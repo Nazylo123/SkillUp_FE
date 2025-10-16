@@ -1,0 +1,47 @@
+import { CommonModule, ViewportScroller } from '@angular/common';
+import { Component, signal } from '@angular/core';
+import { Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { FooterComponent } from '../../common/footer/footer.component';
+import { CustomizerSettingsComponent } from '../../customizer-settings/customizer-settings.component';
+import { ToggleService } from '../../common/header/toggle.service';
+import { CustomizerSettingsService } from '../../customizer-settings/customizer-settings.service';
+import { SidebarManagerComponent } from "../../common/manager/sidebar-manager/sidebar-manager.component";
+import { HeaderManagerComponent } from "../../common/manager/header-manager/header-manager.component";
+
+
+@Component({
+    selector: 'app-manager',
+    imports: [RouterOutlet, CommonModule, FooterComponent, CustomizerSettingsComponent, SidebarManagerComponent, HeaderManagerComponent],
+    templateUrl: './manager.component.html',
+    styleUrl: './manager.component.scss'
+})
+export class Manager {
+
+    private previousUrl: string | null = null;
+
+    protected readonly title = signal('BTS Management System');
+
+    isToggled = false;
+
+    constructor(
+        public router: Router,
+        private toggleService: ToggleService,
+        private viewportScroller: ViewportScroller,
+        public themeService: CustomizerSettingsService
+    ) {
+        this.router.events.subscribe((event: Event) => {
+            if (event instanceof NavigationEnd) {
+                const currentUrl = event.urlAfterRedirects;
+                // Scroll to top ONLY if navigating to a different route (not on refresh)
+                if (this.previousUrl && this.previousUrl !== currentUrl) {
+                    this.viewportScroller.scrollToPosition([0, 0]);
+                }
+                this.previousUrl = currentUrl;
+            }
+        });
+        this.toggleService.isToggled$.subscribe(isToggled => {
+            this.isToggled = isToggled;
+        });
+    }
+
+}
