@@ -156,6 +156,8 @@ import { ManagerUserManagement } from './aproject/manager/manager-user/manager-u
 import { ManagerUserList } from './aproject/manager/manager-user/user-list/user-list.component';
 import { ManagerCourseManagement } from './aproject/manager/manager-course/manager-course.component';
 import { ManagerCourseList } from './aproject/manager/manager-course/course-list/course-list.component';
+import { ManagerUserDetail } from './aproject/manager/manager-user/user-detail/user-detail.component';
+import { AdminUserDetail } from './aproject/admin/user-management/user-detail/user-detail.component';
 
 export const routes: Routes = [
     //project
@@ -166,12 +168,13 @@ export const routes: Routes = [
             {path: '', component: AdminDashboard},
             {path: 'users', component: AdminUserManagement, 
                 children:[
-                    {path: '', component:AdminUserList}
+                    {path: '', component: AdminUserList},
+                    {path: ':id', component: AdminUserDetail}
                 ]
             },
             {path: 'courses', component: AdminCourseManagement,
                 children: [
-                    {path: '', component:AdminCourseList}
+                    {path: '', component: AdminCourseList}
                 ]
             }
         ]
@@ -183,7 +186,8 @@ export const routes: Routes = [
             {path: '', component: ManagerDashboard},
             {path: 'users', component: ManagerUserManagement,
                 children: [
-                    {path: '', component: ManagerUserList}
+                    {path: '', component: ManagerUserList},
+                    {path: ':id', component: ManagerUserDetail},
                 ]
             },
             {path: 'courses', component: ManagerCourseManagement,

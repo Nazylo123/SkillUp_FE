@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-admin-user-list',
@@ -33,6 +34,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
     styleUrls: ['./user-list.component.scss'],
 })
 export class AdminUserList implements AfterViewInit {
+    constructor(private router: Router) {}
+
     displayedColumns: string[] = [
         'id',
         'name',
@@ -55,6 +58,10 @@ export class AdminUserList implements AfterViewInit {
             data.name.toLowerCase().includes(filter);
     }
 
+    goDetail(element: any) {
+        this.router.navigate([`/admin/users/${element.id}`])
+    }
+
     search() {
         this.data.filter = this.searchTerm.trim().toLowerCase();
         if (this.data.paginator) {
@@ -68,7 +75,7 @@ const fakeUsers = [
         id: 1,
         name: 'John Doe',
         email: 'john.doe@example.com',
-        role: 'Student',
+        role: 'User',
         status: 'active',
         joinedDate: '2025-01-15',
     },
@@ -100,7 +107,7 @@ const fakeUsers = [
         id: 5,
         name: 'Alex Brown',
         email: 'alex.b@example.com',
-        role: 'Student',
+        role: 'User',
         status: 'inactive',
         joinedDate: '2025-04-01',
     },
@@ -108,7 +115,7 @@ const fakeUsers = [
         id: 6,
         name: 'Emily Davis',
         email: 'emily.d@example.com',
-        role: 'Student',
+        role: 'User',
         status: 'active',
         joinedDate: '2025-04-15',
     },
@@ -124,7 +131,7 @@ const fakeUsers = [
         id: 8,
         name: 'Lisa Anderson',
         email: 'lisa.a@example.com',
-        role: 'Student',
+        role: 'User',
         status: 'active',
         joinedDate: '2025-05-10',
     },
@@ -132,7 +139,7 @@ const fakeUsers = [
         id: 9,
         name: 'David Taylor',
         email: 'david.t@example.com',
-        role: 'Student',
+        role: 'User',
         status: 'inactive',
         joinedDate: '2025-06-01',
     },
@@ -148,7 +155,7 @@ const fakeUsers = [
         id: 11,
         name: 'James Wilson',
         email: 'james.w@example.com',
-        role: 'Student',
+        role: 'User',
         status: 'active',
         joinedDate: '2025-07-01',
     },
@@ -156,7 +163,7 @@ const fakeUsers = [
         id: 12,
         name: 'Olivia Moore',
         email: 'olivia.m@example.com',
-        role: 'Student',
+        role: 'User',
         status: 'active',
         joinedDate: '2025-07-15',
     },

@@ -16,32 +16,32 @@
         <div class="mat-elevation-z8 recentOrdersTable tagus-mat-table">
             <table mat-table [dataSource]="data">
 
-                <!-- Order ID Column -->
+                <!-- ID Column -->
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef>ID</th>
                     <td mat-cell *matCellDef="let element">{{element.id}}</td>
                 </ng-container>
 
-                <!-- Product Column -->
+                <!-- Name Column -->
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Name</th>
                     <td mat-cell *matCellDef="let element">{{element.name}}</td>
                 </ng-container>
 
-                <!-- Customer Column -->
+                <!-- Email Column -->
                 <ng-container matColumnDef="email">
                     <th mat-header-cell *matHeaderCellDef>Email</th>
                     <td mat-cell *matCellDef="let element">{{element.email}}</td>
                 </ng-container>
 
-                <!-- Price Column -->
+                <!-- Role Column -->
                 <ng-container matColumnDef="role">
                     <th mat-header-cell *matHeaderCellDef>Role</th>
                     <td mat-cell *matCellDef="let element">
                         <span
                         class="role-badge"
                         [ngClass]="{
-                            'student': element.role === 'Student',
+                            'user': element.role === 'User',
                             'lecturer': element.role === 'Lecturer',
                             'admin': element.role === 'Admin',
                             'manager': element.role === 'Manager'
@@ -56,19 +56,18 @@
                 <ng-container matColumnDef="status">
                     <th mat-header-cell *matHeaderCellDef>Status</th>
                     <td mat-cell *matCellDef="let element">
-                        <!-- {{element.status}} -->
                         @if (element.status === 'active') {<span class="badge delivered">{{element.status}}</span>}
                         @if (element.status === 'inactive') {<span class="badge outOfStock">{{element.status}}</span>}
-                        <!-- @if (element.status.delivered) {<span class="badge delivered">{{element.status.delivered}}</span>} -->
                     </td>
                 </ng-container>
 
-                <!-- Rating Column -->
+                <!-- Joined Date Column -->
                 <ng-container matColumnDef="joinedDate">
                     <th mat-header-cell *matHeaderCellDef>Joined Date</th>
                     <td mat-cell *matCellDef="let element">{{element.joinedDate}}</td>
                 </ng-container>
                 
+                <!-- Action Column -->
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
                     <td mat-cell *matCellDef="let element">
@@ -76,21 +75,41 @@
                         <button
                             mat-icon-button
                             matTooltip="View Details"
+                            (click)="goDetail(element)"
                         >
                             <mat-icon>visibility</mat-icon>
                         </button>
-                        <button
-                            mat-icon-button
-                            matTooltip="Edit"
-                        >
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button
-                            mat-icon-button
-                            matTooltip="Delete"
-                        >
-                            <mat-icon>lock</mat-icon>
-                        </button>
+                        <mat-card-content>
+                            <button mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item>
+                                    <span>User</span>
+                                </button>
+                                <button mat-menu-item disabled>
+                                    <span>Lecturer</span>
+                                </button>
+                                <button mat-menu-item>
+                                    <span>Manager</span>
+                                </button>
+                            </mat-menu>
+                        </mat-card-content>
+                        <mat-card-content>
+                            <button mat-icon-button [matMenuTriggerFor]="menu1">
+                                <mat-icon>lock</mat-icon>
+                            </button>
+                            <mat-menu #menu1="matMenu">
+                                <button mat-menu-item>
+                                    <!-- <i class="ri-lock-line"></i> -->
+                                    <span>Ban</span>
+                                </button>
+                                <button mat-menu-item disabled>
+                                    <!-- <i class="ri-lock-unlock-line"></i> -->
+                                    <span>UnBan </span>
+                                </button>
+                            </mat-menu>
+                        </mat-card-content>
                     </div>
                     </td>
                 </ng-container>

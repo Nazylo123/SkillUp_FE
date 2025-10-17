@@ -1,0 +1,12 @@
+.cell-action {
+    display: flex;
+    
+}
+
+.box-button {
+    display: flex;
+    // gap: 15px;
+    button {
+        transform: scale(0.9);
+    }
+}

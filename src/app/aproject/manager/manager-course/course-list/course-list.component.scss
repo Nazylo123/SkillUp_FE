@@ -11,6 +11,10 @@
   font-size: 13px;
   text-align: center;
 }
+.actions-container {
+  display: flex;
+  justify-content: center;
+}
 
 .approved {
   background-color: #d4edda;

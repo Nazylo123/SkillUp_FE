@@ -73,12 +73,19 @@
                         >
                             <mat-icon>visibility</mat-icon>
                         </button>
-                        <button
-                            mat-icon-button
-                            matTooltip="Edit"
-                        >
-                            <mat-icon>edit</mat-icon>
-                        </button>
+                        <mat-card-content>
+                            <button mat-icon-button [matMenuTriggerFor]="menu1">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <mat-menu #menu1="matMenu">
+                                <button mat-menu-item>
+                                    <span>Approve</span>
+                                </button>
+                                <button mat-menu-item disabled>
+                                    <span>Reject</span>
+                                </button>
+                            </mat-menu>
+                        </mat-card-content>
                     </div>
                     </td>
                 </ng-container>

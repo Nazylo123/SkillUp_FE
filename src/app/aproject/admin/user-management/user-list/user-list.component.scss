@@ -13,8 +13,13 @@
   min-width: 80px;
 }
 
+.actions-container {
+  justify-content: center;
+  display: flex;
+}
+
 /* Màu sắc theo role */
-.student {
+.user {
   background-color: #dbeafe; /* xanh nhạt */
   color: #1e3a8a;
 }
