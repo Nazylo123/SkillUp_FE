@@ -1,0 +1,21 @@
+.drag-table {
+  width: 100%;
+  border-spacing: 0;
+
+  tr.cdk-drag-preview {
+    background: #f5f5f5;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  tr.cdk-drag-placeholder {
+    opacity: 0;
+  }
+
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.drag-row {
+  cursor: move;
+}

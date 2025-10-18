@@ -68,12 +68,14 @@
                         <button
                             mat-icon-button
                             matTooltip="View Details"
+                            (click)="detailCourse(element.id)"
                         >
                             <mat-icon>visibility</mat-icon>
                         </button>
                         <button
                             mat-icon-button
                             matTooltip="Edit"
+                            (click)="openAddEventDialog('300ms', '100ms', element.id)"
                         >
                             <mat-icon>edit</mat-icon>
                         </button>
@@ -88,8 +90,6 @@
                         </div>
                     </td>
                 </ng-container>
-
-
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

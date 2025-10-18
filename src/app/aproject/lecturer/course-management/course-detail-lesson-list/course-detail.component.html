@@ -1,0 +1,61 @@
+<mat-card class="mb-25 tagus-card">
+  <mat-card-header class="border-bottom">
+    <h5 class="mb-0">List Lessons</h5>
+    <button mat-flat-button (click)="openAddEventDialog('300ms', '100ms')">+ New Course</button>
+  </mat-card-header>
+    <div >
+        <div class="tagus-search-box" style="margin-bottom: 15px;">
+            <input type="text" class="input-search border-radius" placeholder="Search here" [(ngModel)]="searchTerm" >
+            <button  mat-flat-button class="tagus" (click)="search()"><i class="ri-search-line"></i></button>
+        </div>
+    </div>
+  <mat-card-content>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+      class="drag-table"
+    >
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="lessonName">
+        <th mat-header-cell *matHeaderCellDef>Lesson Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.lessonName }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="actions-container">
+            <button mat-icon-button matTooltip="View Details" (click)="detailLesson(element)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Edit" (click)="openAddEventDialog('300ms', '100ms', element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <!-- thêm cdkDrag cho từng dòng -->
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        cdkDrag
+        class="drag-row"
+      ></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

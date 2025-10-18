@@ -158,9 +158,19 @@ import { ManagerCourseManagement } from './aproject/manager/manager-course/manag
 import { ManagerCourseList } from './aproject/manager/manager-course/course-list/course-list.component';
 import { ManagerUserDetail } from './aproject/manager/manager-user/user-detail/user-detail.component';
 import { AdminUserDetail } from './aproject/admin/user-management/user-detail/user-detail.component';
+import { LecturerCourseDetail } from './aproject/lecturer/course-management/course-detail-lesson-list/course-detail.component';
+import { LecturerLesson } from './aproject/lecturer/course-management/lesson-detail/lesson.component';
+import { Home } from './aproject/user/home/home.component';
+import { User } from './aproject/user/user.component';
 
 export const routes: Routes = [
     //project
+    {
+        path: '', component: User,
+        children: [
+            {path: '', component: Home}
+        ]
+    },
     {
         path:'admin', 
         component: Admin,
@@ -202,9 +212,11 @@ export const routes: Routes = [
         path: 'lecturer',
         component: Lecturer,
         children: [
-            {path: '', component: LecturerCourseManagement,
+            {path: 'courses', component: LecturerCourseManagement,
                 children: [
-                    {path: '', component:LecturerCourseList}
+                    {path: '', component:LecturerCourseList},
+                    {path: ':id', component:LecturerCourseDetail},
+                    {path: 'lesson/:id', component: LecturerLesson}
                 ]
             }
         ]

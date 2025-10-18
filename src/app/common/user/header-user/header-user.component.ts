@@ -13,7 +13,7 @@ import { ToggleService } from '../../header/toggle.service';
     templateUrl: './header-user.component.html',
     styleUrls: ['./header-user.component.scss']
 })
-export class HeaderAdminComponent {
+export class HeaderUserComponent {
 
     isToggled = false;
     

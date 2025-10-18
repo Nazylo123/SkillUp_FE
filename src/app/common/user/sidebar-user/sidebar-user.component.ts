@@ -12,7 +12,7 @@ import { ToggleService } from '../../header/toggle.service';
     templateUrl: './sidebar-user.component.html',
     styleUrls: ['./sidebar-user.component.scss']
 })
-export class SidebarAdminComponent {
+export class SidebarUserComponent {
 
     panelOpenState = false;
 

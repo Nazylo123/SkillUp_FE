@@ -9,6 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from "@angular/material/icon";
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-manager-user-list',
@@ -17,7 +18,7 @@ import { MatIcon } from "@angular/material/icon";
     styleUrls: ['./user-list.component.scss']
 })
 export class ManagerUserList {
-    constructor(private router: Router) {}
+    constructor(private router: Router,public dialog: MatDialog) {}
 
     displayedColumns: string[] = ['user', 'progress', 'email', 'role', 'courses', 'status', 'action'];
     dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
@@ -30,6 +31,14 @@ export class ManagerUserList {
 
     goDetail(element: any) {
         this.router.navigate([`/manager/users/${element.id}`])
+    }
+
+    openCreateUserDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+        this.dialog.open(CreateUserDialog, {
+            width: '600px',
+            enterAnimationDuration,
+            exitAnimationDuration
+        });
     }
 
 }
@@ -273,3 +282,24 @@ const ELEMENT_DATA: PeriodicElement[] = [
     action: 'ri-more-fill'
   }
 ];
+
+
+@Component({
+    selector: 'create-user',
+    templateUrl: './dialog-create-user.html',
+    imports:[CommonModule],
+    // standalone: false
+})
+export class CreateUserDialog {
+
+    constructor(
+        public dialogRef: MatDialogRef<CreateUserDialog>
+    ) {}
+
+    listRole: string[] = ['Intern', 'Fresher', 'Junior', 'Middle', 'Senior']
+
+    close(){
+        this.dialogRef.close(true);
+    }
+
+}
