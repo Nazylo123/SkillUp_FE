@@ -17,16 +17,10 @@ interface Lesson {
 }
 
 const ELEMENT_DATA: Lesson[] = [
-  { id: 1, lessonName: 'Laptop Mac Pro' },
-  { id: 2, lessonName: 'Smart Camera XD6' },
-  { id: 3, lessonName: 'Pixi 8 Wireless Airphone' },
-  { id: 4, lessonName: 'Jebble Smart Watch' },
-  { id: 5, lessonName: 'Smart Watch F8 Pro' },
-  { id: 6, lessonName: 'Wall Clock Cimbina' },
-  { id: 7, lessonName: 'Galaxo T6 Munsun' },
-  { id: 8, lessonName: 'Tagus Airpod x-Zon' },
-  { id: 9, lessonName: 'Levitating Headphone' },
-  { id: 10, lessonName: 'Refreshing Water' },
+  { id: 1, lessonName: 'Introduction about Angular' },
+  { id: 2, lessonName: 'Angular HTML' },
+  { id: 3, lessonName: 'Angular SCSS' },
+  { id: 4, lessonName: 'Angular TypeScript' }
 ];
 
 @Component({

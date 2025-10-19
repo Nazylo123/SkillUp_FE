@@ -18,16 +18,11 @@ interface Lesson {
 }
 
 const ELEMENT_DATA: Lesson[] = [
-  { id: 1, subLessonName: 'Laptop Mac Pro', videoName: 'Introduction to Mac Pro' },
-  { id: 2, subLessonName: 'Smart Camera XD6', videoName: 'Setting Up Smart Camera' },
-  { id: 3, subLessonName: 'Pixi 8 Wireless Airphone', videoName: 'Wireless Audio Basics' },
-  { id: 4, subLessonName: 'Jebble Smart Watch', videoName: 'Getting Started with Jebble' },
-  { id: 5, subLessonName: 'Smart Watch F8 Pro', videoName: 'Advanced F8 Pro Features' },
-  { id: 6, subLessonName: 'Wall Clock Cimbina', videoName: 'Installing Cimbina Clock' },
-  { id: 7, subLessonName: 'Galaxo T6 Munsun', videoName: 'Hands-on with Galaxo T6' },
-  { id: 8, subLessonName: 'Tagus Airpod x-Zon', videoName: 'Airpod x-Zon Overview' },
-  { id: 9, subLessonName: 'Levitating Headphone', videoName: 'Levitating Sound Explained' },
-  { id: 10, subLessonName: 'Refreshing Water', videoName: 'Refreshing Water Tech Demo' },
+  { id: 1, subLessonName: 'Intro', videoName: 'Introduction.mp4' },
+  { id: 2, subLessonName: 'What this?', videoName: 'Setting_Up.mp4' },
+  { id: 3, subLessonName: 'You want to learn?', videoName: 'Basics.mp4' },
+  { id: 4, subLessonName: 'Summary', videoName: 'Started.mp4' },
+  { id: 5, subLessonName: 'Final', videoName: 'Advanced_Pro_Features.mp4' },
 ];
 
 

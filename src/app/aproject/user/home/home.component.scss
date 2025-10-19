@@ -26,6 +26,24 @@
     }
 }
 
+.custom-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+    .card {
+        height: 100%;
+    }
+}
+
+::ng-deep .mat-mdc-card-content {
+    height: 100%;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between !important;
+}
+
+
+
 @media only screen and (max-width : 767px) {
 
     .btn-box {

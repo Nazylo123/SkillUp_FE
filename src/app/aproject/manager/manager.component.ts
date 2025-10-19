@@ -2,16 +2,14 @@ import { CommonModule, ViewportScroller } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../../common/footer/footer.component';
-import { CustomizerSettingsComponent } from '../../customizer-settings/customizer-settings.component';
 import { ToggleService } from '../../common/header/toggle.service';
-import { CustomizerSettingsService } from '../../customizer-settings/customizer-settings.service';
 import { SidebarManagerComponent } from "../../common/manager/sidebar-manager/sidebar-manager.component";
 import { HeaderManagerComponent } from "../../common/manager/header-manager/header-manager.component";
 
 
 @Component({
     selector: 'app-manager',
-    imports: [RouterOutlet, CommonModule, FooterComponent, CustomizerSettingsComponent, SidebarManagerComponent, HeaderManagerComponent],
+    imports: [RouterOutlet, CommonModule, FooterComponent,  SidebarManagerComponent, HeaderManagerComponent],
     templateUrl: './manager.component.html',
     styleUrl: './manager.component.scss'
 })
@@ -19,7 +17,7 @@ export class Manager {
 
     private previousUrl: string | null = null;
 
-    protected readonly title = signal('BTS Management System');
+    protected readonly title = signal('Skill Up');
 
     isToggled = false;
 
@@ -27,7 +25,6 @@ export class Manager {
         public router: Router,
         private toggleService: ToggleService,
         private viewportScroller: ViewportScroller,
-        public themeService: CustomizerSettingsService
     ) {
         this.router.events.subscribe((event: Event) => {
             if (event instanceof NavigationEnd) {

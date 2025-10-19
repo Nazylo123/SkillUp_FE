@@ -163,6 +163,8 @@ import { LecturerLesson } from './aproject/lecturer/course-management/lesson-det
 import { Home } from './aproject/user/home/home.component';
 import { User } from './aproject/user/user.component';
 import { MyCoursesComponent } from './aproject/user/my-courses/my-courses.component';
+import { RoadMap } from './aproject/user/roadmap/roadmap.component';
+import { CourseDetail } from './aproject/user/course-detail/course-detail.component';
 
 export const routes: Routes = [
     //project
@@ -170,7 +172,9 @@ export const routes: Routes = [
         path: '', component: User,
         children: [
             {path: '', component: Home},
-            {path: 'my-courses', component: MyCoursesComponent}
+            {path: 'my-courses', component: MyCoursesComponent},
+            {path: 'course-detail/:id', component: CourseDetail},
+            {path: 'roadmap', component: RoadMap}
         ]
     },
     {
@@ -214,6 +218,7 @@ export const routes: Routes = [
         path: 'lecturer',
         component: Lecturer,
         children: [
+            {path: '', component: LecturerCourseList},
             {path: 'courses', component: LecturerCourseManagement,
                 children: [
                     {path: '', component:LecturerCourseList},

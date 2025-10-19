@@ -4,17 +4,21 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCard, MatCardContent } from "@angular/material/card";
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-my-courses',
-    imports: [MatTableModule, MatButtonModule, MatMenuModule, MatPaginatorModule, MatCard, MatCardContent],
+    imports: [MatTableModule, MatButtonModule, MatMenuModule, MatPaginatorModule, MatCard, MatCardContent, FormsModule],
     templateUrl: './my-courses.component.html',
     styleUrls: ['./my-courses.component.scss']
 })
 export class MyCoursesComponent {
+    constructor(private router: Router) {}
 
     displayedColumns: string[] = ['course', 'instructor', 'status', 'startTime', 'endTime'];
     dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+    searchTerm = ''
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -22,12 +26,19 @@ export class MyCoursesComponent {
         this.dataSource.paginator = this.paginator;
     }
 
-    passed = true;
+    detailCourse(course: any) {
+        this.router.navigate([`/course-detail/${course.id}`])
+    }
+
+    search() {}
+
+    passed = true; 
     failed = true;
     percentage = true;
 
 }
 export interface PeriodicElement {
+    id: number | string;
     startTime: any;
     instructor: string;
     endTime: any;
@@ -36,6 +47,7 @@ export interface PeriodicElement {
 }
 const ELEMENT_DATA: PeriodicElement[] = [
     {
+        id: 1,
         course: {
             title: 'Node.js for Beginners: Go From Zero to Hero with Node.js',
             image: 'img/lms/lms1.jpg',
@@ -54,6 +66,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 2,
         course: {
             title: 'Learn the Fundamentals of working with Angular and How to Create ',
             image: 'img/lms/lms2.jpg',
@@ -72,6 +85,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 3,
         course: {
             title: 'Build an iOS Application in Swift Learn the Fundamentals',
             image: 'img/lms/lms3.jpg',
@@ -90,6 +104,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 4,
         course: {
             title: 'Programming Language Become a React Native Developer',
             image: 'img/lms/lms4.jpg',
@@ -108,6 +123,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 5,
         course: {
             title: 'The Data Science Course 2023: Complete Data Science Bootcamp',
             image: 'img/lms/lms5.jpg',
@@ -126,6 +142,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 6,
         course: {
             title: 'Java Programming Masterclass for Software Developers',
             image: 'img/lms/lms6.jpg',
@@ -144,6 +161,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 7,
         course: {
             title: 'Deep Learning A-Z™: Hands-On Artificial Neural Networks',
             image: 'img/lms/lms7.jpg',
@@ -162,6 +180,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 8,
         course: {
             title: 'Python for Finance: Investment Fundamentals & Data Analytics',
             image: 'img/lms/lms8.jpg',
@@ -180,6 +199,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 9,
         course: {
             title: 'Node.js for Beginners: Go From Zero to Hero with Node.js',
             image: 'img/lms/lms1.jpg',
@@ -198,6 +218,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 10,
         course: {
             title: 'Java Programming Masterclass for Software Developers',
             image: 'img/lms/lms6.jpg',
@@ -216,6 +237,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 11,
         course: {
             title: 'Deep Learning A-Z™: Hands-On Artificial Neural Networks',
             image: 'img/lms/lms7.jpg',
@@ -234,6 +256,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 12,
         course: {
             title: 'Python for Finance: Investment Fundamentals & Data Analytics',
             image: 'img/lms/lms8.jpg',
@@ -252,6 +275,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 13,
         course: {
             title: 'Node.js for Beginners: Go From Zero to Hero with Node.js',
             image: 'img/lms/lms1.jpg',
@@ -270,6 +294,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 14,
         course: {
             title: 'Learn the Fundamentals of working with Angular and How to Create ',
             image: 'img/lms/lms2.jpg',
@@ -288,6 +313,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 15,
         course: {
             title: 'Learn the Fundamentals of working with Angular and How to Create ',
             image: 'img/lms/lms2.jpg',
@@ -306,15 +332,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 16,
         course: {
             title: 'Node.js for Beginners: Go From Zero to Hero with Node.js',
             image: 'img/lms/lms1.jpg',
         },
+        instructor: "Cervantes Kramer",
         startTime: {
             date: '19/02/2023',
             time: '10:00 AM',
         },
-        instructor: "Cervantes Kramer",
         endTime: {
             date: '19/02/2023',
             time: '11:00 AM',
@@ -324,75 +351,22 @@ const ELEMENT_DATA: PeriodicElement[] = [
         }
     },
     {
+        id: 17,
         course: {
             title: 'Learn the Fundamentals of working with Angular and How to Create ',
             image: 'img/lms/lms2.jpg',
         },
+        instructor: "Dejesus Michael",
         startTime: {
             date: '18/02/2023',
             time: '04:00 AM',
         },
-        instructor: "Dejesus Michael",
         endTime: {
             date: '18/02/2023',
             time: '05:00 AM',
         },
         status: {
             failed: 'Failed',
-        }
-    },
-    {
-        course: {
-            title: 'Build an iOS Application in Swift Learn the Fundamentals',
-            image: 'img/lms/lms3.jpg',
-        },
-        startTime: {
-            date: '17/02/2023',
-            time: '05:00 PM',
-        },
-        instructor: "Alissa Nelson",
-        endTime: {
-            date: '17/02/2023',
-            time: '06:00 PM',
-        },
-        status: {
-            passed: 'Passed',
-        }
-    },
-    {
-        course: {
-            title: 'Programming Language Become a React Native Developer',
-            image: 'img/lms/lms4.jpg',
-        },
-        startTime: {
-            date: '16/02/2023',
-            time: '12:00 PM',
-        },
-        instructor: "English Haney",
-        endTime: {
-            date: '16/02/2023',
-            time: '01:00 PM',
-        },
-        status: {
-            percentage: '50%'
-        }
-    },
-    {
-        course: {
-            title: 'The Data Science Course 2023: Complete Data Science Bootcamp',
-            image: 'img/lms/lms5.jpg',
-        },
-        startTime: {
-            date: '15/02/2023',
-            time: '03:00 AM',
-        },
-        instructor: "Edwards Mckenzie",
-        endTime: {
-            date: '15/02/2023',
-            time: '04:00 AM',
-        },
-        status: {
-            passed: 'Passed',
         }
     }
 ];

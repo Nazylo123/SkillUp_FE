@@ -10,7 +10,8 @@ import { CustomizerSettingsComponent } from './customizer-settings/customizer-se
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, CommonModule, CustomizerSettingsComponent],
+    // imports: [RouterOutlet, CommonModule, CustomizerSettingsComponent],
+    imports: [RouterOutlet, CommonModule],
     templateUrl: './app.html',
     styleUrl: './app.scss'
 })
@@ -18,7 +19,7 @@ export class App {
 
     private previousUrl: string | null = null;
 
-    protected readonly title = signal('BTS Management System');
+    protected readonly title = signal('Skill Up');
 
     isToggled = false;
 
