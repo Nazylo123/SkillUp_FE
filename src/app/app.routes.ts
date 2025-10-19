@@ -162,13 +162,15 @@ import { LecturerCourseDetail } from './aproject/lecturer/course-management/cour
 import { LecturerLesson } from './aproject/lecturer/course-management/lesson-detail/lesson.component';
 import { Home } from './aproject/user/home/home.component';
 import { User } from './aproject/user/user.component';
+import { MyCoursesComponent } from './aproject/user/my-courses/my-courses.component';
 
 export const routes: Routes = [
     //project
     {
         path: '', component: User,
         children: [
-            {path: '', component: Home}
+            {path: '', component: Home},
+            {path: 'my-courses', component: MyCoursesComponent}
         ]
     },
     {
