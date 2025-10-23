@@ -23,6 +23,13 @@
   text-align: center;
 }
 
+tr.example-element-row:not(.example-expanded-row):hover {
+    background: whitesmoke;
+}
+tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+}
+
 .approved {
   background-color: #d4edda;
   color: #155724;

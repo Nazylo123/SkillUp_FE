@@ -1,7 +1,10 @@
 <mat-card class="mb-25 tagus-card">
   <mat-card-header class="border-bottom">
     <h5 class="mb-0">List Lessons</h5>
-    <button mat-flat-button (click)="openAddEventDialog('300ms', '100ms')">+ New Course</button>
+    <div class="d-flex" style="gap: 10px;">
+      <button mat-stroked-button >Final Quiz</button>
+      <button mat-flat-button (click)="openAddEventDialog('300ms', '100ms')">+ New Course</button>
+    </div>
   </mat-card-header>
     <div >
         <div class="tagus-search-box" style="margin-bottom: 15px;">
@@ -54,7 +57,7 @@
         mat-row
         *matRowDef="let row; columns: displayedColumns"
         cdkDrag
-        class="drag-row"
+        class="drag-row example-element-row"
       ></tr>
     </table>
   </mat-card-content>
