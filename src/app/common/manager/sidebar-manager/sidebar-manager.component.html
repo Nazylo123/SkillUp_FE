@@ -1,9 +1,6 @@
 <div
     class="sidebar-area bg-white box-shadow"
     [ngClass]="{'active': isToggled}"
-    [class.dark-sidebar]="themeService.isSidebarDark()"
-    [class.right-sidebar]="themeService.isRightSidebar()"
-    [class.hide-sidebar]="themeService.isHideSidebar()"
 >
     <div class="logo bg-white">
         <a routerLink="/manager" class="d-flex align-items-center">

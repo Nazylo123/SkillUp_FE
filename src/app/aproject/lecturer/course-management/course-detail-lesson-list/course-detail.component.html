@@ -2,7 +2,7 @@
   <mat-card-header class="border-bottom">
     <h5 class="mb-0">List Lessons</h5>
     <div class="d-flex" style="gap: 10px;">
-      <button mat-stroked-button >Final Quiz</button>
+      <button mat-stroked-button (click)="finalQuiz()">Final Quiz</button>
       <button mat-flat-button (click)="openAddEventDialog('300ms', '100ms')">+ New Course</button>
     </div>
   </mat-card-header>

@@ -9,7 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Lesson {
   id: number;
@@ -30,11 +30,17 @@ const ELEMENT_DATA: Lesson[] = [
   imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, CommonModule, FormsModule]
 })
 export class LecturerCourseDetail {
-  constructor(public dialog: MatDialog, private router: Router) {}
+  constructor(public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {}
+  id!: string;
 
   displayedColumns: string[] = ['id', 'lessonName', 'actions'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   searchTerm = '';
+
+  ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id')!;
+    console.log(this.id);
+  }
 
   drop(event: CdkDragDrop<Lesson[]>) {
     const prev = this.dataSource.data;
@@ -44,6 +50,10 @@ export class LecturerCourseDetail {
 
   detailLesson(lesson:any) {
     this.router.navigate([`lecturer/courses/lesson/${lesson.id}`])
+  }
+
+  finalQuiz() {
+    this.router.navigate([`lecturer/courses/${this.id}/quiz`])
   }
 
   openAddEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, lesson?: any): void {

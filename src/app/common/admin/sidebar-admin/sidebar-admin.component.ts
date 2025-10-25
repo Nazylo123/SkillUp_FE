@@ -3,7 +3,6 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { CustomizerSettingsService } from '../../../customizer-settings/customizer-settings.service';
 import { ToggleService } from '../../header/toggle.service';
 
 @Component({
@@ -20,7 +19,6 @@ export class SidebarAdminComponent {
 
     constructor(
         private toggleService: ToggleService,
-        public themeService: CustomizerSettingsService,
         private router: Router
     ) {
         this.toggleService.isToggled$.subscribe(isToggled => {
@@ -35,13 +33,4 @@ export class SidebarAdminComponent {
     toggle() {
         this.toggleService.toggle();
     }
-
-    toggleSidebarTheme() {
-        this.themeService.toggleSidebarTheme();
-    }
-
-    toggleHideSidebarTheme() {
-        this.themeService.toggleHideSidebarTheme();
-    }
-
 }

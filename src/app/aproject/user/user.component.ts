@@ -2,9 +2,9 @@ import { CommonModule, ViewportScroller } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../../common/footer/footer.component';
-import { ToggleService } from '../../common/header/toggle.service';
 import { HeaderUserComponent } from "../../common/user/header-user/header-user.component";
 import { SidebarUserComponent } from "../../common/user/sidebar-user/sidebar-user.component";
+import { ToggleService } from '../../common/header/toggle.service';
 
 
 @Component({
