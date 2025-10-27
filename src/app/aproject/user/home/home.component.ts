@@ -11,23 +11,13 @@ import { ApiAuthServices } from '../../../services/auth.service';
     styleUrls: ['./home.component.scss'],
 })
 export class Home {
-    constructor(private router: Router, private api: ApiAuthServices) {}
+    constructor(private router: Router) {}
 
     ngOnInit() {
-        this.login();
     }
 
     detailCourse(course: any) {
         this.router.navigate([`/course-detail/${course.id}`])
-    }
-
-    login() {
-        console.log("run")
-        this.api.login({
-            email:"Employee@skillup.com", password:"Employee123!"
-        }).subscribe((result:any)=> {
-            console.log(result)
-        },err => {})
     }
 
 }

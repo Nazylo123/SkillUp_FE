@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { ToggleService } from '../../header/toggle.service';
+import { ToggleService } from '../../context/toggle.service';
 
 @Component({
     selector: 'app-header-manager',

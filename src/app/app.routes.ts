@@ -22,16 +22,18 @@ import { Lecturer } from './aproject/lecturer/lecturer.component';
 import { LecturerCourseList } from './aproject/lecturer/course-management/course-list/course-list.component';
 import { LecturerCourseManagement } from './aproject/lecturer/course-management/course-management.component';
 import { LecturerCourseDetail } from './aproject/lecturer/course-management/course-detail-lesson-list/course-detail.component';
-import { LecturerFinalQuiz } from './aproject/lecturer/course-management/final-quiz/final-quiz.component';
 import { LecturerLesson } from './aproject/lecturer/course-management/lesson-detail/lesson.component';
 import { NotFoundComponent } from './common/not-found/not-found.component';
 import { ProfileComponent } from './common/profile/profile.component';
 import { SecurityComponent } from './common/security/security.component';
 import { CourseLearnComponent } from './aproject/user/course-learn/course-learn.component';
+import { LoginComponent } from './common/authentication/login/login.component';
+import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
 
 
 export const routes: Routes = [
     //project
+    {path: 'login', component: LoginComponent},
     {
         path: '', component: User,
         children: [
@@ -89,10 +91,11 @@ export const routes: Routes = [
                 children: [
                     {path: '', component:LecturerCourseList},
                     {path: ':id', component:LecturerCourseDetail},
-                    {path: ':id/quiz', component:LecturerFinalQuiz},
+                    {path: ':id/quiz', component:QuizCreatorComponent},
                     {path: 'lesson/:id', component: LecturerLesson},
                 ]
-            }
+            },
+            {path: 'quiz', component: QuizCreatorComponent},
         ]
     },
     //endProject

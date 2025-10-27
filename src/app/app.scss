@@ -1,3 +1,7 @@
+.loading {
+    position: absolute;
+}
+
 .main-content {
     overflow: hidden;
     min-height: 100vh;
@@ -129,4 +133,54 @@
         padding-right: 10px;
         padding-left: 10px;
     }
+}
+
+::ng-deep .custom-snackbar {
+    .mdc-snackbar__surface{
+        font-weight: 500 !important;
+        font-size: 16px !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px;
+        .mat-mdc-button {
+            color: #fff !important;  
+            background-color: transparent !important;  
+            &:hover {
+                background-color: transparent !important;
+                box-shadow: none !important;
+            }  
+        }
+    }
+}
+
+::ng-deep .success-snackbar {
+    .mdc-snackbar__surface{
+        background-color: #4caf50 !important;
+        color: #fff !important;
+    }
+}
+
+::ng-deep .error-snackbar {
+    .mdc-snackbar__surface{
+        background-color: #f44336 !important;
+        color: #fff !important;
+    }
+}
+
+::ng-deep .warning-snackbar {
+    .mdc-snackbar__surface{
+        background-color: #ff9800 !important;
+        color: #fff !important;
+    }
+}
+
+::ng-deep .info-snackbar {
+    .mdc-snackbar__surface{
+        background-color: #2196f3 !important; 
+        color: #fff !important;
+    }
+}
+
+::ng-deep .mat-mdc-form-field-error-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
 }

@@ -4,7 +4,7 @@ import { RouterOutlet, Router, Event, NavigationEnd } from '@angular/router';
 import { HeaderAdminComponent } from '../../common/admin/header-admin/header-admin.component';
 import { FooterComponent } from '../../common/footer/footer.component';
 import { SidebarAdminComponent } from '../../common/admin/sidebar-admin/sidebar-admin.component';
-import { ToggleService } from '../../common/header/toggle.service';
+import { ToggleService } from '../../common/context/toggle.service';
 
 @Component({
     selector: 'app-admin',
