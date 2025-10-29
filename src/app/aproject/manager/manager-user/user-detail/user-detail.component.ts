@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTabsModule } from '@angular/material/tabs';
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -21,6 +22,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatProgressBar } from "@angular/material/progress-bar";
+import { RouterLink } from "@angular/router";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -39,13 +41,14 @@ export type ChartOptions = {
 
 @Component({
     selector: 'app-manager-user-detail',
-    imports: [MatCardModule, MatButtonModule, MatMenuModule, ChartComponent, MatCheckboxModule, MatTableModule, MatProgressBar, MatPaginatorModule],
+    imports: [MatCardModule, MatButtonModule, MatMenuModule, ChartComponent, MatCheckboxModule, MatTableModule, MatProgressBar, MatPaginatorModule, RouterLink, MatTabsModule],
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.scss']
 })
 export class ManagerUserDetail {
 
-    displayedColumns: string[] = ['name', 'startDate', 'deadline', 'progress'];
+    displayedColumnsEnrolled: string[] = ['name', 'startDate', 'deadline', 'progress'];
+    displayedColumnsCreated: string[] = ['name', 'startDate', 'deadline'];
     dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
     @ViewChild("chart") chart!: ChartComponent;

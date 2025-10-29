@@ -23,6 +23,14 @@
   text-align: center;
 }
 
+.input-des {
+  min-width: 100%;
+  min-height: 200px;
+  resize: none;
+  padding: 20px;
+  transition: none;
+}
+
 tr.example-element-row:not(.example-expanded-row):hover {
     background: whitesmoke;
 }

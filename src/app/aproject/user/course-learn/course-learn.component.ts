@@ -7,7 +7,7 @@ import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionP
 
 @Component({
     selector: 'app-course-learn',
-    imports: [RouterLink, MatCardModule, MatButtonModule, MatMenuModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle],
+    imports: [MatCardModule, MatButtonModule, MatMenuModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, RouterLink],
     templateUrl: './course-learn.component.html',
     styleUrls: ['./course-learn.component.scss']
 })

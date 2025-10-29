@@ -10,6 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FilesAcceptDirective, FileUploadModule } from "@iplab/ngx-file-upload";
+import { RouterLink } from "@angular/router";
 
 interface Lesson {
   id: number | string;
@@ -30,7 +31,7 @@ const ELEMENT_DATA: Lesson[] = [
   selector: 'app-lecturer-lesson',
   templateUrl: './lesson.component.html',
   styleUrls: ['./lesson.component.scss'],
-  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, FormsModule]
+  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, FormsModule, RouterLink]
 })
 export class LecturerLesson {
   constructor(public dialog: MatDialog) {}

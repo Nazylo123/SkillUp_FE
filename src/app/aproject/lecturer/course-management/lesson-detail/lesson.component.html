@@ -1,6 +1,18 @@
 <mat-card class="mb-25 tagus-card">
   <mat-card-header class="border-bottom">
-    <h5 class="mb-0">Lesson Detail</h5>
+    <div class="breadcrumb-card">
+      <h5 class="mb-0">Lesson Detail</h5>
+      <ol class="breadcrumb mb-0 ps-0">
+        <li class="breadcrumb-item">
+            <a routerLink="/lecturer/courses">
+                <i class="ri-home-8-line"></i>
+                Course list
+            </a>
+        </li>
+        <li class="breadcrumb-item fw-semibold">Course Details</li>
+        <li class="breadcrumb-item fw-semibold">Lesson Details</li>
+      </ol>
+    </div>
     <button mat-flat-button (click)="openAddEventDialog('300ms', '100ms')">+ New Course</button>
   </mat-card-header>
     <div >

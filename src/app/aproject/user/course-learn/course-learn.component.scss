@@ -1,6 +1,6 @@
 // Some CSS is Available on the Style.scss file because of Angular Material CSS didn't work in Component CSS.
 .tagus-card {
-    // margin: auto;
+    margin: auto;
 }
 
 .course-details-header {
@@ -37,6 +37,8 @@
     }
 }
 .course-details-desc {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
     padding: {
         left: 25px;
         right: 25px;
@@ -404,4 +406,31 @@
         }
     }
 
+}
+
+.mat-mdc-card {
+    padding-right: 0;
+}
+
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+ul {
+    li {
+        a {
+            font-size: 14px;
+            span {
+                i {
+                    font-size: 15px !important;
+                }
+            }
+            i {
+                font-size: 15px !important;
+            }
+        }
+        
+    }
 }

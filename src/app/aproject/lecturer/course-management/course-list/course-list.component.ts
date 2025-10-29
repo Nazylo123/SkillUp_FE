@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, Inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -39,18 +39,17 @@ export class LecturerCourseList implements AfterViewInit {
         'id',
         'name',
         'type',
-        'createdDate',
+        'time',
+        'role',
         'status',
         'action',
     ];
+    router = inject(Router)
 
     data = new MatTableDataSource<any>(fakeCourses);
     searchTerm = '';
 
-    constructor(
-        public dialog: MatDialog,
-        private router: Router
-    ) {}
+    constructor(public dialog: MatDialog) {}
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -58,14 +57,14 @@ export class LecturerCourseList implements AfterViewInit {
       this.data.paginator = this.paginator;
 
       this.data.filterPredicate = (data, filter) =>
-          data.name.toLowerCase().includes(filter) || data.email.toLowerCase().includes(filter);
+        data.name.toLowerCase().includes(filter) || data.email.toLowerCase().includes(filter);
     }
 
     search() {
-        this.data.filter = this.searchTerm.trim().toLowerCase();
-        if (this.data.paginator) {
-            this.data.paginator.firstPage();
-        }
+      this.data.filter = this.searchTerm.trim().toLowerCase();
+      if (this.data.paginator) {
+          this.data.paginator.firstPage();
+      }
     }
 
     detailCourse(id: string| number) {
@@ -87,8 +86,8 @@ export class LecturerCourseList implements AfterViewInit {
 @Component({
     selector: 'create-course',
     templateUrl: './dialog-create-course.html',
+    styleUrl: './course-list.component.scss',
     imports: [CommonModule]
-    // standalone: false
 })
 export class CreateCourse {
 
@@ -115,101 +114,125 @@ export class CreateCourse {
       'Go',
       'Rust',
       'Kotlin',
-      'Swift'
+      'Swift',
+      'Other',
+    ];
+
+    listRoles: string[] = [
+      'Intern',
+      'Fresher',
+      'Junior',
+      'Middle',
+      'Senior',
+      'Other',
     ];
 
 
 }
+
 const fakeCourses = [
   {
     id: 1,
     name: 'Introduction to React',
     type: 'JavaScript',
-    createdDate: '2025-01-15',
+    time: 30,
+    role: 'Intern',
     status: 'Approved',
   },
   {
     id: 2,
     name: 'Advanced JavaScript',
     type: 'JavaScript',
-    createdDate: '2025-02-20',
+    time: 45,
+    role: 'Junior',
     status: 'Pending',
   },
   {
     id: 3,
     name: 'Spring Boot for Beginners',
     type: 'Java',
-    createdDate: '2025-03-10',
+    time: 60,
+    role: 'Fresher',
     status: 'Approved',
   },
   {
     id: 4,
     name: 'Building APIs with Go',
     type: 'Go',
-    createdDate: '2025-03-15',
+    time: 25,
+    role: 'Middle',
     status: 'Rejected',
   },
   {
     id: 5,
     name: 'Data Science with Python',
     type: 'Python',
-    createdDate: '2025-04-01',
+    time: 75,
+    role: 'Senior',
     status: 'Approved',
   },
   {
     id: 6,
     name: 'Mobile Development with Kotlin',
     type: 'Kotlin',
-    createdDate: '2025-04-15',
+    time: 40,
+    role: 'Fresher',
     status: 'Draft',
   },
   {
     id: 7,
     name: 'Swift for iOS Development',
     type: 'Swift',
-    createdDate: '2025-05-01',
+    time: 35,
+    role: 'Junior',
     status: 'Rejected',
   },
   {
     id: 8,
     name: 'Rust for Systems Programming',
     type: 'Rust',
-    createdDate: '2025-05-15',
+    time: 50,
+    role: 'Senior',
     status: 'Approved',
   },
   {
     id: 9,
     name: 'C# Backend Development',
     type: 'C#',
-    createdDate: '2025-06-01',
+    time: 42,
+    role: 'Middle',
     status: 'Pending',
   },
   {
     id: 10,
     name: 'C++ Game Engine Development',
     type: 'C++',
-    createdDate: '2025-06-15',
+    time: 65,
+    role: 'Other',
     status: 'Draft',
   },
   {
     id: 11,
     name: 'TypeScript in Depth',
     type: 'TypeScript',
-    createdDate: '2025-07-01',
+    time: 28,
+    role: 'Fresher',
     status: 'Rejected',
   },
   {
     id: 12,
     name: 'Python for Data Analysis',
     type: 'Python',
-    createdDate: '2025-07-15',
+    time: 80,
+    role: 'Middle',
     status: 'Approved',
   },
   {
     id: 13,
     name: 'Modern Web Development with TypeScript',
     type: 'TypeScript',
-    createdDate: '2025-08-01',
+    time: 55,
+    role: 'Intern',
     status: 'Draft',
   },
 ];
