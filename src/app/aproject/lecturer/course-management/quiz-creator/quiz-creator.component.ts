@@ -159,11 +159,35 @@ export class QuizCreatorComponent {
   }
 
   onSubmit(): void {
-    if (this.quizForm.valid) {
-      console.log('Quiz Data:', this.quizForm.value);
-      alert('Quiz đã được tạo thành công! Xem console để biết chi tiết.');
+    if (this.quizForm.valid && this.questions.length > 0) {
+      const quizData = this.quizForm.value;
+      console.log('Quiz Data:', quizData);
+      
+      // Success message with quiz summary
+      const questionCount = this.questions.length;
+      const successMessage = `🎉 Quiz "${quizData.title}" created successfully!\n\n📊 Summary:\n• ${questionCount} question${questionCount > 1 ? 's' : ''}\n• ${quizData.duration} minutes duration\n• ${quizData.passScore}% pass score\n\nCheck the console for detailed quiz data.`;
+      
+      alert(successMessage);
     } else {
-      alert('Vui lòng điền đầy đủ thông tin!');
+      let errorMessage = '⚠️ Please fix the following issues:\n\n';
+      
+      if (this.questions.length === 0) {
+        errorMessage += '• Add at least one question\n';
+      }
+      
+      if (this.quizForm.get('title')?.hasError('required')) {
+        errorMessage += '• Quiz title is required\n';
+      }
+      
+      if (this.quizForm.get('duration')?.hasError('required')) {
+        errorMessage += '• Duration is required\n';
+      }
+      
+      if (this.quizForm.get('passScore')?.hasError('required')) {
+        errorMessage += '• Pass score is required\n';
+      }
+      
+      alert(errorMessage);
       this.markFormGroupTouched(this.quizForm);
     }
   }

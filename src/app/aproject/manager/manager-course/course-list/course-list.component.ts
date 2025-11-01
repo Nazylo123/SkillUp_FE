@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-manager-course-list',
@@ -48,6 +49,8 @@ export class ManagerCourseList implements AfterViewInit {
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+    constructor(private router: Router) {}
+
     ngAfterViewInit() {
         this.data.paginator = this.paginator;
 
@@ -59,6 +62,33 @@ export class ManagerCourseList implements AfterViewInit {
         this.data.filter = this.searchTerm.trim().toLowerCase();
         if (this.data.paginator) {
             this.data.paginator.firstPage();
+        }
+    }
+
+    viewCourseDetail(course: any) {
+        this.router.navigate(['/manager/courses', course.id]);
+    }
+
+    approveCourse(course: any) {
+        if (confirm(`Are you sure you want to approve "${course.name}"?`)) {
+            // Update course status to approved
+            const courseIndex = fakeCourses.findIndex(c => c.id === course.id);
+            if (courseIndex !== -1) {
+                fakeCourses[courseIndex].status = 'Approved';
+                this.data.data = [...fakeCourses]; // Refresh table
+            }
+        }
+    }
+
+    rejectCourse(course: any) {
+        const reason = prompt(`Please provide a reason for rejecting "${course.name}":`);
+        if (reason) {
+            // Update course status to rejected
+            const courseIndex = fakeCourses.findIndex(c => c.id === course.id);
+            if (courseIndex !== -1) {
+                fakeCourses[courseIndex].status = 'Rejected';
+                this.data.data = [...fakeCourses]; // Refresh table
+            }
         }
     }
 }

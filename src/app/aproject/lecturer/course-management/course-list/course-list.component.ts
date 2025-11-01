@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { DialogService } from '../../../../services/dialog.service';
 
 @Component({
     selector: 'app-lecturer-course-list',
@@ -49,7 +50,7 @@ export class LecturerCourseList implements AfterViewInit {
     data = new MatTableDataSource<any>(fakeCourses);
     searchTerm = '';
 
-    constructor(public dialog: MatDialog) {}
+    constructor(public dialog: MatDialog, private dialogService: DialogService) {}
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -79,6 +80,22 @@ export class LecturerCourseList implements AfterViewInit {
           data:{
             id : id
           }
+      });
+    }
+
+    onDelete(course: any) {
+      this.dialogService.confirm({
+        type: 'confirm',
+        title: 'Confirmation',
+        message: `Are you sure you want to Delete?`,
+        confirmText: 'Yes',
+        cancelText: 'No'
+      }).subscribe((ok: boolean) => {
+        if (!ok) {
+          return;
+        }
+        this.data.data = this.data.data.filter((c: any) => c.id !== course.id);
+        this.data.paginator?.firstPage();
       });
     }
 }

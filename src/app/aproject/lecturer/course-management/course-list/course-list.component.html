@@ -84,10 +84,11 @@
                         >
                             <mat-icon>edit</mat-icon>
                         </button>
-                        @if(element.status === 'Draft') {
+                        @if(element.status != 'Approved') {
                             <button
                                 mat-icon-button
                                 matTooltip="Delete"
+                                (click)="onDelete(element)"
                             >
                                 <mat-icon>delete</mat-icon>
                             </button> 

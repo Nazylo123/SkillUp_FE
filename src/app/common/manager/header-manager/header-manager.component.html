@@ -128,16 +128,30 @@
                     <i class="flaticon-calendar"></i> {{ currentDate | date: 'dd MMMM yyyy' }}
                 </div>
             </li>
-            <li>
+            <!-- Login Button - Show when not authenticated -->
+            <li *ngIf="(currentUser$ | async) === null">
+                <button mat-raised-button color="primary" (click)="login()" class="login-btn">
+                    <mat-icon>login</mat-icon>
+                    Login
+                </button>
+            </li>
+            
+            <!-- Profile Menu - Show when authenticated -->
+            <li *ngIf="currentUser$ | async as user">
                 <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="profile-btn main-color border-none bg-transparent position-relative">
                     <img src="img/admin.jpg" class="rounded-circle" alt="admin">
-                    Admin
-                    <span class="fw-semibold">Adison Jack</span>
+                   
+                    <span class="fw-semibold">{{ user.fullName }}</span>
                 </button>
                 <mat-menu class="profile-menu-dropdown" #profileMenu="matMenu" xPosition="before">
                     <ul class="m-0">
                         <li>
-                            <a routerLink="/manager">
+                            <a routerLink="/profile">
+                                <i class="ri-user-3-line"></i> Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a (click)="logout()" class="logout-btn" style="cursor: pointer;">
                                 <i class="ri-shut-down-line"></i> Logout
                             </a>
                         </li>

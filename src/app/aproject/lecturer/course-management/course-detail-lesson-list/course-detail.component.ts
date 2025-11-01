@@ -8,8 +8,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { DocumentDialog } from './document-dialog/document-dialog.component';
 
 interface Lesson {
   id: number;
@@ -27,7 +32,7 @@ const ELEMENT_DATA: Lesson[] = [
   selector: 'app-drag-table',
   templateUrl: './course-detail.component.html',
   styleUrls: ['./course-detail.component.scss'],
-  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, CommonModule, FormsModule, RouterLink]
+  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, CommonModule, FormsModule, RouterLink, MatDialogModule, MatFormFieldModule, MatInputModule, MatDividerModule, MatTooltipModule]
 })
 export class LecturerCourseDetail {
   constructor(public dialog: MatDialog, public router: Router, private route: ActivatedRoute) {}
@@ -67,6 +72,14 @@ export class LecturerCourseDetail {
     });
   }
 
+  openDocumentDialog(): void {
+    this.dialog.open(DocumentDialog, {
+      width: '1000px',
+      enterAnimationDuration: '300ms',
+      exitAnimationDuration: '200ms'
+    });
+  }
+
   search() {}
 }
 
@@ -92,3 +105,4 @@ export class CreateCourse {
     }
 
 }
+

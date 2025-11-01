@@ -70,22 +70,29 @@
                         <button
                             mat-icon-button
                             matTooltip="View Details"
+                            (click)="viewCourseDetail(element)"
                         >
                             <mat-icon>visibility</mat-icon>
                         </button>
-                        <mat-card-content>
-                            <button mat-icon-button [matMenuTriggerFor]="menu1">
-                                <mat-icon>edit</mat-icon>
+                        <!-- <mat-card-content>
+                            <button mat-icon-button [matMenuTriggerFor]="menu1" matTooltip="Course Actions">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #menu1="matMenu">
-                                <button mat-menu-item>
+                                <button mat-menu-item 
+                                        (click)="approveCourse(element)"
+                                        [disabled]="element.status === 'Approved'">
+                                    <mat-icon>check_circle</mat-icon>
                                     <span>Approve</span>
                                 </button>
-                                <button mat-menu-item disabled>
+                                <button mat-menu-item 
+                                        (click)="rejectCourse(element)"
+                                        [disabled]="element.status === 'Rejected'">
+                                    <mat-icon>cancel</mat-icon>
                                     <span>Reject</span>
                                 </button>
                             </mat-menu>
-                        </mat-card-content>
+                        </mat-card-content> -->
                     </div>
                     </td>
                 </ng-container>

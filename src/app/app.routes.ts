@@ -18,6 +18,7 @@ import { ManagerUserList } from './aproject/manager/manager-user/user-list/user-
 import { ManagerUserDetail } from './aproject/manager/manager-user/user-detail/user-detail.component';
 import { ManagerCourseManagement } from './aproject/manager/manager-course/manager-course.component';
 import { ManagerCourseList } from './aproject/manager/manager-course/course-list/course-list.component';
+import { ManagerCourseDetail } from './aproject/manager/manager-course/course-detail/course-detail.component';
 import { Lecturer } from './aproject/lecturer/lecturer.component';
 import { LecturerCourseList } from './aproject/lecturer/course-management/course-list/course-list.component';
 import { LecturerCourseManagement } from './aproject/lecturer/course-management/course-management.component';
@@ -29,6 +30,7 @@ import { SecurityComponent } from './common/security/security.component';
 import { CourseLearnComponent } from './aproject/user/course-learn/course-learn.component';
 import { LoginComponent } from './common/authentication/login/login.component';
 import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
+import { QuizComponent } from './aproject/user/quiz/quiz.component';
 
 
 export const routes: Routes = [
@@ -43,6 +45,7 @@ export const routes: Routes = [
             {path: 'security', component: SecurityComponent},
             {path: 'course-detail/:id', component: CourseDetail},
             {path: 'course/learn/:id', component: CourseLearnComponent},
+            {path: 'quiz/:id', component: QuizComponent},
             {path: 'roadmap', component: RoadMap}
         ]
     },
@@ -77,7 +80,8 @@ export const routes: Routes = [
             },
             {path: 'courses', component: ManagerCourseManagement,
                 children: [
-                    {path: '', component: ManagerCourseList}
+                    {path: '', component: ManagerCourseList},
+                    {path: ':id', component: ManagerCourseDetail}
                 ]
             }
         ]
