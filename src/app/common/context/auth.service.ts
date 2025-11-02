@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ApiAuthServices } from '../../services/auth.service';
 import { UserInfo } from '../../models/user.models';
 
@@ -9,11 +9,9 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserInfo | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private apiAuthService: ApiAuthServices) {
-    this.initializeAuth();
-  }
+  constructor(private apiAuthService: ApiAuthServices) {}
 
-  private initializeAuth() {
+  initializeAuth() {
     const token = this.getToken();
     if (token) {
       this.loadUserInfo();
@@ -50,25 +48,19 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  loadUserInfo(): Observable<any> {
-    return new Observable(observer => {
-      this.apiAuthService.getUserInfo().subscribe(
-        (userInfo: UserInfo) => {
-          this.currentUserSubject.next(userInfo);
-          observer.next(userInfo);
-          observer.complete();
-        },
-        error => {
-          console.error('Error loading user info:', error);
-          this.clearTokens();
-          observer.error(error);
-        }
-      );
-    });
+  loadUserInfo() : void {
+    this.apiAuthService.getUserInfo().subscribe(
+      (userInfo: UserInfo) => {
+        this.currentUserSubject.next(userInfo);
+      },
+      error => {
+        console.error('Error loading user info:', error);
+        this.clearTokens();
+      }
+    );
   }
 
   logout() {
     this.clearTokens();
-    // Redirect to login page or emit logout event
   }
 }

@@ -1,5 +1,4 @@
-import { User } from './aproject/user/user.component';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -8,6 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { environment } from '../environments/environment';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './services/auth.interceptor';
+import { AuthService } from './common/context/auth.service';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -16,7 +16,11 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes), provideClientHydration(withEventReplay()),
         provideAnimationsAsync(),
         provideHttpClient(),
-        provideHttpClient(withInterceptors([authInterceptor]))
+        provideHttpClient(withInterceptors([authInterceptor])),
+        provideAppInitializer(() => {
+          const authService = inject(AuthService);
+          return authService.initializeAuth();
+        })
     ]
 };
 
