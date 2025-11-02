@@ -26,52 +26,94 @@
         </div>
     </div>
   <mat-card-content>
-    <table
-      mat-table
-      [dataSource]="dataSource"
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-      class="drag-table"
-    >
-      <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-      </ng-container>
-
-      <!-- Name Column -->
-      <ng-container matColumnDef="lessonName">
-        <th mat-header-cell *matHeaderCellDef>Lesson Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.lessonName }}</td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let element">
-          <div class="actions-container">
-            <button mat-icon-button matTooltip="View Details" (click)="detailLesson(element)">
-              <mat-icon>visibility</mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="Edit" (click)="openAddEventDialog('300ms', '100ms', element)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="Delete">
-              <mat-icon>delete</mat-icon>
+    <mat-accordion *ngIf="lessons && lessons.length > 0" class="lessons-accordion">
+      <mat-expansion-panel *ngFor="let lesson of lessons; let i = index" class="lesson-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div class="lesson-header-content">
+              <div class="lesson-info">
+                <mat-icon class="lesson-icon">video_library</mat-icon>
+                <div class="lesson-details">
+                  <h4 class="lesson-title">{{lesson.lessonName}}</h4>
+                  <p class="lesson-description">{{lesson.description}}</p>
+                </div>
+              </div>
+              <div class="lesson-meta">
+                <mat-chip color="accent" selected>
+                  <mat-icon matChipAvatar>schedule</mat-icon>
+                  {{lesson.duration}}
+                </mat-chip>
+                <mat-chip color="primary" selected>
+                  <mat-icon matChipAvatar>video_library</mat-icon>
+                  {{lesson.subLessons?.length || 0}} videos
+                </mat-chip>
+              </div>
+              <div class="lesson-actions">
+                <button mat-raised-button color="primary" matTooltip="Add Video" (click)="openSubLessonDialog('300ms', '100ms', lesson); $event.stopPropagation()">
+                  <mat-icon>add</mat-icon>
+                  Add Video
+                </button>
+                <button mat-icon-button matTooltip="Edit Lesson" (click)="openAddEventDialog('300ms', '100ms', lesson); $event.stopPropagation()">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Delete Lesson" (click)="$event.stopPropagation()">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <div class="sub-lessons-container">
+          <h5 class="sub-lessons-title">
+            <mat-icon>playlist_play</mat-icon>
+            Video Lessons
+          </h5>
+          
+          <div *ngIf="lesson.subLessons && lesson.subLessons.length > 0" class="sub-lessons-list">
+            <div *ngFor="let subLesson of lesson.subLessons; let j = index" 
+                 class="sub-lesson-item">
+              <div class="sub-lesson-content">
+                <div class="video-thumbnail">
+                  <mat-icon class="play-icon">play_circle_filled</mat-icon>
+                </div>
+                <div class="sub-lesson-info">
+                  <h6 class="sub-lesson-name">{{subLesson.name}}</h6>
+                  <p class="sub-lesson-description">{{subLesson.description}}</p>
+                  <div class="sub-lesson-meta">
+                    <mat-chip color="accent" selected size="small">
+                      <mat-icon matChipAvatar>schedule</mat-icon>
+                      {{subLesson.duration}}
+                    </mat-chip>
+                  </div>
+                </div>
+              </div>
+              <div class="sub-lesson-actions">
+                <button mat-icon-button matTooltip="Edit Video" (click)="openSubLessonDialog('300ms', '100ms', lesson, subLesson)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Delete Video">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="!lesson.subLessons || lesson.subLessons.length === 0" class="no-sub-lessons">
+            <mat-icon>video_library</mat-icon>
+            <p>No video lessons available for this lesson</p>
+            <button mat-raised-button color="primary" class="add-video-btn" (click)="openSubLessonDialog('300ms', '100ms', lesson)">
+              <mat-icon>add</mat-icon>
+              Add Video
             </button>
           </div>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
-      <!-- thêm cdkDrag cho từng dòng -->
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        cdkDrag
-        class="drag-row example-element-row"
-      ></tr>
-    </table>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    
+    <div *ngIf="!lessons || lessons.length === 0" class="empty-state">
+      <mat-icon>video_library</mat-icon>
+      <p>No lessons available for this course</p>
+    </div>
   </mat-card-content>
 </mat-card>
