@@ -1,3 +1,8 @@
+.tagus-mat-table {
+  width: 100%;
+  min-width: 1000px;
+}
+
 .search {
     margin: 15px 0;
 }
@@ -19,7 +24,7 @@
 }
 
 /* Màu sắc theo role */
-.user {
+.employee {
   background-color: #dbeafe; /* xanh nhạt */
   color: #1e3a8a;
 }
@@ -37,4 +42,35 @@
 .manager {
   background-color: #bbf7d0; /* xanh lá nhạt */
   color: #14532d;
+}
+
+/* Loading styles */
+.loading-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.loading-text {
+  padding: 10px 20px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
+}
+
+.recentOrdersTable {
+  position: relative;
+}
+
+table.loading {
+  opacity: 0.5;
+  pointer-events: none;
 }

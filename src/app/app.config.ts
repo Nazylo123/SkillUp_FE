@@ -39,7 +39,7 @@ export const API_URLS = {
   USER_INFO: BASE_URLS.SKILL_UP + "/Users/me",
 
   //Api User
-  GET_USERS: BASE_URLS.SKILL_UP + "/User/get-all",
+  GET_USERS_ADMIN_LIST: BASE_URLS.SKILL_UP + "/Users",
   GET_USER_BY_ID: BASE_URLS.SKILL_UP + "/User/get-by-id",
   CREATE_USER: BASE_URLS.SKILL_UP + "/User/create",
   UPDATE_USER: BASE_URLS.SKILL_UP + "/User/update",

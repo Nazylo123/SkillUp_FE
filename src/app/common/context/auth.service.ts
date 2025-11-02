@@ -40,6 +40,7 @@ export class AuthService {
   loadUserInfo() : void {
     this.apiAuthService.getUserInfo().subscribe(
       (userInfo: UserInfo) => {
+        console.log('userInfo', userInfo);
         this.currentUserSubject.next(userInfo);
       },
       error => {
