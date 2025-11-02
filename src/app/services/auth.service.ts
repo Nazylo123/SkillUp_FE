@@ -19,7 +19,7 @@ export class ApiAuthServices {
   }
 
   refreshToken(refreshToken: string) {
-    return this.http.post<any>(API_URLS.REFRESH_TOKEN, { refresh_token: refreshToken });
+    return this.http.post<any>(API_URLS.REFRESH_TOKEN, { refreshToken: refreshToken });
   }
 
   logout(): Observable<any> {

@@ -1,7 +1,17 @@
 export interface UserInfo {
-    id: number;
+    userId: number;
     fullName: string;
     email: string;
     roles: string[];
     avatar?: string;
+}
+
+export interface UserAdmin {
+    userId: number;
+    fullName: string;
+    email: string;
+    roles: string[];
+    avatar?: string;
+    createdAt?: string;
+    active?: boolean;
 }

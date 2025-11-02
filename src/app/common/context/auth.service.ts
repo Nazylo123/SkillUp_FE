@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ApiAuthServices } from '../../services/auth.service';
 import { UserInfo } from '../../models/user.models';
+import { TokenService } from './token.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -9,39 +10,27 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserInfo | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private apiAuthService: ApiAuthServices) {}
+  constructor(private apiAuthService: ApiAuthServices, private tokenService: TokenService) {}
 
   initializeAuth() {
-    const token = this.getToken();
-    if (token) {
+    const token = this.tokenService.getToken();
+
+    if (this.tokenService.isTokenExpired(token)) {
+      this.tokenService.refreshTokenObservable$().subscribe(
+        (response: any) => {
+          this.loadUserInfo();
+        },
+        (error: any) => {
+          console.error('Error refreshing token:', error);
+          // this.tokenService.clearTokens();
+        });
+    }else {
       this.loadUserInfo();
     }
   }
 
-  setToken(token: string) {
-    localStorage.setItem('access_token', token);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('access_token');
-  }
-
-  setRefreshToken(refreshToken: string) {
-    localStorage.setItem('refresh_token', refreshToken);
-  }
-
-  getRefreshToken(): string | null {
-    return localStorage.getItem('refresh_token');
-  }
-
-  clearTokens() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    this.currentUserSubject.next(null);
-  }
-
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    return !!this.tokenService.getToken();
   }
 
   getCurrentUser(): UserInfo | null {
@@ -55,12 +44,13 @@ export class AuthService {
       },
       error => {
         console.error('Error loading user info:', error);
-        this.clearTokens();
+        // this.clearTokens();
       }
     );
   }
 
   logout() {
-    this.clearTokens();
+    this.tokenService.clearTokens();
+    this.currentUserSubject.next(null);
   }
 }

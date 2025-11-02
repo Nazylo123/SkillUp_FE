@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { UserAdmin } from '../../../../models/user.models';
 
 @Component({
     selector: 'app-admin-user-list',
@@ -46,7 +47,7 @@ export class AdminUserList implements AfterViewInit {
         'action',
     ];
 
-    data = new MatTableDataSource<any>(fakeUsers);
+    data = new MatTableDataSource<UserAdmin>(fakeUsers);
     searchTerm = '';
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -55,11 +56,11 @@ export class AdminUserList implements AfterViewInit {
         this.data.paginator = this.paginator;
 
         this.data.filterPredicate = (data, filter) =>
-            data.name.toLowerCase().includes(filter);
+            data.fullName.toLowerCase().includes(filter);
     }
 
-    goDetail(element: any) {
-        this.router.navigate([`/admin/users/${element.id}`])
+    goDetail(element: UserAdmin) {
+        this.router.navigate([`/admin/users/${element.userId}`])
     }
 
     search() {
@@ -70,101 +71,101 @@ export class AdminUserList implements AfterViewInit {
     }
 }
 
-const fakeUsers = [
+const fakeUsers: UserAdmin[] = [
     {
-        id: 1,
-        name: 'John Doe',
+        userId: 1,
+        fullName: 'John Doe',
         email: 'john.doe@example.com',
-        role: 'User',
-        status: 'active',
-        joinedDate: '2025-01-15',
+        roles: ['User'],
+        active: true,
+        createdAt: '2025-01-15',
     },
     {
-        id: 2,
-        name: 'Jane Smith',
+        userId: 2,
+        fullName: 'Jane Smith',
         email: 'jane.smith@example.com',
-        role: 'Lecturer',
-        status: 'inactive',
-        joinedDate: '2025-02-20',
+        roles: ['Lecturer'],
+        active: false,
+        createdAt: '2025-02-20',
     },
     {
-        id: 3,
-        name: 'Mike Johnson',
-        email: 'mike.j@example.com',
-        role: 'Admin',
-        status: 'active',
-        joinedDate: '2025-03-10',
+        userId: 3,
+        fullName: 'Mike Johnson',
+        email: 'john.doe@example.com',
+        roles: ['Admin'],
+        active: true,
+        createdAt: '2025-03-10',
     },
     {
-        id: 4,
-        name: 'Sarah Williams',
+        userId: 4,
+        fullName: 'Sarah Williams',
         email: 'sarah.w@example.com',
-        role: 'Manager',
-        status: 'active',
-        joinedDate: '2025-03-15',
+        roles: ['Manager'],
+        active: true,
+        createdAt: '2025-03-15',
     },
     {
-        id: 5,
-        name: 'Alex Brown',
+        userId: 5,
+        fullName: 'Alex Brown',
+        email: 'mike.j@example.com',
+        roles: ['Admin'],
+        active: true,
+        createdAt: '2025-03-10',
+    },
+    {
+        userId: 6,
+        fullName: 'Alex Brown',
         email: 'alex.b@example.com',
-        role: 'User',
-        status: 'inactive',
-        joinedDate: '2025-04-01',
+        roles: ['User'],
+        active: false,
+        createdAt: '2025-04-01',
     },
     {
-        id: 6,
-        name: 'Emily Davis',
-        email: 'emily.d@example.com',
-        role: 'User',
-        status: 'active',
-        joinedDate: '2025-04-15',
-    },
-    {
-        id: 7,
-        name: 'Chris Wilson',
+        userId: 7,
+        fullName: 'Chris Wilson',
         email: 'chris.w@example.com',
-        role: 'Lecturer',
-        status: 'active',
-        joinedDate: '2025-05-01',
+        roles: ['Lecturer'],
+        active: true,
+        createdAt: '2025-05-01',
     },
     {
-        id: 8,
-        name: 'Lisa Anderson',
+        userId: 8,
+        fullName: 'Lisa Anderson',
         email: 'lisa.a@example.com',
-        role: 'User',
-        status: 'active',
-        joinedDate: '2025-05-10',
+        roles: ['User'],
+        active: true,
+        createdAt: '2025-05-10',
     },
     {
-        id: 9,
-        name: 'David Taylor',
+        userId: 9,
+        fullName: 'David Taylor',
         email: 'david.t@example.com',
-        role: 'User',
-        status: 'inactive',
-        joinedDate: '2025-06-01',
+        roles: ['User'],
+        active: false,
+        createdAt: '2025-06-01',
     },
     {
-        id: 10,
-        name: 'Emma Miller',
+        userId: 10,
+        fullName: 'Emma Miller',
         email: 'emma.m@example.com',
-        role: 'Lecturer',
-        status: 'active',
-        joinedDate: '2025-06-15',
+        roles: ['Lecturer'],
+        active: true,
+        createdAt: '2025-06-15',
     },
     {
-        id: 11,
-        name: 'James Wilson',
+        userId: 11,
+        fullName: 'James Wilson',
         email: 'james.w@example.com',
-        role: 'User',
-        status: 'active',
-        joinedDate: '2025-07-01',
+        roles: ['User'],
+        active: true,
+        createdAt: '2025-07-01',
     },
     {
-        id: 12,
-        name: 'Olivia Moore',
+        userId: 12,
+        fullName: 'Olivia Moore',
         email: 'olivia.m@example.com',
-        role: 'User',
-        status: 'active',
-        joinedDate: '2025-07-15',
+        roles: ['User'],
+        active: true,
+        createdAt: '2025-07-15',
     },
 ];

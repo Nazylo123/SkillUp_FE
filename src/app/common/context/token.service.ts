@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, timer, Observable, throwError } from 'rxjs';
 import { ApiAuthServices } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from './auth.service';
+import { tap, catchError, share } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TokenService {
 
   private refreshTokenInProgress = false;
   private refreshTokenSubject = new BehaviorSubject<any>(null);
+  private refreshTokenObservable: Observable<string> | null = null;
   
-  constructor(private apiAuthService: ApiAuthServices, private snack: MatSnackBar, private authService: AuthService) {
-    this.setupAutoRefresh();
-  }
+  constructor(private apiAuthService: ApiAuthServices, private snack: MatSnackBar) {}
 
   /**
    * Kiểm tra xem token có hết hạn không
    */
-  isTokenExpired(token: string): boolean {
+  isTokenExpired(token: string | null): boolean {
     if (!token) return true;
     
     try {
@@ -30,43 +29,52 @@ export class TokenService {
   }
 
   /**
-   * Tự động refresh token khi hết hạn
+   * Refresh token và trả về Observable để có thể đợi kết quả
    */
-  refreshToken(): void {
-    if (this.refreshTokenInProgress) {
-      return;
-    }
-
-    const refreshToken = this.authService.getRefreshToken();
+  refreshTokenObservable$(): Observable<any> {
+    // Nếu không có refresh token, throw error
+    const refreshToken = this.getRefreshToken();
     if (!refreshToken) {
-      this.authService.clearTokens();
-      return;
+      return throwError(() => new Error('No refresh token available'));
     }
 
-    this.refreshTokenInProgress = true;
-    this.apiAuthService.refreshToken(refreshToken || '').subscribe(
-      (response: any) => {
-        // Lưu token mới
-        this.authService.setToken(response.access_token);
+    // Nếu đang refresh, trả về observable hiện tại
+    if (this.refreshTokenObservable) {
+      return this.refreshTokenObservable;
+    }
+
+    // Tạo observable mới cho việc refresh
+    this.refreshTokenObservable = this.apiAuthService.refreshToken(refreshToken).pipe(
+      tap((response: any) => {
+        this.setToken(response.accessToken);
         
-        // Nếu có refresh token mới, lưu lại
-        if (response.refresh_token) {
-          this.authService.setRefreshToken(response.refresh_token);
+        if (response.refreshToken) {
+          this.setRefreshToken(response.refreshToken);
         }
 
         this.refreshTokenInProgress = false;
-        this.refreshTokenSubject.next(response.access_token as string | null);
-      },
-      (error: any) => {
+        this.refreshTokenSubject.next(response.accessToken as string | null);
+        this.setupAutoRefresh();
+        this.refreshTokenObservable = null; // Reset observable
+      }),
+      catchError((error: any) => {
         this.refreshTokenInProgress = false;
-      })
+        this.refreshTokenObservable = null; // Reset observable
+        // this.authService.clearTokens(); // Clear tokens on refresh failure
+        return throwError(() => error);
+      }),
+      share() // Share the observable to prevent multiple API calls
+    );
+
+    this.refreshTokenInProgress = true;
+    return this.refreshTokenObservable;
   }
 
   /**
    * Lấy token hợp lệ, tự động refresh nếu cần
    */
   getValidToken(): void {
-    const token = this.authService.getToken();
+    const token = localStorage.getItem('access_token');
     
     if (!token) {
       this.snack.open('No token available', '', { 
@@ -79,7 +87,7 @@ export class TokenService {
     }
 
     if (this.isTokenExpired(token)) {
-      this.refreshToken();
+      this.refreshTokenObservable$().subscribe();
     }
 
   }
@@ -88,7 +96,7 @@ export class TokenService {
    * Thiết lập auto refresh timer
    */
   setupAutoRefresh(): void {
-    const token = this.authService.getToken();
+    const token = this.getToken();
     if (!token) return;
 
     try {
@@ -97,18 +105,40 @@ export class TokenService {
       const now = Date.now();
       
       // Refresh token 5 phút trước khi hết hạn
-      const refreshTime = expiry - now - (5 * 60 * 1000);
+      const refreshTime = expiry - now - (1.5 * 60 * 1000);
+      console.log('refreshTime', refreshTime);
       
       if (refreshTime > 0) {
         timer(refreshTime).subscribe(() => {
-          this.refreshToken();
-          this.setupAutoRefresh(); // Setup next refresh
+          this.refreshTokenObservable$().subscribe();
         });
+      }else {
+        this.refreshTokenObservable$().subscribe();
       }
-      console.log('Token refreshed automatically');
     } catch (error) {
       console.error('Error setting up auto refresh:', error);
     } 
+  }
+
+  setToken(token: string) {
+    localStorage.setItem('access_token', token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  setRefreshToken(refreshToken: string) {
+    localStorage.setItem('refresh_token', refreshToken);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token');
+  }
+
+  clearTokens() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   }
 
 }

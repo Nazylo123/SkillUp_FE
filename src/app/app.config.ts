@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './services/auth.interceptor';
 import { AuthService } from './common/context/auth.service';
+import { TokenService } from './common/context/token.service';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -19,7 +20,9 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withInterceptors([authInterceptor])),
         provideAppInitializer(() => {
           const authService = inject(AuthService);
-          return authService.initializeAuth();
+          const tokenService = inject(TokenService);
+          authService.initializeAuth();
+          tokenService.setupAutoRefresh();
         })
     ]
 };

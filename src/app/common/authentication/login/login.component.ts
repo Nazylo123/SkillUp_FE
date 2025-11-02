@@ -45,7 +45,7 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false],
+      rememberMe: [true],
     });
   }
 
@@ -66,12 +66,12 @@ export class LoginComponent {
         
         // Lưu access token 
         if (result.accessToken) {
-          this.authService.setToken(result.accessToken);
+          this.tokenService.setToken(result.accessToken);
         }
         
         // Lưu refresh token nếu rememberMe = true
         if (rememberMe && result.refreshToken) {
-          this.authService.setRefreshToken(result.refreshToken);
+          this.tokenService.setRefreshToken(result.refreshToken);
         }
         
         // Load thông tin user
