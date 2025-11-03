@@ -48,7 +48,7 @@ export type ChartOptions = {
 export class ManagerUserDetail {
 
     displayedColumnsEnrolled: string[] = ['name', 'startDate', 'deadline', 'progress'];
-    displayedColumnsCreated: string[] = ['name', 'startDate', 'deadline'];
+    displayedColumnsCreated: string[] = ['name', 'createdAt'];
     dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
     @ViewChild("chart") chart!: ChartComponent;

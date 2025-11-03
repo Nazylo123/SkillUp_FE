@@ -14,7 +14,7 @@
     mat-card-header {
       background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
       padding: 24px;
-      text-align: center;
+      text-align: left;
       border-bottom: 1px solid #e2e8f0;
       
       mat-card-title {
@@ -24,13 +24,8 @@
         margin: 0 0 8px 0;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: left;
         gap: 12px;
-        
-        &::before {
-          content: '🎯';
-          font-size: 32px;
-        }
       }
       
       mat-card-subtitle {
@@ -96,11 +91,6 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        
-        &::before {
-          content: '❓';
-          font-size: 28px;
-        }
       }
       
       button {
@@ -153,11 +143,6 @@
           display: flex;
           align-items: center;
           gap: 8px;
-          
-          &::before {
-            content: '📝';
-            font-size: 20px;
-          }
         }
 
         .delete-question-btn {
@@ -212,11 +197,6 @@
           display: flex;
           align-items: center;
           gap: 8px;
-          
-          &::before {
-            content: '✅';
-            font-size: 18px;
-          }
         }
         
         button {
@@ -466,10 +446,6 @@
       
       mat-card-title {
         font-size: 24px;
-        
-        &::before {
-          font-size: 28px;
-        }
       }
     }
   }
