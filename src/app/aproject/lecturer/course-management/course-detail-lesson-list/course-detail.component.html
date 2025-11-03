@@ -27,12 +27,21 @@
         </div>
     </div>
   <mat-card-content>
-    <mat-accordion *ngIf="lessons && lessons.length > 0" class="lessons-accordion">
-      <mat-expansion-panel *ngFor="let lesson of lessons; let i = index" class="lesson-panel">
+    <mat-accordion *ngIf="lessons && lessons.length > 0" 
+                   class="lessons-accordion"
+                   cdkDropList
+                   [cdkDropListData]="lessons"
+                   (cdkDropListDropped)="dropLesson($event)">
+      <mat-expansion-panel *ngFor="let lesson of lessons; let i = index" 
+                           class="lesson-panel"
+                           cdkDrag>
         <mat-expansion-panel-header>
           <mat-panel-title>
             <div class="lesson-header-content">
               <div class="lesson-info">
+                <mat-icon class="drag-handle lesson-drag-handle" 
+                         cdkDragHandle
+                         matTooltip="Drag to reorder lesson">drag_indicator</mat-icon>
                 <mat-icon class="lesson-icon">video_library</mat-icon>
                 <div class="lesson-details">
                   <h4 class="lesson-title">{{lesson.lessonName}}</h4>
@@ -71,10 +80,18 @@
             Video Lessons
           </h5>
           
-          <div *ngIf="lesson.subLessons && lesson.subLessons.length > 0" class="sub-lessons-list">
+          <div *ngIf="lesson.subLessons && lesson.subLessons.length > 0" 
+               class="sub-lessons-list"
+               cdkDropList
+               [cdkDropListData]="lesson.subLessons"
+               (cdkDropListDropped)="dropSubLesson($event, lesson)">
             <div *ngFor="let subLesson of lesson.subLessons; let j = index" 
-                 class="sub-lesson-item">
+                 class="sub-lesson-item"
+                 cdkDrag>
               <div class="sub-lesson-content">
+                <mat-icon class="drag-handle sub-lesson-drag-handle" 
+                         cdkDragHandle
+                         matTooltip="Drag to reorder video">drag_indicator</mat-icon>
                 <div class="video-thumbnail">
                   <mat-icon class="play-icon">play_circle_filled</mat-icon>
                 </div>

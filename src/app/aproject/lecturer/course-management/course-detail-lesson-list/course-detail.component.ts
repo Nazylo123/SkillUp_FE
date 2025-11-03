@@ -106,6 +106,20 @@ export class LecturerCourseDetail {
     this.dataSource.data = [...prev];
   }
 
+  dropLesson(event: CdkDragDrop<Lesson[]>) {
+    moveItemInArray(this.lessons, event.previousIndex, event.currentIndex);
+    // Trigger change detection by creating a new array reference
+    this.lessons = [...this.lessons];
+  }
+
+  dropSubLesson(event: CdkDragDrop<SubLesson[]>, lesson: Lesson) {
+    if (lesson.subLessons) {
+      moveItemInArray(lesson.subLessons, event.previousIndex, event.currentIndex);
+      // Update the lessons array to trigger change detection
+      this.lessons = [...this.lessons];
+    }
+  }
+
   detailLesson(lesson:any) {
     this.router.navigate([`lecturer/courses/lesson/${lesson.id}`])
   }
