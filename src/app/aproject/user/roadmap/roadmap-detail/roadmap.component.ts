@@ -21,7 +21,6 @@ interface RoadmapPhase {
   status: PhaseStatus;
   description: string;
   progress: number;
-  icon: string;
   milestones: PhaseMilestone[];
 }
 
@@ -34,8 +33,6 @@ interface SkillProgress {
 interface UpcomingEvent {
   title: string;
   date: string;
-  type: 'live' | 'deadline' | 'review';
-  icon: string;
 }
 
 @Component({
@@ -62,7 +59,6 @@ export class RoadMap {
       status: 'completed',
       description: 'Master the basics of web development including HTML, CSS, JavaScript and version control.',
       progress: 100,
-      icon: 'foundation',
       milestones: [
         { title: 'HTML & CSS Basics', status: 'completed' },
         { title: 'JavaScript Essentials', status: 'completed' },
@@ -76,7 +72,6 @@ export class RoadMap {
       status: 'in-progress',
       description: 'Build modern web applications with Angular, components, services and routing.',
       progress: 65,
-      icon: 'web',
       milestones: [
         { title: 'Components & Templates', status: 'completed' },
         { title: 'Services & Dependency Injection', status: 'in-progress' },
@@ -90,7 +85,6 @@ export class RoadMap {
       status: 'upcoming',
       description: 'Dive into state management, testing, performance optimization and best practices.',
       progress: 0,
-      icon: 'rocket_launch',
       milestones: [
         { title: 'State Management', status: 'upcoming' },
         { title: 'Testing & QA', status: 'upcoming' },
@@ -104,7 +98,6 @@ export class RoadMap {
       status: 'upcoming',
       description: 'Build a complete full-stack application and deploy it to production.',
       progress: 0,
-      icon: 'workspace_premium',
       milestones: [
         { title: 'Project Planning', status: 'upcoming' },
         { title: 'Development & Testing', status: 'upcoming' },
@@ -124,20 +117,14 @@ export class RoadMap {
     {
       title: 'Angular Workshop',
       date: 'Nov 08, 2025',
-      type: 'live',
-      icon: 'video_library'
     },
     {
       title: 'Project Submission',
       date: 'Nov 15, 2025',
-      type: 'deadline',
-      icon: 'assignment_turned_in'
     },
     {
       title: 'Code Review Session',
       date: 'Nov 22, 2025',
-      type: 'review',
-      icon: 'rate_review'
     }
   ];
 

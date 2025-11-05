@@ -3,7 +3,6 @@ import { User } from './aproject/user/user.component';
 import { Home } from './aproject/user/home/home.component';
 import { MyCoursesComponent } from './aproject/user/my-courses/my-courses.component';
 import { CourseDetail } from './aproject/user/course-detail/course-detail.component';
-import { RoadMap } from './aproject/user/roadmap/roadmap.component';
 import { Admin } from './aproject/admin/admin.component';
 import { AdminDashboard } from './aproject/admin/admin-dashboard/admin-dashboard.component';
 import { AdminUserManagement } from './aproject/admin/user-management/user-management.component';
@@ -30,6 +29,10 @@ import { CourseLearnComponent } from './aproject/user/course-learn/course-learn.
 import { LoginComponent } from './common/authentication/login/login.component';
 import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
 import { QuizComponent } from './aproject/user/quiz/quiz.component';
+import { ChatComponent } from './aproject/user/chat/chat.component';
+import { ManagerChatComponent } from './aproject/manager/manager-chat/manager-chat.component';
+import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.component';
+import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
 
 
 export const routes: Routes = [
@@ -45,7 +48,9 @@ export const routes: Routes = [
             {path: 'course-detail/:id', component: CourseDetail},
             {path: 'course/learn/:id', component: CourseLearnComponent},
             {path: 'quiz/:id', component: QuizComponent},
-            {path: 'roadmap', component: RoadMap}
+            {path: 'roadmap', component: RoadmapListComponent},
+            {path: 'roadmap/:id', component: RoadMap},
+            {path: 'chat', component: ChatComponent},
         ]
     },
     {
@@ -71,6 +76,7 @@ export const routes: Routes = [
         component: Manager,
         children: [
             {path: '', component: ManagerDashboard},
+            {path: 'chat', component: ManagerChatComponent},
             {path: 'users', component: ManagerUserManagement,
                 children: [
                     {path: '', component: ManagerUserList},
