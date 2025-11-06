@@ -44,7 +44,6 @@
                     </mat-expansion-panel>
 
                     <mat-expansion-panel [expanded]="isActive('/manager/courses')" hideToggle>
-                        
                     <mat-expansion-panel-header routerLink="/manager/courses" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
                         <mat-panel-title>
                             <i class="flaticon-menu-2"></i>
@@ -52,7 +51,16 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     </mat-expansion-panel>
-                    
+
+                    <mat-expansion-panel [expanded]="isActive('/manager/roadmaps')" hideToggle>
+                    <mat-expansion-panel-header routerLink="/manager/roadmaps" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                        <mat-panel-title>
+                            <i class="flaticon-calendar-1"></i>
+                            <span class="title">Road Maps</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+                
                 </mat-accordion>
             </div>
         </div>
