@@ -17,20 +17,69 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="form-group">
-                    <label class="d-block fw-semibold">Video Name *</label>
+                    <label class="d-block fw-semibold">Name Sub Lesson <span class="text-danger">*</span></label>
                     <input 
                         type="text" 
                         class="input-control" 
-                        placeholder="Video Name *"
+                        placeholder="Name Sub Lesson"
                         formControlName="name"
                         [class.error]="isFieldInvalid('name')">
                     <div *ngIf="isFieldInvalid('name')" class="error-message">
-                        Video name is required
+                        Name Sub Lesson is required
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="form-group">
+                    <label class="d-block fw-semibold">Sub Lesson Video <span class="text-danger">*</span></label>
+                    <div class="video-upload-container">
+                        <input 
+                            type="file" 
+                            id="videoFile" 
+                            class="input-control file-input" 
+                            accept="video/*"
+                            (change)="onVideoSelected($event)"
+                            [class.error]="isFieldInvalid('videoFile')"
+                            #fileInput
+                        >
+                        <div class="video-preview-wrapper" *ngIf="!selectedVideo">
+                            <div class="video-placeholder" (click)="fileInput.click()">
+                                <i class="ri-video-add-line"></i>
+                                <span>Click to upload sub lesson video</span>
+                                <small>Support: MP4, AVI, MOV, WMV (Max 100MB)</small>
+                            </div>
+                        </div>
+                        <div class="video-preview-container" *ngIf="selectedVideo && selectedVideoUrl">
+                            <video [src]="selectedVideoUrl" class="preview-video" controls preload="metadata">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-info">
+                                <div class="file-info">
+                                    <mat-icon>movie</mat-icon>
+                                    <span class="file-name">{{ selectedVideo.name }}</span>
+                                    <span class="file-size">{{ getFileSize(selectedVideo.size) }}</span>
+                                </div>
+                                <div class="video-controls">
+                                    <button type="button" class="btn-change-video" (click)="fileInput.click()">
+                                        <i class="ri-edit-2-line"></i> Change Video
+                                    </button>
+                                    <button type="button" class="btn-remove-video" (click)="removeVideo()">
+                                        <i class="ri-delete-bin-line"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="isFieldInvalid('videoFile')" class="error-message">
+                        Video file is required
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="form-group">
@@ -45,47 +94,12 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="form-group">
-                    <label class="d-block fw-semibold">Duration *</label>
-                    <input 
-                        type="text" 
-                        class="input-control" 
-                        placeholder="e.g. 15 min"
-                        formControlName="duration"
-                        [class.error]="isFieldInvalid('duration')">
-                    <div *ngIf="isFieldInvalid('duration')" class="error-message">
-                        Duration is required
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="form-group">
-                    <label class="d-block fw-semibold">Video URL</label>
-                    <input 
-                        type="text" 
-                        class="input-control" 
-                        placeholder="https://example.com/video.mp4"
-                        formControlName="videoUrl">
-                </div>
-            </div>
-        </div>
-
-        <div class="video-preview" *ngIf="subLessonForm.get('videoUrl')?.value">
-            <h6>Video Preview:</h6>
-            <div class="preview-container">
-                <mat-icon class="preview-icon">movie</mat-icon>
-                <span class="preview-url">{{subLessonForm.get('videoUrl')?.value}}</span>
-            </div>
-        </div>
-
         <div class="text-end form-actions">
             <button type="button" class="gray" (click)="close()">
                 <i class="ri-close-fill"></i> 
                 Cancel
             </button>
-            <button type="submit" [disabled]="subLessonForm.invalid" class="primary">
+            <button type="submit" class="primary">
                 <i class="ri-save-fill"></i> 
                 {{ data.subLesson ? 'Update Video' : 'Create Video' }}
             </button>

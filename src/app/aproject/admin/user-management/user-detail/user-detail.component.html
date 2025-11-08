@@ -19,18 +19,18 @@
             </mat-card-header>
             <mat-card-content>
                 <img src="img/user/user12.jpg" class="rounded-circle mb-15" width="150" alt="user">
-                <span class="d-block gray-color fw-medium">&#64;alvaradoturner</span>
+                <span class="d-block gray-color fw-medium">&#64;{{ detail?.fullName }}</span>
                 <ul class="list ps-0 mb-0">
                     <li class="gray-color fw-medium">
                         <a href="tel:+9003526765" class="gray-color d-inline-block position-relative">
                             <i class="flaticon-phone-call"></i>
-                            +9003526765
+                            {{ detail?.phone }}
                         </a>
                     </li>
                     <li class="gray-color fw-medium">
                         <a href="mailto:alvaradoturner&#64;tagus.com" class="gray-color d-inline-block position-relative">
                             <i class="flaticon-envelope"></i>
-                            alvaradoturner&#64;tagus.com
+                            {{ detail?. email }}
                         </a>
                     </li>
                 </ul>
@@ -43,32 +43,32 @@
                 <h5 class="mb-0">Personal Information</h5>
             </mat-card-header>
             <mat-card-content>
-                <span class="d-block fw-semibold mb-5">About Me:</span>
-                <p>Hi I'm Andrew Burns, has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a industry.</p>
+                <h3 class="d-block fw-semibold mb-5">About Me</h3>
+                <!-- <p>Hi I'm Andrew Burns, has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a industry.</p> -->
                 <ul class="list ps-0 mb-0">
                     <li>
-                        <span class="fw-semibold d-inline-block">Full Name:</span>
-                        <span class="gray-color">Andrew Burns</span>
+                        <span class="fw-semibold d-inline-block">Full Name: &nbsp;</span>
+                        <span class="gray-color">{{ detail?.fullName }}</span>
                     </li>
                     <li>
-                        <span class="fw-semibold d-inline-block">Mobile:</span>
-                        <span class="gray-color">(123) 123 1234</span>
+                        <span class="fw-semibold d-inline-block">Mobile: &nbsp;</span>
+                        <span class="gray-color">{{ detail?.phone }}</span>
                     </li>
                     <li>
-                        <span class="fw-semibold d-inline-block">Email:</span>
-                        <span class="gray-color">andrewburns&#64;tagus.com</span>
+                        <span class="fw-semibold d-inline-block">Email: &nbsp;</span>
+                        <span class="gray-color">{{ detail?.email }}</span>
                     </li>
                     <li>
-                        <span class="fw-semibold d-inline-block">Location:</span>
-                        <span class="gray-color">New York, USA</span>
+                        <span class="fw-semibold d-inline-block">Location: &nbsp;</span>
+                        <span class="gray-color">{{ detail.location }}</span>
                     </li>
                     <li>
-                        <span class="fw-semibold d-inline-block">Designation:</span>
-                        <span class="gray-color">Backend Developer</span>
+                        <span class="fw-semibold d-inline-block">Designation: &nbsp;</span>
+                        <span class="gray-color">{{ "Backend Developer" }}</span>
                     </li>
                     <li>
-                        <span class="fw-semibold d-inline-block">Experience:</span>
-                        <span class="gray-color">5 Years</span>
+                        <span class="fw-semibold d-inline-block">Experience: &nbsp;</span>
+                        <span class="gray-color">{{ detail?.level }}</span>
                     </li>
                 </ul>
             </mat-card-content>

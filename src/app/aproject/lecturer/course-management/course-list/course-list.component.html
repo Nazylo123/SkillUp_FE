@@ -3,7 +3,7 @@
         <div class="search">
             <div class="title">
                 <h5>Course Management</h5>
-                <button mat-flat-button (click)="openAddEventDialog('300ms', '100ms')">+ New Course</button>
+                <button mat-flat-button (click)="openAddEditEventDialog('300ms', '100ms')">+ New Course</button>
             </div>
             
             <div >
@@ -80,7 +80,7 @@
                         <button
                             mat-icon-button
                             matTooltip="Edit"
-                            (click)="openAddEventDialog('300ms', '100ms', element.id)"
+                            (click)="openAddEditEventDialog('300ms', '100ms', element.id)"
                         >
                             <mat-icon>edit</mat-icon>
                         </button>

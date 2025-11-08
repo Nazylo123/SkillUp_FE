@@ -30,6 +30,16 @@ nav {
         }
     }
 }
+.avatar-image {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+}
+.remove-avatar-btn {
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 5px 10px !important;
+}
 .component-dark-theme {
     nav {
         ul {

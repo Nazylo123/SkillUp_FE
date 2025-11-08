@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIcon } from "@angular/material/icon";
@@ -18,22 +18,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DocumentDialog } from './document-dialog/document-dialog.component';
 import { CreateSubLesson } from './sub-lesson-dialog/dialog-creat-sublesson';
-
-interface Lesson {
-  id: number;
-  lessonName: string;
-  description?: string;
-  duration?: string;
-  subLessons?: SubLesson[];
-}
-
-interface SubLesson {
-  id: number;
-  name: string;
-  videoUrl?: string;
-  duration: string;
-  description?: string;
-}
+import { Lesson, SubLesson } from '../../../../models/course.models';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const ELEMENT_DATA: Lesson[] = [
   { 
@@ -90,7 +76,6 @@ export class LecturerCourseDetail {
   constructor(public dialog: MatDialog, public router: Router, private route: ActivatedRoute) {}
   id!: string;
 
-  displayedColumns: string[] = ['id', 'lessonName', 'actions'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   searchTerm = '';
   lessons: Lesson[] = ELEMENT_DATA;
@@ -108,14 +93,12 @@ export class LecturerCourseDetail {
 
   dropLesson(event: CdkDragDrop<Lesson[]>) {
     moveItemInArray(this.lessons, event.previousIndex, event.currentIndex);
-    // Trigger change detection by creating a new array reference
     this.lessons = [...this.lessons];
   }
 
   dropSubLesson(event: CdkDragDrop<SubLesson[]>, lesson: Lesson) {
     if (lesson.subLessons) {
       moveItemInArray(lesson.subLessons, event.previousIndex, event.currentIndex);
-      // Update the lessons array to trigger change detection
       this.lessons = [...this.lessons];
     }
   }
@@ -171,21 +154,18 @@ export class LecturerCourseDetail {
     }
 
     if (existingSubLesson) {
-      // Edit existing subLesson
       const index = lesson.subLessons.findIndex(sl => sl.id === existingSubLesson.id);
       if (index !== -1) {
         lesson.subLessons[index] = { ...existingSubLesson, ...subLessonData };
       }
     } else {
-      // Create new subLesson
       const newSubLesson: SubLesson = {
-        id: Date.now(), // Simple ID generation
+        id: Date.now(),
         ...subLessonData
       };
       lesson.subLessons.push(newSubLesson);
     }
 
-    // Update the lessons array to trigger change detection
     this.lessons = [...this.lessons];
   }
 
@@ -195,18 +175,49 @@ export class LecturerCourseDetail {
 @Component({
     selector: 'create-course',
     templateUrl: './dialog-create-lesson.html',
-    imports: [CommonModule]
-    // standalone: false
+    styleUrls: ['./course-detail.component.scss'],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class CreateCourse {
 
     constructor(
-        public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any
+        public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any,
+        private snack: MatSnackBar
     ) {}
 
+    fb = inject(FormBuilder);
+    lessonForm = this.fb.group({
+      name: ['', [Validators.required]],
+      duration: ['', [Validators.required]],
+      description: ['', []],
+    });
+    isEdit = false;
     ngOnInit() {
-      console.log('Received data from parent:', this.data);
-      // bạn có thể truy cập data.courses, data.title, ...
+      if (this.data.lesson) {
+        this.isEdit = true;
+        this.lessonForm.patchValue({
+          name: this.data.lesson.name,
+          description: this.data.lesson.description,
+          duration: this.data.lesson.duration,
+        });
+      }
+    }
+
+    onSubmit() {
+      if (!this.lessonForm.valid) return;
+      if (this.isEdit) {
+        console.log('Edit lesson:', this.lessonForm.value);
+        this.snack.open('Lesson updated successfully', '', {
+          duration: 3000,
+          panelClass: ['success-snackbar', 'custom-snackbar']
+        });
+      } else {
+        console.log('Add lesson:', this.lessonForm.value);
+        this.snack.open('Lesson created successfully', '', {
+          duration: 3000,
+          panelClass: ['success-snackbar', 'custom-snackbar']
+        });
+      }
     }
 
     close(){

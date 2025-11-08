@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { API_URLS } from '../app.config';
-import { UserAdmin, PaginatedResponse } from '../models/user.models';
+import { Observable } from 'rxjs';
+import { UserAdmin, PaginatedResponse, UserDetail } from '../models/user.models';
+import { API_URLS } from '../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,11 @@ export class ApiUserServices {
 
     return this.http.get<PaginatedResponse<UserAdmin>>(API_URLS.GET_USERS_ADMIN_LIST, { params });
   }
+
+  getUserAdminDetail(id: string | number): Observable<UserDetail> {
+    return this.http.get<any>(`${API_URLS.GET_USERS_ADMIN_LIST}/${id}`);
+  }
+
+  
 
 }

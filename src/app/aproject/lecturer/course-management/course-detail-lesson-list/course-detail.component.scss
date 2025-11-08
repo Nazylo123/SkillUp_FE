@@ -519,3 +519,15 @@
     }
   }
 }
+
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+  position: absolute;
+}
+
+.form-group {
+  position: relative;
+}

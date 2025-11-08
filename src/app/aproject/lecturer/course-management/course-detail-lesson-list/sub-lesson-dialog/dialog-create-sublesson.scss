@@ -37,7 +37,7 @@
 
   .lesson-info-section {
     margin-bottom: 24px;
-    padding: 16px;
+    padding: 8px 16px;
     background: #edf2f7;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -104,10 +104,10 @@
         box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
       }
 
-      &.error {
-        border-color: #e53e3e;
-        background: #fed7d7;
-      }
+      // &.error {
+      //   border-color: #e53e3e;
+      //   background: #fed7d7;
+      // }
 
       &::placeholder {
         color: #a0aec0;
@@ -282,6 +282,220 @@
       .input-control {
         padding: 10px 12px;
       }
+    }
+  }
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+  position: absolute;
+}
+
+.form-group {
+  position: relative;
+}
+
+// ==================== VIDEO UPLOAD STYLES ====================
+
+.video-upload-container {
+  position: relative;
+  width: 100%;
+}
+
+.file-input {
+  display: none; // Hide the default file input
+}
+
+.video-preview-wrapper {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.video-placeholder {
+  width: 100%;
+  min-height: 200px;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  transition: all 0.3s ease;
+  padding: 40px 20px;
+  
+  &:hover {
+    border-color: #4299e1;
+    background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+    transform: translateY(-2px);
+  }
+  
+  i {
+    font-size: 56px;
+    color: #4299e1;
+    margin-bottom: 16px;
+  }
+  
+  span {
+    color: #2d3748;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  small {
+    color: #718096;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.4;
+  }
+}
+
+.video-preview-container {
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  .preview-video {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .video-info {
+    background: white;
+    padding: 16px;
+    border-radius: 0 0 12px 12px;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      
+      mat-icon {
+        color: #4299e1;
+        font-size: 20px;
+      }
+      
+      .file-name {
+        color: #2d3748;
+        font-weight: 600;
+        font-size: 14px;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .file-size {
+        color: #718096;
+        font-size: 13px;
+        background: #f7fafc;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 500;
+      }
+    }
+    
+    .video-controls {
+      display: flex;
+      gap: 12px;
+      
+      .btn-change-video,
+      .btn-remove-video {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        
+        i {
+          font-size: 14px;
+        }
+      }
+      
+      .btn-change-video {
+        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        color: white;
+        flex: 1;
+        
+        &:hover {
+          background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+      }
+      
+      .btn-remove-video {
+        background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        color: white;
+        
+        &:hover {
+          background: linear-gradient(135deg, #c53030 0%, #9c1c1c 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+        }
+      }
+    }
+  }
+}
+
+// Video upload responsive adjustments
+@media (max-width: 768px) {
+  .video-placeholder {
+    min-height: 160px;
+    padding: 30px 16px;
+    
+    i {
+      font-size: 44px;
+    }
+    
+    span {
+      font-size: 15px;
+    }
+
+    small {
+      font-size: 13px;
+    }
+  }
+  
+  .video-preview-container .preview-video {
+    max-height: 200px;
+  }
+  
+  .video-controls {
+    flex-direction: column;
+    
+    .btn-change-video,
+    .btn-remove-video {
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+  }
+
+  .file-info {
+    .file-name {
+      font-size: 13px;
+    }
+    
+    .file-size {
+      font-size: 12px;
     }
   }
 }

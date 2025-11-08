@@ -1,17 +1,18 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, Inject, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule, MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DialogService } from '../../../../services/dialog.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-lecturer-course-list',
@@ -72,7 +73,7 @@ export class LecturerCourseList implements AfterViewInit {
       this.router.navigate([`/lecturer/courses/${id}`])
     }
 
-    openAddEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, id? : string | number): void {
+    openAddEditEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, id? : string | number): void {
       this.dialog.open(CreateCourse, {
           width: '600px',
           enterAnimationDuration,
@@ -104,24 +105,118 @@ export class LecturerCourseList implements AfterViewInit {
     selector: 'create-course',
     templateUrl: './dialog-create-course.html',
     styleUrl: './course-list.component.scss',
-    imports: [CommonModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class CreateCourse {
 
+    fb = inject(FormBuilder);
+    courseForm = this.fb.group({
+      name: ['', [Validators.required]],
+      duration: [null as number | null, [Validators.required]],
+      category: ['', [Validators.required]],
+      level: ['', [Validators.required]],
+      description: ['', []],
+      image: [null as File | null, [Validators.required]],
+    });
+
+    isEdit = false;
+    selectedImage: string | null = null;
+    selectedFile: File | null = null;
+
     constructor(
-        public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any
+        public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any,
+        private snack: MatSnackBar
     ) {}
 
     ngOnInit() {
-      console.log('Received data from parent:', this.data);
-      // bạn có thể truy cập data.courses, data.title, ...
+      if (this.data.id) {
+        this.isEdit = true;
+        this.courseForm.patchValue({
+          name: this.data.name,
+          duration: this.data.duration,
+          category: this.data.category,
+          level: this.data.level,
+          description: this.data.description,
+          image: this.data.image,
+        });
+      }
     }
 
     close(){
         this.dialogRef.close(true);
     }
 
-    listLanguages: string[] = [
+    onSubmit(): void {
+      this.courseForm.markAllAsTouched();
+      if (!this.courseForm.valid) return;
+
+      if (this.isEdit) {
+        this.snack.open('Course updated successfully', '', {
+          duration: 3000,
+          panelClass: ['success-snackbar', 'custom-snackbar']
+        });
+      } else {
+        this.snack.open('Course created successfully', '', {
+          duration: 3000,
+          panelClass: ['success-snackbar', 'custom-snackbar']
+        });
+      }
+        
+    }
+
+    onImageSelected(event: Event): void {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            this.snack.open('Please select a valid image file', '', {
+              duration: 3000,
+              panelClass: ['error-snackbar', 'custom-snackbar']
+            });
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            this.snack.open('File size must be less than 5MB', '', {
+              duration: 3000,
+              panelClass: ['error-snackbar', 'custom-snackbar']
+            });
+            return;
+        }
+
+        this.selectedFile = file;
+        
+        // Create preview URL
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.selectedImage = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+
+        // Update form control
+        this.courseForm.patchValue({ image: file });
+      }
+    }
+
+    /**
+     * Remove selected image
+     */
+    removeImage(): void {
+        this.selectedImage = null;
+        this.selectedFile = null;
+        this.courseForm.patchValue({ image: null });
+        
+        // Reset file input
+        const fileInput = document.getElementById('courseImage') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = '';
+        }
+    }
+
+    listCategories: string[] = [
       'JavaScript',
       'Python',
       'Java',
@@ -135,7 +230,7 @@ export class CreateCourse {
       'Other',
     ];
 
-    listRoles: string[] = [
+    listLevels: string[] = [
       'Intern',
       'Fresher',
       'Junior',
