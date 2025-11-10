@@ -31,9 +31,9 @@ import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz
 import { QuizComponent } from './aproject/user/quiz/quiz.component';
 import { ChatComponent } from './aproject/user/chat/chat.component';
 import { ManagerChatComponent } from './aproject/manager/manager-chat/manager-chat.component';
-import { ManagerRoadmapComponent } from './aproject/manager/manager-roadmap/manager-roadmap.component';
-import { RoadmapFormComponent } from './aproject/manager/roadmap-form/roadmap-form.component';
-import { RoadmapDetailComponent } from './aproject/manager/roadmap-detail/roadmap-detail.component';
+import { RoadmapFormComponent } from './aproject/manager/manager-roadmap/roadmap-form/roadmap-form.component';
+import { RoadmapDetailComponent } from './aproject/manager/manager-roadmap/roadmap-detail/roadmap-detail.component';
+import { ManagerRoadmapComponent } from './aproject/manager/manager-roadmap/manager-roadmap/manager-roadmap.component';
 import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.component';
 import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
 

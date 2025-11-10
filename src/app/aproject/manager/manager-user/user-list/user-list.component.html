@@ -22,7 +22,7 @@
                             <img [src]="element.user.userImage" class="rounded-circle" width="45" alt="user">
                             <div class="title">
                                 {{element.user.userName}}
-                                <span class="muted-color fw-normal d-block">{{element.user.userDesignation}}</span>
+                                <!-- <span class="muted-color fw-normal d-block">{{element.user.userDesignation}}</span> -->
                             </div>
                         </div>
                     </td>
@@ -44,9 +44,9 @@
                 </ng-container>
 
                 <!-- Role Column -->
-                <ng-container matColumnDef="role">
+                <ng-container matColumnDef="level">
                     <th mat-header-cell *matHeaderCellDef>Role</th>
-                    <td mat-cell *matCellDef="let element">{{element.role}}</td>
+                    <td mat-cell *matCellDef="let element">{{element.level}}</td>
                 </ng-container>
 
                 <!-- Courses Column -->

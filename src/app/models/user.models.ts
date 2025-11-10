@@ -3,7 +3,7 @@ export interface UserInfo {
     fullName: string;
     email: string;
     roles: string[];
-    avatar?: string;
+    avatarUrl?: string;
 }
 
 export interface UserAdmin {

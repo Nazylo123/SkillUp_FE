@@ -25,8 +25,14 @@ export class ApiUserServices {
 
   getUserAdminDetail(id: string | number): Observable<UserDetail> {
     return this.http.get<any>(`${API_URLS.GET_USERS_ADMIN_LIST}/${id}`);
+  } 
+
+  updateUserRole(id: string | number, role: number): Observable<any> {
+    return this.http.patch<any>(`${API_URLS.UPDATE_USER_ROLE_STATUS}/${id}/roles`, { roleIds : [role] });
   }
 
+  banUser(id: string | number, isActive: boolean): Observable<any> {
+    return this.http.patch<any>(`${API_URLS.UPDATE_USER_ROLE_STATUS}/${id}/activate`, { active : isActive });
+  }
   
-
 }

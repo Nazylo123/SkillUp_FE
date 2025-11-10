@@ -88,14 +88,8 @@
                                 <mat-icon>edit</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item>
-                                    <span>User</span>
-                                </button>
-                                <button mat-menu-item disabled>
-                                    <span>Lecturer</span>
-                                </button>
-                                <button mat-menu-item>
-                                    <span>Manager</span>
+                                <button mat-menu-item *ngFor="let role of roles" (click)="updateRole(element, role.value)" [disabled]="role.label === element.roles[0]">
+                                    <span>{{role.label}}</span>
                                 </button>
                             </mat-menu>
                         </mat-card-content>
@@ -104,13 +98,11 @@
                                 <mat-icon>lock</mat-icon>
                             </button>
                             <mat-menu #menu1="matMenu">
-                                <button mat-menu-item>
-                                    <!-- <i class="ri-lock-line"></i> -->
+                                <button mat-menu-item (click)="banUser(element, false)" [disabled]="!element.active">
                                     <span>Ban</span>
                                 </button>
-                                <button mat-menu-item disabled>
-                                    <!-- <i class="ri-lock-unlock-line"></i> -->
-                                    <span>UnBan </span>
+                                <button mat-menu-item (click)="banUser(element, true)" [disabled]="element.active">
+                                    <span>UnBan</span>
                                 </button>
                             </mat-menu>
                         </mat-card-content>

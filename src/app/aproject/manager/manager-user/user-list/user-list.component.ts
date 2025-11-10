@@ -20,7 +20,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 export class ManagerUserList {
     constructor(private router: Router,public dialog: MatDialog) {}
 
-    displayedColumns: string[] = ['user', 'progress', 'email', 'role', 'courses', 'status', 'action'];
+    displayedColumns: string[] = ['user', 'progress', 'email', 'level', 'courses', 'status', 'action'];
     dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -40,13 +40,12 @@ export class ManagerUserList {
             exitAnimationDuration
         });
     }
-
 }
 
 export interface PeriodicElement {
     id: number;
     email: string;
-    role: string;
+    level: string;
     user: any;
     action: string;
     gender: string;
@@ -64,7 +63,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@lyoung4a',
     },
     email: 'lyoung4a@tagus.com',
-    role: 'Junior',
+    level: 'Junior',
     gender: 'Male',
     courses: 165,
     progress: 86,
@@ -79,7 +78,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@jstevenson5c',
     },
     email: 'jstevenson5c@tagus.com',
-    role: 'Intern',
+    level: 'Intern',
     gender: 'Female',
     courses: 54,
     progress: 20,
@@ -94,7 +93,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@ffrank7e',
     },
     email: 'ffrank7e@tagus.com',
-    role: 'Senior',
+    level: 'Senior',
     gender: 'Male',
     courses: 99,
     progress: 55,
@@ -109,7 +108,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@ppatterson2g',
     },
     email: 'ppatterson2g@tagus.com',
-    role: 'Fresher',
+    level: 'Fresher',
     gender: 'Male',
     courses: 27,
     progress: 76,
@@ -124,7 +123,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@andyjm32',
     },
     email: 'andyjm32@tagus.com',
-    role: 'Middle',
+    level: 'Middle',
     courses: 222,
     gender: 'Female',
     progress: 87,
@@ -139,7 +138,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@taylors32',
     },
     email: 'taylors32@tagus.com',
-    role: 'Senior',
+    level: 'Senior',
     courses: 54,
     progress: 99,
     gender: 'Male',
@@ -154,7 +153,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@davidwabc2',
     },
     email: 'davidwabc2@tagus.com',
-    role: 'Intern',
+    level: 'Intern',
     courses: 165,
     gender: 'Male',
     progress: 34,
@@ -169,7 +168,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@ssmith542',
     },
     email: 'ssmith542@tagus.com',
-    role: 'Leader',
+    level: 'Leader',
     gender: 'Custom',
     progress: 79,
     courses: 200,
@@ -184,7 +183,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@ffrank7e',
     },
     email: 'ffrank7e@tagus.com',
-    role: 'Fresher',
+    level: 'Fresher',
     gender: 'Male',
     courses: 99,
     progress: 55,
@@ -199,7 +198,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@ppatterson2g',
     },
     email: 'ppatterson2g@tagus.com',
-    role: 'Middle',
+    level: 'Middle',
     gender: 'Male',
     courses: 27,
     progress: 76,
@@ -214,7 +213,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@andyjm32',
     },
     email: 'andyjm32@tagus.com',
-    role: 'Junior',
+    level: 'Junior',
     courses: 222,
     gender: 'Female',
     progress: 87,
@@ -229,7 +228,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@taylors32',
     },
     email: 'taylors32@tagus.com',
-    role: 'Fresher',
+    level: 'Fresher',
     courses: 54,
     progress: 99,
     gender: 'Male',
@@ -244,7 +243,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@lyoung4a',
     },
     email: 'lyoung4a@tagus.com',
-    role: 'Senior',
+    level: 'Senior',
     gender: 'Male',
     courses: 165,
     progress: 86,
@@ -259,7 +258,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@jstevenson5c',
     },
     email: 'jstevenson5c@tagus.com',
-    role: 'Intern',
+    level: 'Intern',
     gender: 'Female',
     courses: 54,
     progress: 20,
@@ -274,7 +273,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       userDesignation: '@ffrank7e',
     },
     email: 'ffrank7e@tagus.com',
-    role: 'Leader',
+    level: 'Leader',
     gender: 'Male',
     courses: 99,
     progress: 55,

@@ -4,9 +4,9 @@ const BASE_URLS: any = environment.baseUrl;
 
 const BASE_POINTS = {
   AUTH: BASE_URLS.SKILL_UP + "/Auth",
-  USER: BASE_URLS.SKILL_UP + "/User",
+  USER: BASE_URLS.SKILL_UP + "/Users",
   COURSE: BASE_URLS.SKILL_UP + "/Course",
-  QUIZ: BASE_URLS.SKILL_UP + "/Quiz",
+  QUIZ: BASE_URLS.SKILL_UP + "/Quizzes",
 }
 
 export const API_URLS = {
@@ -19,10 +19,11 @@ export const API_URLS = {
   USER_INFO: BASE_POINTS.USER + "/me",
 
   //Api User
-  GET_USERS_ADMIN_LIST: BASE_POINTS.USER + "/Users",
+  GET_USERS_ADMIN_LIST: BASE_POINTS.USER,
   GET_USER_BY_ID: BASE_POINTS.USER + "/get-by-id",
   CREATE_USER: BASE_POINTS.USER + "/create",
   UPDATE_USER: BASE_POINTS.USER + "/update",
+  UPDATE_USER_ROLE_STATUS: BASE_POINTS.USER ,
   DELETE_USER: BASE_POINTS.USER + "/delete",
 
   //API Course

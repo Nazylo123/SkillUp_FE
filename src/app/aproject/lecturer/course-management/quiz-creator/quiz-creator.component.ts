@@ -38,7 +38,7 @@ export enum QuestionType {
   styleUrls: ['./quiz-creator.component.scss']
 })
 export class QuizCreatorComponent {
-  quizForm: FormGroup;
+  quizForm: FormGroup; 
   QuestionType = QuestionType;
 
   questionTypes = [
