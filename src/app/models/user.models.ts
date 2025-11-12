@@ -37,3 +37,18 @@ export interface PaginatedResponse<T> {
     total: number;
     items: T[];
 }
+
+export interface UserManager {
+    userId: number;
+    fullName: string;
+    email: string;
+    avatarUrl: string;
+    phone: string;
+    location: string;
+    dateOfBirth: string; // ISO datetime string
+    gender: string;
+    level: string;
+    active: boolean;
+    createdAt: string; // ISO datetime string
+    roles: string[];
+}

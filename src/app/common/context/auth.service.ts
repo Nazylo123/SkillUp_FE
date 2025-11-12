@@ -33,6 +33,13 @@ export class AuthService {
     return !!this.tokenService.getToken();
   }
 
+  setAvatarCurrentUser(avatarUrl: string | null): void {
+    const currentUser = this.currentUserSubject.value;
+    if (currentUser) {
+      this.currentUserSubject.next({ ...currentUser, avatarUrl: avatarUrl ?? undefined });
+    }
+  }
+
   getCurrentUser(): UserInfo | null {
     return this.currentUserSubject.value;
   }

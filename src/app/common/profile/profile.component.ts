@@ -15,6 +15,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiUserServices } from '../../services/user.service';
+import { AuthService } from '../context/auth.service';
 @Component({
     selector: 'app-profile',
     imports: [RouterLink, MatCardModule, MatButtonModule, MatMenuModule, RouterLinkActive, MatFormFieldModule, MatInputModule,MatIconModule,
@@ -36,7 +38,9 @@ export class ProfileComponent implements OnDestroy {
         avatar: [null as File | null, [Validators.required]],
     });
 
-    constructor(private apiAuthService: ApiAuthServices, private snack: MatSnackBar) {}
+    constructor(private apiAuthService: ApiAuthServices, private snack: MatSnackBar,
+        private apiUser : ApiUserServices, private authService : AuthService
+    ) {}
 
     userProfile: UserProfile | null = null;
     previewUrl: string | null = null;
@@ -65,19 +69,19 @@ export class ProfileComponent implements OnDestroy {
                 level: userProfile.level || '',
                 avatar: userProfile.avatarUrl ? new File([], userProfile.avatarUrl) : null,
             });
+            this.previewUrl = null;
+            this.selectedFile = null;
         });
     }
 
     onSubmit() {
         this.profileForm.markAllAsTouched();
-        this.snack.open("Update profile successfully", '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
         
-        // if (this.profileForm.valid) {
-        //     this.apiAuthService.updateUserProfile(this.profileForm.value).subscribe((response) => {
-        //         console.log(response);
-        //     });
-        // }
-        console.log(this.profileForm.value);
+        this.apiUser.uploadAvatar(this.selectedFile!).subscribe((response) => {
+            this.snack.open("Update profile successfully", '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
+            this.loadUserProfile();
+            this.authService.setAvatarCurrentUser(response.url);
+        });
     }
 
     onFileSelected(event: Event): void {

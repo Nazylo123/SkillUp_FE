@@ -16,9 +16,8 @@ import {
     ApexTitleSubtitle,
     ApexXAxis,
     ApexFill,
-    NgApexchartsModule
 } from "ng-apexcharts";
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatProgressBar } from "@angular/material/progress-bar";
