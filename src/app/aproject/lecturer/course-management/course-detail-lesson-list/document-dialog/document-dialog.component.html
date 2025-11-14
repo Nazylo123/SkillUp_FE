@@ -73,33 +73,29 @@
         <div *ngIf="filteredDocuments.length > 0" class="documents-grid">
           <div *ngFor="let doc of filteredDocuments" class="document-card">
             <div class="document-header">
-              <mat-icon [ngSwitch]="doc.type" class="doc-type-icon">
+              <mat-icon [ngSwitch]="doc.fileType" class="doc-type-icon">
                 <span *ngSwitchCase="'pdf'">picture_as_pdf</span>
                 <span *ngSwitchCase="'doc'">description</span>
                 <span *ngSwitchCase="'excel'">grid_on</span>
                 <span *ngSwitchCase="'ppt'">slideshow</span>
                 <span *ngSwitchDefault>insert_drive_file</span>
               </mat-icon>
-              <button mat-icon-button class="delete-btn" (click)="deleteDocument(doc.id)" 
+              <button mat-icon-button class="delete-btn" (click)="deleteDocument(doc)" 
                       matTooltip="Delete document">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
             <div class="document-info">
-              <h4 class="document-name">{{doc.name}}</h4>
+              <h4 class="document-name">{{doc.fileName}}</h4>
               <p class="document-meta">
-                <span class="size">{{doc.size}}</span>
-                <span class="date">{{doc.uploadDate | date:'short'}}</span>
+                <span class="size">{{doc.fileSizeFormatted}}</span>
+                <span class="date">{{doc.createdAt | date:'short'}}</span>
               </p>
             </div>
             <div class="document-actions">
               <button mat-button (click)="downloadDocument(doc)" class="action-btn">
                 <mat-icon>download</mat-icon>
                 Download
-              </button>
-              <button mat-button (click)="previewDocument(doc)" class="action-btn">
-                <mat-icon>visibility</mat-icon>
-                Preview
               </button>
             </div>
           </div>

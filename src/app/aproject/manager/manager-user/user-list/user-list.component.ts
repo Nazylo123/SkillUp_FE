@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIcon, MatIconModule } from "@angular/material/icon";
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { PaginatedResponse, UserManager } from '../../../../models/user.models';
+import { UserManager } from '../../../../models/user.models';
 import { ApiUserServices } from '../../../../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 export class ManagerUserList {
   constructor(private router: Router,public dialog: MatDialog, private apiUserServices: ApiUserServices, private snack: MatSnackBar) {}
 
-  displayedColumns: string[] = ['user', 'email', 'level', 'courses', 'status', 'action'];
+  displayedColumns: string[] = ['user', 'email', 'level', 'role', 'status', 'action'];
   dataSource = new MatTableDataSource<UserManager>([]);
   searchTerm = '';
   
@@ -55,7 +55,7 @@ export class ManagerUserList {
     this.apiUserServices.getUserManagerList(page, pageSize, searchTerm).subscribe(
       (res: any) => {
         console.log(res);
-        this.dataSource = res;
+        this.dataSource = res.items;
         this.totalItems = res.total;
         this.currentPage = res.page;
         this.pageSize = res.pageSize;

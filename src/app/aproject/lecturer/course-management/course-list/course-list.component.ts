@@ -5,14 +5,16 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule, MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DialogService } from '../../../../services/dialog.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiCourseServices } from '../../../../services/course.service';
+import { Course, CoursePaginatedResponse } from '../../../../models/course.models';
 
 @Component({
     selector: 'app-lecturer-course-list',
@@ -38,35 +40,41 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class LecturerCourseList implements AfterViewInit {
     displayedColumns: string[] = [
-        'id',
+        'courseId',
         'name',
-        'type',
-        'time',
-        'role',
+        'courseType',
+        'duration',
+        'level',
         'status',
         'action',
     ];
     router = inject(Router)
 
-    data = new MatTableDataSource<any>(fakeCourses);
+    data: Course[] = [];
     searchTerm = '';
+    totalItems = 0;
+    currentPage = 1;
+    pageSize = 10;
 
-    constructor(public dialog: MatDialog, private dialogService: DialogService) {}
+    constructor(public dialog: MatDialog, private dialogService: DialogService, private courseService: ApiCourseServices) {}
+
+    ngOnInit() {
+        this.loadCourses();
+    }
+
+    loadCourses(page: number = 1, pageSize: number = 10, searchTerm?: string) {
+      this.courseService.getCourseListCreator(page, pageSize, searchTerm).subscribe((response: any) => {
+        this.data = response;
+        this.totalItems = response.total;
+      });
+    }
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    ngAfterViewInit() {
-      this.data.paginator = this.paginator;
-
-      this.data.filterPredicate = (data, filter) =>
-        data.name.toLowerCase().includes(filter) || data.email.toLowerCase().includes(filter);
-    }
+    ngAfterViewInit() {}
 
     search() {
-      this.data.filter = this.searchTerm.trim().toLowerCase();
-      if (this.data.paginator) {
-          this.data.paginator.firstPage();
-      }
+      this.loadCourses(this.currentPage, this.pageSize, this.searchTerm);
     }
 
     detailCourse(id: string| number) {
@@ -84,7 +92,7 @@ export class LecturerCourseList implements AfterViewInit {
       });
     }
 
-    onDelete(course: any) {
+    onDelete(course: Course) {
       this.dialogService.confirm({
         type: 'confirm',
         title: 'Confirmation',
@@ -95,10 +103,16 @@ export class LecturerCourseList implements AfterViewInit {
         if (!ok) {
           return;
         }
-        this.data.data = this.data.data.filter((c: any) => c.id !== course.id);
-        this.data.paginator?.firstPage();
+        this.data = this.data.filter((c: Course) => c.courseId !== course.courseId);
+        this.totalItems--;
       });
     }
+
+  onPaginatorChange(event: PageEvent) {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadCourses(this.currentPage, this.pageSize, this.searchTerm);
+  }
 }
 
 @Component({
@@ -161,7 +175,6 @@ export class CreateCourse {
           panelClass: ['success-snackbar', 'custom-snackbar']
         });
       }
-        
     }
 
     onImageSelected(event: Event): void {
@@ -216,7 +229,7 @@ export class CreateCourse {
         }
     }
 
-    listCategories: string[] = [
+    listCourseTypes: string[] = [
       'JavaScript',
       'Python',
       'Java',

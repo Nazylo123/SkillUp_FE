@@ -2,14 +2,40 @@ import { QuestionType } from "../enums/api.enums";
 import { Quiz } from "./quiz.models";
 
 export interface Course {
-    id: number;
+    courseId: number;
     name: string;
     description: string;
-    image: string;
-    duration: number;
-    category: string;
+    status: CourseStatus;
+    courseType: CourseType;
+    imageUrl: string | null;
+    duration: number | null;
     level: string;
+    createdBy: number;
+    createdByName: string;
+    createdAt: string;
+    lessons: Lesson[];
 }
+
+export interface CoursePaginatedResponse<T> {
+    page: number;
+    pageSize: number;
+    total: number;
+    items: T[];
+}
+
+enum CourseStatus {
+    APPROVED = "Approved",
+    PENDING = "Pending",
+    DRAFT = "Draft",
+    REJECTED = "Rejected"
+  }
+  
+  enum CourseType {
+    ONBOARDING = "Onboarding",
+    TECHNICAL = "Technical",
+    SOFT_SKILLS = "SoftSkills",
+    MANAGEMENT = "Management"
+  }
 
 export interface CourseDetail {
     id: number;
@@ -31,8 +57,8 @@ export interface CourseCreateEdit {
 }
 
 export interface Lesson {
-    id: number;
-    lessonName: string;
+    id?: number;
+    title: string;
     description?: string;
     duration?: string;
     subLessons?: SubLesson[];
@@ -45,14 +71,14 @@ export interface SubLesson {
     videoFile?: File;
     duration?: string;
     description?: string;
-    quizId?: number;
+    // quizId?: number;
 }
 
 export interface SubLessonCreateEdit {
     name: string;
     videoFile: File | null;
     description?: string;
-    quizId?: number;
+    // quizId?: number;
 }
 
 

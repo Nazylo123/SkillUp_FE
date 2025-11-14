@@ -23,7 +23,7 @@ export class ApiUserServices {
     return this.http.get<PaginatedResponse<UserAdmin>>(API_URLS.GET_USERS_ADMIN_LIST, { params });
   }
 
-  getUserAdminDetail(id: string | number): Observable<UserDetail> {
+  getUserDetail(id: string | number): Observable<UserDetail> {
     return this.http.get<any>(`${API_URLS.GET_USER_BY_ID}/${id}`);
   } 
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -21,7 +21,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatProgressBar } from "@angular/material/progress-bar";
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
+import { ApiUserServices } from '../../../../services/user.service';
+import { UserDetail } from '../../../../models/user.models';
+import { CommonModule } from '@angular/common';
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -40,7 +43,7 @@ export type ChartOptions = {
 
 @Component({
     selector: 'app-manager-user-detail',
-    imports: [MatCardModule, MatButtonModule, MatMenuModule, ChartComponent, MatCheckboxModule, MatTableModule, MatProgressBar, MatPaginatorModule, RouterLink, MatTabsModule],
+    imports: [CommonModule, MatCardModule, MatButtonModule, MatMenuModule, ChartComponent, MatCheckboxModule, MatTableModule, MatProgressBar, MatPaginatorModule, RouterLink, MatTabsModule],
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.scss']
 })
@@ -52,8 +55,11 @@ export class ManagerUserDetail {
 
     @ViewChild("chart") chart!: ChartComponent;
     public chartOptions: Partial<ChartOptions>;
+    private route = inject(ActivatedRoute);
+    id!: string;
+    detail: UserDetail | null = null;
 
-    constructor() {
+    constructor(private api: ApiUserServices) {
         this.chartOptions = {
             series: [
                 {
@@ -145,6 +151,19 @@ export class ManagerUserDetail {
                 }
             }
         };
+    }
+
+    ngOnInit(): void {
+        this.id = this.route.snapshot.paramMap.get('id')!;
+        this.fetchDetail();
+    }
+
+    private fetchDetail() {
+        this.api.getUserDetail(this.id).subscribe({
+            next: (res) => {
+                this.detail = res;
+            }
+        })
     }
 
     active = true;

@@ -25,14 +25,14 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="d-block fw-semibold">Category<span class="text-danger">*</span></label>
-                    <select class="input-control" formControlName="category" placeholder="Select Category">
-                        <option *ngFor="let category of listCategories" [value]="category">
-                            {{ category }}
+                    <label class="d-block fw-semibold">Course Type<span class="text-danger">*</span></label>
+                    <select class="input-control" formControlName="courseType" placeholder="Select Course Type">
+                        <option *ngFor="let courseType of listCourseTypes" [value]="courseType">
+                            {{ courseType }}
                         </option>
                     </select>
-                    <div *ngIf="courseForm.get('category')?.hasError('required') && courseForm.get('category')?.touched" class="error-message">
-                        Category is required
+                    <div *ngIf="courseForm.get('courseType')?.hasError('required') && courseForm.get('courseType')?.touched" class="error-message">
+                        Course type is required
                     </div>
                 </div>
             </div>

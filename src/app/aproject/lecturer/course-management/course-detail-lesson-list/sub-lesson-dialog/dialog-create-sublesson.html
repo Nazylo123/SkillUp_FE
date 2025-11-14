@@ -6,11 +6,11 @@
         </button>
     </div>
     
-    <form [formGroup]="subLessonForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="subLessonForm" (ngSubmit)="onSubmit()" class="form-container">
         <div class="lesson-info-section">
             <h5 class="section-title">
                 <mat-icon>info</mat-icon>
-                Lesson: {{data.lesson.lessonName}}
+                Lesson: {{data.lesson.title}}
             </h5>
         </div>
 

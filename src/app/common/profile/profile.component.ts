@@ -76,11 +76,17 @@ export class ProfileComponent implements OnDestroy {
 
     onSubmit() {
         this.profileForm.markAllAsTouched();
-        
-        this.apiUser.uploadAvatar(this.selectedFile!).subscribe((response) => {
+        if (this.selectedFile) {
+            this.apiUser.uploadAvatar(this.selectedFile!).subscribe((response) => {
+                this.snack.open("Update profile successfully", '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
+                this.loadUserProfile();
+                this.authService.setAvatarCurrentUser(response.url);
+            });
+        }
+
+        this.apiAuthService.updateUserInfo(this.profileForm.value).subscribe((response) => {
+            this.authService.updateUserInfo(this.profileForm.value);
             this.snack.open("Update profile successfully", '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
-            this.loadUserProfile();
-            this.authService.setAvatarCurrentUser(response.url);
         });
     }
 

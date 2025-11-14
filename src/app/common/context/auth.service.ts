@@ -40,6 +40,12 @@ export class AuthService {
     }
   }
 
+  updateUserInfo(payload: any): void {
+    this.apiAuthService.updateUserInfo(payload).subscribe((response) => {
+      this.loadUserInfo();
+    });
+  }
+
   getCurrentUser(): UserInfo | null {
     return this.currentUserSubject.value;
   }

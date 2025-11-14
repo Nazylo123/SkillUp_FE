@@ -20,11 +20,12 @@ import { DocumentDialog } from './document-dialog/document-dialog.component';
 import { CreateSubLesson } from './sub-lesson-dialog/dialog-creat-sublesson';
 import { Lesson, SubLesson } from '../../../../models/course.models';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiCourseServices } from '../../../../services/course.service';
 
 const ELEMENT_DATA: Lesson[] = [
   { 
     id: 1, 
-    lessonName: 'Introduction about Angular', 
+    title: 'Introduction about Angular', 
     description: 'Basic concepts and getting started with Angular framework',
     duration: '45 min',
     subLessons: [
@@ -35,7 +36,7 @@ const ELEMENT_DATA: Lesson[] = [
   },
   { 
     id: 2, 
-    lessonName: 'Angular HTML Templates', 
+    title: 'Angular HTML Templates', 
     description: 'Learn about Angular templates, data binding and directives',
     duration: '60 min',
     subLessons: [
@@ -46,7 +47,7 @@ const ELEMENT_DATA: Lesson[] = [
   },
   { 
     id: 3, 
-    lessonName: 'Angular SCSS Styling', 
+    title: 'Angular SCSS Styling', 
     description: 'Styling Angular components with SCSS and CSS',
     duration: '40 min',
     subLessons: [
@@ -56,7 +57,7 @@ const ELEMENT_DATA: Lesson[] = [
   },
   { 
     id: 4, 
-    lessonName: 'Angular TypeScript', 
+    title: 'Angular TypeScript', 
     description: 'Working with TypeScript in Angular applications',
     duration: '50 min',
     subLessons: [
@@ -117,7 +118,8 @@ export class LecturerCourseDetail {
         enterAnimationDuration,
         exitAnimationDuration,
         data:{
-          lesson
+          lesson, 
+          courseId: this.id
         }
     });
   }
@@ -126,7 +128,10 @@ export class LecturerCourseDetail {
     this.dialog.open(DocumentDialog, {
       width: '1000px',
       enterAnimationDuration: '300ms',
-      exitAnimationDuration: '200ms'
+      exitAnimationDuration: '200ms',
+      data: {
+        courseId: this.id
+      }
     });
   }
 
@@ -137,7 +142,7 @@ export class LecturerCourseDetail {
         exitAnimationDuration,
         data: {
           lesson,
-          subLesson
+          courseId: this.id
         }
     });
 
@@ -182,42 +187,58 @@ export class CreateCourse {
 
     constructor(
         public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any,
-        private snack: MatSnackBar
+        private snack: MatSnackBar,
+        private courseService: ApiCourseServices,
+        private route: ActivatedRoute
     ) {}
+
+    courseId!: number | string;
 
     fb = inject(FormBuilder);
     lessonForm = this.fb.group({
       name: ['', [Validators.required]],
-      duration: ['', [Validators.required]],
       description: ['', []],
     });
     isEdit = false;
+    
     ngOnInit() {
+      this.courseId = this.data.courseId;
       if (this.data.lesson) {
         this.isEdit = true;
         this.lessonForm.patchValue({
           name: this.data.lesson.name,
           description: this.data.lesson.description,
-          duration: this.data.lesson.duration,
         });
       }
     }
 
     onSubmit() {
+      this.lessonForm.markAllAsTouched();
       if (!this.lessonForm.valid) return;
-      if (this.isEdit) {
-        console.log('Edit lesson:', this.lessonForm.value);
-        this.snack.open('Lesson updated successfully', '', {
-          duration: 3000,
-          panelClass: ['success-snackbar', 'custom-snackbar']
-        });
-      } else {
-        console.log('Add lesson:', this.lessonForm.value);
-        this.snack.open('Lesson created successfully', '', {
-          duration: 3000,
-          panelClass: ['success-snackbar', 'custom-snackbar']
-        });
-      }
+
+      const payload = {
+        title: this.lessonForm.value.name,
+        description: this.lessonForm.value.description,
+      } as Lesson;
+      this.courseService.createLesson(this.courseId, payload).subscribe({
+        next: (lesson: Lesson) => {
+          this.snack.open('Lesson created successfully', '', {
+            duration: 3000,
+            panelClass: ['success-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+          this.dialogRef.close(true);
+        },
+        error: (error: any) => {
+          this.snack.open('Failed to create lesson', '', {
+            duration: 3000,
+            panelClass: ['error-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+        }
+      });
     }
 
     close(){

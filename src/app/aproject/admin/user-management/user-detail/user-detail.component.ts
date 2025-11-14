@@ -27,7 +27,7 @@ export class AdminUserDetail {
     }
     
     private fetchDetail() {
-        this.api.getUserAdminDetail(this.id).subscribe({
+        this.api.getUserDetail(this.id).subscribe({
             next: (res) => {
                 this.detail = {
                     ...res,

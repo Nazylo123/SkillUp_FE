@@ -16,17 +16,6 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12"> 
-                <div class="form-group">
-                    <label class="d-block fw-semibold">Duration <span class="text-danger">*</span></label>
-                    <input type="text" class="input-control" placeholder="Duration" formControlName="duration">
-                    <div *ngIf="lessonForm.get('duration')?.hasError('required') && lessonForm.get('duration')?.touched" class="error-message">
-                        Duration is required
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="form-group">
                     <label class="d-block fw-semibold">Description</label>
@@ -36,7 +25,7 @@
         </div>
         <div class="text-end">
             <button type="button" class="gray" (click)="close()"><i class="ri-close-fill"></i> Cancel</button>
-            <button type="button"><i class="ri-add-fill"></i> Save</button>
+            <button type="button" (click)="onSubmit()"> <i class="ri-add-fill"></i> Save</button>
         </div>
     </form>
 </div>

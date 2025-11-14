@@ -1,6 +1,12 @@
 .create-sublesson-dialog-box {
   padding: 0;
   width: 100%;
+  overflow-y: auto;
+
+  .form-container {
+    overflow-y: scroll;
+    height: 85vh;
+  }
 
   .title {
     padding: 20px 24px;
