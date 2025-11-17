@@ -3,7 +3,7 @@ import { Quiz } from "./quiz.models";
 
 export interface Course {
     courseId: number;
-    name: string;
+    courseName: string;
     description: string;
     status: CourseStatus;
     courseType: CourseType;
@@ -38,39 +38,43 @@ enum CourseStatus {
   }
 
 export interface CourseDetail {
-    id: number;
+    courseId: number;
     name: string;
     description: string;
-    image: string;
+    imageUrl: string;
     duration: number;
-    category: string;
-    level: string;
+    courseType: string;
+    status: string;
+    targetLevel: string;
 }
 
 export interface CourseCreateEdit {
     name: string;
     description?: string;
-    image: File | null;
+    courseType: string;
+    targetLevel: string;
     duration: number;
-    category: string;
-    level: string;
+    imageUrl: File;
 }
 
 export interface Lesson {
-    id?: number;
+    lessonId?: number;
     title: string;
     description?: string;
     duration?: string;
+    courseId?: number;
     subLessons?: SubLesson[];
 }
 
 export interface SubLesson {
     id: number;
-    name: string;
+    title: string;
     videoUrl?: string;
     videoFile?: File;
     duration?: string;
     description?: string;
+    orderIndex?: number;
+    contentUrl?: string;
     // quizId?: number;
 }
 
