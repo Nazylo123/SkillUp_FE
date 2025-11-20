@@ -5,6 +5,56 @@ export interface QuestionTypeOption {
     label: string;
 }
 
+// ========== BACKEND API MODELS ==========
+
+// Answer Option (from backend)
+export interface AnswerOption {
+    optionId?: number;
+    questionId?: number;
+    content: string;
+    isCorrect: boolean;
+}
+
+// Question (from backend)
+export interface Question {
+    questionId?: number;
+    quizId?: number;
+    title: string;
+    questionType: string;
+    points: number;
+    orderIndex: number;
+    answerOptions: AnswerOption[];
+}
+
+// Quiz Create Request
+export interface QuizCreateRequest {
+    courseId: number;
+    title: string;
+    passScore: number;
+    attemptLimit: number;
+    questions: Question[];
+}
+
+// Quiz Response (from backend)
+export interface QuizResponse {
+    quizId: number;
+    courseId: number;
+    courseName: string;
+    title: string;
+    passScore: number;
+    attemptLimit: number;
+    createdAt: string;
+    updatedAt: string;
+    questions: Question[];
+}
+
+// Batch Create Questions Request
+export interface BatchCreateQuestionsRequest {
+    questions: Question[];
+}
+
+// ========== LEGACY UI MODELS (keep for compatibility) ==========
+
 export interface QuizAnswer {
     text: string;
     isCorrect: boolean;
