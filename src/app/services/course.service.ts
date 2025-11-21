@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URLS } from '../constants';
-import { Course, CourseCreateEdit, CoursePaginatedResponse, CourseDetail, Lesson, SubLesson, SubLessonCreateEdit, CourseUserView } from '../models/course.models';
+import { Course, CourseCreateEdit, CoursePaginatedResponse, CourseDetail, Lesson, SubLesson, SubLessonCreateEdit, CourseUserView, reorder } from '../models/course.models';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class ApiCourseServices {
 
   getCourseListManager(page: number = 1, pageSize: number = 10, searchTerm?: string): Observable<CoursePaginatedResponse<Course>> {
     let params = new HttpParams()
-      .set('pageNumber', page.toString())
+      .set('page', page.toString())
       .set('pageSize', pageSize.toString());
     
     if (searchTerm && searchTerm.trim()) {
@@ -42,8 +42,8 @@ export class ApiCourseServices {
     const formData = new FormData();
     formData.append('Name', course.name);
     formData.append('Description', course.description as string);
-    formData.append('CourseType', course.courseType);
-    formData.append('TargetLevel', course.targetLevel);
+    formData.append('CourseTypeId', course.courseTypeId.toString());
+    formData.append('TargetLevelId', course.targetLevelId.toString());
     formData.append('Duration', course.duration.toString());
     formData.append('Image', course.imageUrl);
     return this.http.post<Course>(API_URLS.COURSE, formData);
@@ -53,8 +53,8 @@ export class ApiCourseServices {
     const formData = new FormData();
     formData.append('Name', course.name);
     formData.append('Description', course.description as string);
-    formData.append('CourseType', course.courseType);
-    formData.append('TargetLevel', course.targetLevel);
+    formData.append('CourseTypeId', course.courseTypeId.toString());
+    formData.append('TargetLevelId', course.targetLevelId.toString());
     formData.append('Duration', course.duration.toString());
     formData.append('Image', course.imageUrl);
     return this.http.put<Course>(`${API_URLS.COURSE}/${courseId}`, formData);
@@ -118,7 +118,11 @@ export class ApiCourseServices {
     return this.http.delete<void>(`${API_URLS.SUB_LESSON}/${subLessonId}`);
   }
 
-  getCoursesUserView(): Observable<CourseUserView[]> {
+  getCoursesUserView(): Observable<CourseUserView[]> {    
     return this.http.get<CourseUserView[]>(API_URLS.GET_COURSES_USER_VIEW);
+  }
+
+  reorderLessons(reorder: reorder): Observable<any> {
+    return this.http.patch<any>(API_URLS.REORDER_LESSONS, reorder);
   }
 }

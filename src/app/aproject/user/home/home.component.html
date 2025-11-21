@@ -7,13 +7,13 @@
         <mat-card class="mb-25 text-center tagus-card w-100">
             <mat-card-content>
                 <div>
-                    <img [src]="course.imageUrl ?? 'img/user/user12.jpg'" class="mb-15 img-course" width="300" alt="user">
+                    <img [src]="course.imageUrl || 'img/user/user12.jpg'" class="mb-15 img-course" width="300" alt="user">
                     <h5 class="mb-5 fw-semibold">{{course.courseName}}</h5>
                 </div>
                 <div>
                     <span class="d-block muted-color">{{course.level}}</span>
                     <div class="btn-box">
-                        <button mat-flat-button class="gray" (click)="detailCourse(course)">Enroll Now</button>
+                        <button mat-flat-button class="gray" (click)="detailCourse(course)" >{{course.isEnrolled ? 'Continue' : 'Enroll Now'}}</button>
                     </div>
                     <ul class="list d-flex align-items-center justify-content-space-between text-center mb-0">
                         <li class="muted-color fw-medium down">

@@ -11,6 +11,7 @@ const BASE_POINTS = {
   QUIZ: BASE_URLS.SKILL_UP + "/Quizzes",
   DOCUMENT: BASE_URLS.SKILL_UP + "/Documents",
   AI: BASE_URLS.SKILL_UP + "/AI",
+  LOOKUP: BASE_URLS.SKILL_UP + "/Lookups",
 }
 
 export const API_URLS = {
@@ -38,6 +39,7 @@ export const API_URLS = {
   //API Lesson
   GET_LESSONS: BASE_POINTS.COURSE,
   LESSON: BASE_POINTS.LESSON,
+  REORDER_LESSONS: BASE_POINTS.LESSON + "/reorder",
 
   //API SubLesson
   SUB_LESSON: BASE_POINTS.SUB_LESSON,
@@ -48,7 +50,6 @@ export const API_URLS = {
   GET_COURSES: BASE_POINTS.COURSE + "/get-all",
   COURSE: BASE_POINTS.COURSE,
   GET_COURSES_USER_VIEW: BASE_POINTS.COURSE + "/user/view",
-
 
   //API Quiz
   GET_QUIZZES: BASE_POINTS.QUIZ + "/get-all",
@@ -67,4 +68,8 @@ export const API_URLS = {
 
   //API AI
   GET_AI_CHAT: BASE_POINTS.AI + "/chat",
+
+  //API Lookup
+  GET_COURSE_TYPES: BASE_POINTS.LOOKUP + "/course-types",
+  GET_LEVELS: BASE_POINTS.LOOKUP + "/user-levels",
 }

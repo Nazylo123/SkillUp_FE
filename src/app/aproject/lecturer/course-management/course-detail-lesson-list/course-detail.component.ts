@@ -86,20 +86,62 @@ export class LecturerCourseDetail {
     });
   }
 
-  drop(event: CdkDragDrop<Lesson[]>) {
-    const prev = this.dataSource.data;
-    moveItemInArray(prev, event.previousIndex, event.currentIndex);
-    this.dataSource.data = [...prev];
-  }
-
   dropLesson(event: CdkDragDrop<Lesson[]>) {
+    // Lưu orderIndex của 2 lesson cần swap
+    const prev = this.lessons[event.previousIndex];
+    const current = this.lessons[event.currentIndex];
+
+    const previousOrderIndex = prev.orderIndex;
+    const currentOrderIndex = current.orderIndex;
+    
+    // Move items in array
     moveItemInArray(this.lessons, event.previousIndex, event.currentIndex);
-    this.lessons = [...this.lessons];
+    
+    // Swap orderIndex của 2 lesson
+    current.orderIndex = previousOrderIndex;
+    prev.orderIndex = currentOrderIndex;
+    
+    this.courseService.reorderLessons({
+      courseId: Number(this.id),
+      lessons: this.lessons.map((lesson: Lesson) => ({
+        lessonId: lesson.lessonId as number,
+        orderIndex: lesson.orderIndex as number
+      }))
+    }).subscribe({
+      next: () => {
+        this.snack.open('Lessons reordered successfully', '', {
+          duration: 3000,
+          panelClass: ['success-snackbar', 'custom-snackbar'],
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      },
+      error: (error: any) => {
+        this.snack.open('Failed to reorder lessons', '', {
+          duration: 3000,
+          panelClass: ['error-snackbar', 'custom-snackbar'],
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      }
+    });
   }
 
   dropSubLesson(event: CdkDragDrop<SubLesson[]>, lesson: Lesson) {
     if (lesson.subLessons) {
+      // Lưu orderIndex của 2 sub-lesson cần swap
+      const previousOrderIndex = lesson.subLessons[event.previousIndex].orderIndex;
+      const currentOrderIndex = lesson.subLessons[event.currentIndex].orderIndex;
+      
+      // Move items in array
       moveItemInArray(lesson.subLessons, event.previousIndex, event.currentIndex);
+      
+      // Swap orderIndex của 2 sub-lesson
+      if (previousOrderIndex !== undefined && currentOrderIndex !== undefined) {
+        lesson.subLessons[event.currentIndex].orderIndex = previousOrderIndex;
+        lesson.subLessons[event.previousIndex].orderIndex = currentOrderIndex;
+      }
+      
       this.lessons = [...this.lessons];
     }
   }

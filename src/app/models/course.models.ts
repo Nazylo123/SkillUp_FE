@@ -1,6 +1,3 @@
-import { QuestionType } from "../enums/api.enums";
-import { Quiz } from "./quiz.models";
-
 export interface Course {
     courseId: number;
     courseName: string;
@@ -41,42 +38,59 @@ export interface CourseDetail {
     courseId: number;
     name: string;
     description: string;
+    status: string;
+    courseType: string;
+    courseTypeId: number;
+    targetLevel: string;
+    targetLevelId: number;
     imageUrl: string;
     duration: number;
-    courseType: string;
-    status: string;
-    targetLevel: string;
+    createdBy: number;
+    createdByName: string;
+    createdAt: string;
+    isEnrolled: boolean;
+    lessons: Lesson[];
+    quizzes: Quiz;
+    documents: DocumentItem[];
 }
+
+
 
 export interface CourseCreateEdit {
     name: string;
     description?: string;
-    courseType: string;
-    targetLevel: string;
+    courseTypeId: number | string;
+    targetLevelId: number | string;
     duration: number;
     imageUrl: File;
 }
 
 export interface Lesson {
-    lessonId?: number;
+    lessonId: number;
+    courseId: number;
     title: string;
-    description?: string;
-    duration?: string;
-    courseId?: number;
-    subLessons?: SubLesson[];
+    description: string;
+    contentType: string;
+    url: string;
+    publicId: string;
+    orderIndex: number;
+    totalDuration: number;
+    subLessons: SubLesson[];
 }
 
 export interface SubLesson {
     id: number;
     title: string;
-    videoUrl?: string;
-    videoFile?: File;
-    duration?: string;
-    description?: string;
-    orderIndex?: number;
-    contentUrl?: string;
-    fileSizeBytes?: number;
-    // quizId?: number;
+    description: string;
+    duration: number;
+    orderIndex: number;
+    contentType: string;
+    contentUrl: string;
+    publicId: string;
+    fileSizeBytes: number;
+    createdBy: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface SubLessonCreateEdit {
@@ -114,4 +128,60 @@ export interface CourseUserView {
     totalDuration: number;
     creatorName: string;
     imageUrl: string;
+    isEnrolled: boolean;
 }
+
+export interface reorder {
+    courseId: number;
+    lessons: {
+        lessonId: number;
+        orderIndex: number;
+    }[]
+}
+
+export interface DocumentItem {
+    documentId: number;
+    courseId: number;
+    courseName: string;
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+    fileSizeFormatted: string;
+    fileUrl: string;
+    publicId: string;
+    createdBy: number;
+    createdByName: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+  
+  /* ------------ QUIZZES ------------ */
+  
+  export interface Quiz {
+    quizId: number;
+    courseId: number;
+    courseName: string;
+    title: string;
+    passScore: number;
+    attemptLimit: number;
+    createdAt: string;
+    updatedAt: string;
+    questions: Question[];
+  }
+  
+  export interface Question {
+    questionId: number;
+    quizId: number;
+    title: string;
+    questionType: string;
+    points: number;
+    orderIndex: number;
+    answerOptions: AnswerOption[];
+  }
+  
+  export interface AnswerOption {
+    optionId: number;
+    questionId: number;
+    content: string;
+    isCorrect: boolean;
+  }

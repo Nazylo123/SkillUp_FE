@@ -11,6 +11,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ApiCourseServices } from '../../../../services/course.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-manager-course-list',
@@ -52,7 +53,7 @@ export class ManagerCourseList implements AfterViewInit {
     pageSize = 10;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(private router: Router, private courseService: ApiCourseServices) {}
+    constructor(private router: Router, private courseService: ApiCourseServices, private snack: MatSnackBar) {}
 
     ngAfterViewInit() {
         this.data.paginator = this.paginator;
@@ -66,12 +67,20 @@ export class ManagerCourseList implements AfterViewInit {
     loadCourses() {
         this.courseService.getCourseListManager(this.currentPage, this.pageSize, this.searchTerm).subscribe({
             next: (response: any) => {
+                console.log(response);
                 this.data.data = response.items || [];
                 this.totalItems = response.total || 0;
                 this.currentPage = response.page || 1;
                 this.pageSize = response.pageSize || 10;
             },
             error: (error: any) => {
+                this.snack.open(error.error || 'Failed to load courses', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar', 'custom-snackbar'],
+                    horizontalPosition: 'right',
+                    verticalPosition: 'top'
+                });
+                this.data.data = [];
                 this.totalItems = 0;
             }
         });
@@ -93,24 +102,10 @@ export class ManagerCourseList implements AfterViewInit {
         this.router.navigate(['/manager/courses', course.courseId]);
     }
 
-    onPageChange(p: number) {
-        if (p < 1) return;
-        this.currentPage = p;
-        this.loadCourses();
-      }
-    
-      onPageSizeChange(s: number) {
-        this.pageSize = s;
-        this.currentPage = 1;
-        this.loadCourses();
-      }
-    
     onPaginatorChange(event: PageEvent) {
-        if (event.pageSize !== this.pageSize) {
-            this.onPageSizeChange(event.pageSize);
-          } else {
-            this.onPageChange(event.pageIndex + 1);
-          }
-    }
+        this.currentPage = event.pageIndex + 1;
+        this.pageSize = event.pageSize;
+        this.loadCourses();
+      }
 
 }
