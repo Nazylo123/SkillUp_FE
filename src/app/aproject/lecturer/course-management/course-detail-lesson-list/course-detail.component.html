@@ -109,7 +109,7 @@
                 <button mat-icon-button matTooltip="Edit Video" (click)="openSubLessonDialog('300ms', '100ms', lesson, subLesson)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button matTooltip="Delete Video" >
+                <button mat-icon-button matTooltip="Delete Video" (click)="deleteSubLesson(subLesson.id || 0); $event.stopPropagation()">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>

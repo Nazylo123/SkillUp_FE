@@ -75,6 +75,7 @@ export interface SubLesson {
     description?: string;
     orderIndex?: number;
     contentUrl?: string;
+    fileSizeBytes?: number;
     // quizId?: number;
 }
 
@@ -95,4 +96,22 @@ export interface CourseDetailManager {
     category: string;
     level: string;
     quizzes?: Quiz[];
+}
+
+export interface SubLessonCreateEdit {
+    title: string;
+    videoUrl?: string;
+    videoFile: File | null;
+    duration?: string;
+    description?: string;
+}
+
+export interface CourseUserView {
+    courseId: number;
+    courseName: string;
+    level: string;
+    totalLesson: number;
+    totalDuration: number;
+    creatorName: string;
+    imageUrl: string;
 }

@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -39,7 +39,6 @@ export class LecturerCourseDetail {
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id')!;
-    console.log(this.id);
     this.getLessons();
   }
 
@@ -148,13 +147,58 @@ export class LecturerCourseDetail {
         exitAnimationDuration,
         data: {
           lesson,
-          courseId: this.id
+          courseId: this.id,
+          load: () => this.getLessons(),
+          subLesson
         }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.handleSubLessonResult(lesson, result, subLesson);
+      }
+    });
+  }
+
+  deleteSubLesson(subLessonId: number | string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      data: {
+        type: 'warning',
+        title: 'Delete Sub Lesson',
+        message: 'Are you sure you want to delete this sub lesson?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        destructive: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.courseService.deleteSubLesson(subLessonId).subscribe({
+          next: () => {
+            this.lessons = this.lessons.map((lesson: Lesson) => {
+              if (lesson.subLessons) {
+                lesson.subLessons = lesson.subLessons.filter(subLesson => subLesson.id !== subLessonId);
+              }
+              return lesson;
+            });
+            this.snack.open('Sub lesson deleted successfully', '', {
+              duration: 3000,
+              panelClass: ['success-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
+          },
+          error: (error: any) => {
+            this.snack.open('Failed to delete sub lesson', '', {
+              duration: 3000,
+              panelClass: ['error-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
+          }
+        });
       }
     });
   }
@@ -191,90 +235,89 @@ export class LecturerCourseDetail {
 })
 export class CreateCourse {
 
-    constructor(
-        public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any,
-        private snack: MatSnackBar,
-        private courseService: ApiCourseServices,
-    ) {}
+  constructor(
+    public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any,
+    private snack: MatSnackBar,
+    private courseService: ApiCourseServices,
+  ) {}
 
-    courseId!: number | string;
-    lessonId!: number | string;
+  courseId!: number | string;
+  lessonId!: number | string;
 
-    fb = inject(FormBuilder);
-    lessonForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: ['', []],
-    });
-    isEdit = false;
-    
-    ngOnInit() {
-      console.log(this.data);
-      this.courseId = this.data.courseId;
-      this.lessonId = this.data.lesson?.lessonId;
-      if (this.lessonId) {
-        this.isEdit = true;
-        this.courseService.detailLesson(this.lessonId).subscribe((lesson: Lesson) => {
-          this.lessonForm.patchValue({
-            name: lesson.title,
-            description: lesson.description,
+  fb = inject(FormBuilder);
+  lessonForm = this.fb.group({
+    name: ['', [Validators.required]],
+    description: ['', []],
+  });
+  isEdit = false;
+  
+  ngOnInit() {
+    this.courseId = this.data.courseId;
+    this.lessonId = this.data.lesson?.lessonId;
+    if (this.lessonId) {
+      this.isEdit = true;
+      this.courseService.detailLesson(this.lessonId).subscribe((lesson: Lesson) => {
+        this.lessonForm.patchValue({
+          name: lesson.title,
+          description: lesson.description,
+        });
+      });
+    }
+  }
+
+  onSubmit() {
+    this.lessonForm.markAllAsTouched();
+    if (!this.lessonForm.valid) return;
+
+    const payload = {
+      title: this.lessonForm.value.name,
+      description: this.lessonForm.value.description,
+    } as Lesson;
+    if (this.isEdit) {
+      this.courseService.updateLesson(this.lessonId as number, payload).subscribe({
+        next: (lesson: Lesson) => {
+          this.snack.open('Lesson updated successfully', '', {
+            duration: 3000,
+            panelClass: ['success-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
           });
-        });
-      }
+          this.dialogRef.close(true);
+        },
+        error: (error: any) => {
+          this.snack.open('Failed to update lesson', '', {
+            duration: 3000,
+            panelClass: ['error-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+        }
+      });
+    } else {
+      this.courseService.createLesson(this.courseId, payload).subscribe({
+        next: (lesson: Lesson) => {
+          this.snack.open('Lesson created successfully', '', {
+            duration: 3000,
+            panelClass: ['success-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+          this.dialogRef.close(true);
+        },
+        error: (error: any) => {
+          this.snack.open('Failed to create lesson', '', {
+            duration: 3000,
+            panelClass: ['error-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+        }
+      });
     }
+  }
 
-    onSubmit() {
-      this.lessonForm.markAllAsTouched();
-      if (!this.lessonForm.valid) return;
-
-      const payload = {
-        title: this.lessonForm.value.name,
-        description: this.lessonForm.value.description,
-      } as Lesson;
-      if (this.isEdit) {
-        this.courseService.updateLesson(this.lessonId as number, payload).subscribe({
-          next: (lesson: Lesson) => {
-            this.snack.open('Lesson updated successfully', '', {
-              duration: 3000,
-              panelClass: ['success-snackbar', 'custom-snackbar'],
-              horizontalPosition: 'right',
-              verticalPosition: 'top'
-            });
-            this.dialogRef.close(true);
-          },
-          error: (error: any) => {
-            this.snack.open('Failed to update lesson', '', {
-              duration: 3000,
-              panelClass: ['error-snackbar', 'custom-snackbar'],
-              horizontalPosition: 'right',
-              verticalPosition: 'top'
-            });
-          }
-        });
-      } else {
-        this.courseService.createLesson(this.courseId, payload).subscribe({
-          next: (lesson: Lesson) => {
-            this.snack.open('Lesson created successfully', '', {
-              duration: 3000,
-              panelClass: ['success-snackbar', 'custom-snackbar'],
-              horizontalPosition: 'right',
-              verticalPosition: 'top'
-            });
-            this.dialogRef.close(true);
-          },
-          error: (error: any) => {
-            this.snack.open('Failed to create lesson', '', {
-              duration: 3000,
-              panelClass: ['error-snackbar', 'custom-snackbar'],
-              horizontalPosition: 'right',
-              verticalPosition: 'top'
-            });
-          }
-        });
-      }
-    }
-
-    close(){
-        this.dialogRef.close(true);
-    }
+  close(){
+      this.dialogRef.close(true);
+  }
 
 }
