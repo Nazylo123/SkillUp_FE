@@ -28,6 +28,7 @@ import { SecurityComponent } from './common/security/security.component';
 import { CourseLearnComponent } from './aproject/user/course-learn/course-learn.component';
 import { LoginComponent } from './common/authentication/login/login.component';
 import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
+import { QuizListComponent } from './aproject/lecturer/course-management/quiz-list/quiz-list.component';
 import { QuizComponent } from './aproject/user/quiz/quiz.component';
 import { ChatComponent } from './aproject/user/chat/chat.component';
 import { ManagerChatComponent } from './aproject/manager/manager-chat/manager-chat.component';
@@ -36,6 +37,8 @@ import { RoadmapDetailComponent } from './aproject/manager/manager-roadmap/roadm
 import { ManagerRoadmapComponent } from './aproject/manager/manager-roadmap/manager-roadmap/manager-roadmap.component';
 import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.component';
 import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
+import { ManagerQuiz } from './aproject/manager/manager-quiz/manager-quiz.component';
+import { ManagerQuizDetail } from './aproject/manager/manager-quiz-detail/manager-quiz-detail.component';
 
 
 export const routes: Routes = [
@@ -95,7 +98,9 @@ export const routes: Routes = [
             {path: 'roadmaps', component: ManagerRoadmapComponent},
             {path: 'roadmaps/create', component: RoadmapFormComponent},
             {path: 'roadmaps/edit/:id', component: RoadmapFormComponent},
-            {path: 'roadmaps/detail/:id', component: RoadmapDetailComponent}
+            {path: 'roadmaps/detail/:id', component: RoadmapDetailComponent},
+            {path: 'quizzes', component: ManagerQuiz},
+            {path: 'quizzes/:id', component: ManagerQuizDetail}
         ]
     },
     {
@@ -110,7 +115,7 @@ export const routes: Routes = [
                     {path: ':id/quiz', component:QuizCreatorComponent},
                 ]
             },
-            {path: 'quiz', component: QuizCreatorComponent},
+            {path: 'quizzes', component: QuizListComponent},
         ]
     },
     //endProject

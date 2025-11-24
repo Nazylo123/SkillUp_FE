@@ -50,6 +50,7 @@ export const API_URLS = {
   //API Quiz
   GET_QUIZZES: BASE_POINTS.QUIZ, // GET /api/Quizzes (paginated)
   GET_QUIZ_BY_ID: BASE_POINTS.QUIZ, // GET /api/Quizzes/{quizId}
+  GET_QUIZ_BY_COURSE: BASE_POINTS.QUIZ + "/by-course", // GET /api/Quizzes/by-course/{courseId}
   CREATE_QUIZ: BASE_POINTS.QUIZ, // POST /api/Quizzes
   UPDATE_QUIZ: BASE_POINTS.QUIZ, // PUT /api/Quizzes/{quizId}
   DELETE_QUIZ: BASE_POINTS.QUIZ, // DELETE /api/Quizzes/{quizId}

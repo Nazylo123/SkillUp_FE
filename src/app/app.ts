@@ -25,7 +25,7 @@ export class App {
         public router: Router,
         private toggleService: ToggleService,
         private loadingService: LoadingService,
-        private viewportScroller: ViewportScroller,
+        private viewportScroller: ViewportScroller
     ) {
         this.router.events.subscribe((event: Event) => {
             if (event instanceof NavigationEnd) {
@@ -41,7 +41,10 @@ export class App {
             this.isToggled = isToggled;
         });
         this.loadingService.isLoading$.subscribe(loading => {
-            this.loading = loading;
+            // Defer the change to the next change detection cycle to avoid ExpressionChangedAfterItHasBeenCheckedError
+            setTimeout(() => {
+                this.loading = loading;
+            }, 0);
         });
     }
 

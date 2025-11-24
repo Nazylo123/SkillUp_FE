@@ -7,7 +7,10 @@ import {
   QuizResponse,
   BatchCreateQuestionsRequest,
   Question,
-  AnswerOption
+  AnswerOption,
+  QuizSummary,
+  QuizAttempt,
+  QuizAttemptsResponse
 } from '../models/quiz.models';
 
 @Injectable({
@@ -41,6 +44,14 @@ export class QuizService {
    */
   getQuizById(quizId: number): Observable<QuizResponse> {
     return this.http.get<QuizResponse>(`${API_URLS.GET_QUIZ_BY_ID}/${quizId}`);
+  }
+
+  /**
+   * Get quiz by course ID (1 course = 1 quiz)
+   * GET /api/Quizzes/by-course/{courseId}
+   */
+  getQuizByCourseId(courseId: number): Observable<QuizResponse> {
+    return this.http.get<QuizResponse>(`${API_URLS.GET_QUIZ_BY_COURSE}/${courseId}`);
   }
 
   /**
@@ -189,27 +200,27 @@ export class QuizService {
    * Get user quiz attempts
    * GET /api/Quizzes/attempts
    */
-  getUserAttempts(page: number = 1, pageSize: number = 10): Observable<any> {
+  getUserAttempts(page: number = 1, pageSize: number = 10): Observable<QuizAttemptsResponse> {
     let params = new HttpParams()
       .set('pageNumber', page.toString())
       .set('pageSize', pageSize.toString());
 
-    return this.http.get<any>(API_URLS.GET_USER_ATTEMPTS, { params });
+    return this.http.get<QuizAttemptsResponse>(API_URLS.GET_USER_ATTEMPTS, { params });
   }
 
   /**
    * Get quiz attempt detail
    * GET /api/Quizzes/attempts/{attemptId}
    */
-  getAttemptDetail(attemptId: number): Observable<any> {
-    return this.http.get<any>(`${API_URLS.GET_ATTEMPT_DETAIL}/${attemptId}`);
+  getAttemptDetail(attemptId: number): Observable<QuizAttempt> {
+    return this.http.get<QuizAttempt>(`${API_URLS.GET_ATTEMPT_DETAIL}/${attemptId}`);
   }
 
   /**
    * Get quiz summary
    * GET /api/Quizzes/{quizId}/summary
    */
-  getQuizSummary(quizId: number): Observable<any> {
-    return this.http.get<any>(`${API_URLS.GET_QUIZ_SUMMARY}/${quizId}/summary`);
+  getQuizSummary(quizId: number): Observable<QuizSummary> {
+    return this.http.get<QuizSummary>(`${API_URLS.GET_QUIZ_SUMMARY}/${quizId}/summary`);
   }
 }
