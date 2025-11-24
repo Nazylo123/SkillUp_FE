@@ -9,6 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ChatMessage, ConversationModel } from '../../models/ai.models';
 import { ApiAiServices } from '../../services/ai.service';
+import { AuthService } from '../../common/context/auth.service';
+import { UserInfo } from '../../models/user.models';
 
 @Component({
   selector: 'app-chat-box',
@@ -28,6 +30,7 @@ import { ApiAiServices } from '../../services/ai.service';
 })
 export class ChatBoxComponent implements OnInit, AfterViewChecked {
   private apiAiServices = inject(ApiAiServices);
+  private authService = inject(AuthService);
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   isExpanded = false;
@@ -36,9 +39,11 @@ export class ChatBoxComponent implements OnInit, AfterViewChecked {
   messages: ChatMessage[] = [];
   isTyping = false;
   unreadCount = 0;
+  currentUser: UserInfo | null = null;
 
   ngOnInit(): void {
     // Initialize with welcome message
+    this.currentUser = this.authService.getCurrentUser();
     this.addBotMessage('Xin chào! Tôi là trợ lý ảo của SkillUp. Tôi có thể giúp gì cho bạn hôm nay?');
   }
 

@@ -22,7 +22,8 @@
     <div class="chat-header">
       <div class="header-info">
         <div class="bot-avatar">
-          <mat-icon>smart_toy</mat-icon>
+          <!-- <mat-icon>smart_toy</mat-icon> -->
+          <img src="img/user/bot.png" class="message-avatar-img" alt="user">
         </div>
         <div class="bot-info">
           <h4 class="bot-name">SkillUp Assistant</h4>
@@ -53,7 +54,8 @@
           <!-- Bot Message -->
           <div *ngIf="message.isBot" class="message bot">
             <div class="message-avatar">
-              <mat-icon>smart_toy</mat-icon>
+              <!-- <mat-icon>smart_toy</mat-icon> -->
+              <img src="img/user/bot.png" class="message-avatar-img" alt="user">
             </div>
             <div class="message-content">
               <div *ngIf="!message.typing" class="message-bubble">
@@ -83,7 +85,8 @@
               </div>
             </div>
             <div class="message-avatar">
-              <mat-icon>person</mat-icon>
+              <!-- <mat-icon>person</mat-icon> -->
+              <img [src]="currentUser?.avatarUrl ?? 'img/user/user12.jpg'" class="message-avatar-img" alt="user">
             </div>
           </div>
         </div>

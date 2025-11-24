@@ -15,6 +15,9 @@ import { DialogService } from '../../../../services/dialog.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiCourseServices } from '../../../../services/course.service';
 import { Course, CourseCreateEdit, CoursePaginatedResponse } from '../../../../models/course.models';
+import { CourseType } from '../../../../models/lookup.model';
+import { Level } from '../../../../models/lookup.model';
+import { ApiLookupServices } from '../../../../services/lookup.service';
 
 @Component({
     selector: 'app-lecturer-course-list',
@@ -56,7 +59,7 @@ export class LecturerCourseList {
     currentPage = 1;
     pageSize = 10;
 
-    constructor(public dialog: MatDialog, private dialogService: DialogService, private courseService: ApiCourseServices) {}
+    constructor(public dialog: MatDialog, private dialogService: DialogService, private courseService: ApiCourseServices, private snack: MatSnackBar) {}
 
     ngOnInit() {
         this.loadCourses();
@@ -65,14 +68,18 @@ export class LecturerCourseList {
     loadCourses(page: number = 1, pageSize: number = 10, searchTerm?: string) {
       this.courseService.getCourseListCreator(page, pageSize, searchTerm).subscribe({
         next: (response: any) => {
-          console.log(response);
           this.data = response.items || [];
           this.totalItems = response.total || 0;
           this.currentPage = response.page || 1;
           this.pageSize = response.pageSize || 10;
         },
         error: (error) => {
-          console.error('Error loading courses:', error);
+          this.snack.open(error.error || 'Failed to load courses', '', {
+            duration: 3000,
+            panelClass: ['error-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
           this.data = [];
           this.totalItems = 0;
         }
@@ -125,11 +132,22 @@ export class LecturerCourseList {
           next: () => {
             // Reload the courses list to get updated data from server
             this.loadCourses(this.currentPage, this.pageSize, this.searchTerm);
-            console.log('Course deleted successfully');
+            this.snack.open('Course deleted successfully', '', {
+              duration: 3000,
+              panelClass: ['success-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
           },
           error: (error) => {
             console.error('Error deleting course:', error);
             // Could show error snackbar here if needed
+            this.snack.open(error.error || 'Failed to delete course', '', {
+              duration: 3000,
+              panelClass: ['error-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
           }
         });
       });
@@ -167,7 +185,8 @@ export class CreateCourse {
     constructor(
         public dialogRef: MatDialogRef<CreateCourse>, @Inject(MAT_DIALOG_DATA) public data: any,
         private snack: MatSnackBar,
-        private courseService: ApiCourseServices
+        private courseService: ApiCourseServices,
+        private lookupService: ApiLookupServices
     ) {}
 
     ngOnInit() {
@@ -175,7 +194,6 @@ export class CreateCourse {
       if (this.data.id) {
         this.isEdit = true;
         this.courseService.getCourseById(this.data.id).subscribe((response: any) => {
-          console.log(response);
           this.courseForm.patchValue({
             name: response.name,
             duration: response.duration,
@@ -184,7 +202,6 @@ export class CreateCourse {
             description: response.description,
             image: new File([], response.imageUrl),
           });
-          console.log(this.courseForm.value);
           this.selectedImage = response.imageUrl;
         });
       }
@@ -201,8 +218,8 @@ export class CreateCourse {
       const payload : CourseCreateEdit = {
         name: this.courseForm.value.name as string,
         description: this.courseForm.value.description as string,
-        courseType: this.courseForm.value.courseType as string,
-        targetLevel: this.courseForm.value.targetLevel as string,
+        courseTypeId: this.courseForm.value.courseType as string,
+        targetLevelId: this.courseForm.value.targetLevel as string,
         duration: this.courseForm.value.duration as number,
         imageUrl: this.courseForm.value.image as File,
       };
@@ -217,7 +234,7 @@ export class CreateCourse {
           });
           this.dialogRef.close(true);
         }, (error: any) => {
-          this.snack.open('Failed to update course', '', {
+          this.snack.open(error.error || 'Failed to update course', '', {
             duration: 3000,
             panelClass: ['error-snackbar', 'custom-snackbar'],
             horizontalPosition: 'right',
@@ -234,7 +251,7 @@ export class CreateCourse {
           });
           this.dialogRef.close(true);
         }, (error: any) => {
-          this.snack.open('Failed to create course', '', {
+          this.snack.open(error.error || 'Failed to create course', '', {
             duration: 3000,
             panelClass: ['error-snackbar', 'custom-snackbar'],
             horizontalPosition: 'right',
@@ -253,7 +270,9 @@ export class CreateCourse {
         if (!file.type.startsWith('image/')) {
             this.snack.open('Please select a valid image file', '', {
               duration: 3000,
-              panelClass: ['error-snackbar', 'custom-snackbar']
+              panelClass: ['error-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
             });
             return;
         }
@@ -262,7 +281,9 @@ export class CreateCourse {
         if (file.size > 5 * 1024 * 1024) {
             this.snack.open('File size must be less than 5MB', '', {
               duration: 3000,
-              panelClass: ['error-snackbar', 'custom-snackbar']
+              panelClass: ['error-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
             });
             return;
         }
@@ -296,25 +317,16 @@ export class CreateCourse {
       }
     }
 
-    listCourseTypes: string[] = [
-      'JavaScript',
-      'Python',
-      'Java',
-      'C#',
-      'C++',
-      'TypeScript',
-      'Go',
-      'Rust',
-      'Kotlin',
-      'Swift',
-      'Other',
-    ];
+    listCourseTypes: CourseType[] = [];
 
-    listLevels: string[] = [];
+    listLevels: Level[] = [];
 
     loadOptions() {
-      this.courseService.getLevels().subscribe((response: string[]) => {
+      this.lookupService.getLevels().subscribe((response: Level[]) => {
         this.listLevels = response;
+      });
+      this.lookupService.getCourseTypes().subscribe((response: CourseType[]) => {
+        this.listCourseTypes = response;
       });
     }
 }

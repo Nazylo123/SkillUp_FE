@@ -77,14 +77,14 @@
                         >
                             <mat-icon>visibility</mat-icon>
                         </button>
-                        <button
-                            mat-icon-button
-                            matTooltip="Edit"
-                            (click)="openAddEditEventDialog('300ms', '100ms', element.courseId)"
-                        >
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        @if(element.status != 'Approved') {
+                        @if(element.status != 'Approved' && element.status != 'Pending') {
+                            <button
+                                mat-icon-button
+                                matTooltip="Edit"
+                                (click)="openAddEditEventDialog('300ms', '100ms', element.courseId)"
+                            >
+                                <mat-icon>edit</mat-icon>
+                            </button>
                             <button
                                 mat-icon-button
                                 matTooltip="Delete"

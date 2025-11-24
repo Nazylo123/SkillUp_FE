@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { User } from './aproject/user/user.component';
 import { Home } from './aproject/user/home/home.component';
 import { MyCoursesComponent } from './aproject/user/my-courses/my-courses.component';
-import { CourseDetail } from './aproject/user/course-detail/course-detail.component';
+import { CourseDetailComponent } from './aproject/user/course-detail/course-detail.component';
 import { Admin } from './aproject/admin/admin.component';
 import { AdminDashboard } from './aproject/admin/admin-dashboard/admin-dashboard.component';
 import { AdminUserManagement } from './aproject/admin/user-management/user-management.component';
@@ -37,9 +37,6 @@ import { RoadmapDetailComponent } from './aproject/manager/manager-roadmap/roadm
 import { ManagerRoadmapComponent } from './aproject/manager/manager-roadmap/manager-roadmap/manager-roadmap.component';
 import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.component';
 import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
-import { ManagerQuiz } from './aproject/manager/manager-quiz/manager-quiz.component';
-import { ManagerQuizDetail } from './aproject/manager/manager-quiz-detail/manager-quiz-detail.component';
-
 
 export const routes: Routes = [
     //project
@@ -51,7 +48,7 @@ export const routes: Routes = [
             {path: 'my-courses', component: MyCoursesComponent},
             {path: 'profile', component: ProfileComponent},
             {path: 'security', component: SecurityComponent},
-            {path: 'course-detail/:id', component: CourseDetail},
+            {path: 'course-detail/:id', component: CourseDetailComponent},
             {path: 'course/learn/:id', component: CourseLearnComponent},
             {path: 'quiz/:id', component: QuizComponent},
             {path: 'roadmap', component: RoadmapListComponent},
@@ -99,8 +96,6 @@ export const routes: Routes = [
             {path: 'roadmaps/create', component: RoadmapFormComponent},
             {path: 'roadmaps/edit/:id', component: RoadmapFormComponent},
             {path: 'roadmaps/detail/:id', component: RoadmapDetailComponent},
-            {path: 'quizzes', component: ManagerQuiz},
-            {path: 'quizzes/:id', component: ManagerQuizDetail}
         ]
     },
     {

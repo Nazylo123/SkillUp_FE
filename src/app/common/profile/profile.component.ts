@@ -35,7 +35,6 @@ export class ProfileComponent implements OnDestroy {
         dateOfBirth: [null as Date | null, [Validators.required]],
         gender: ['', [Validators.required]],
         level: ['', [Validators.required]],
-        avatar: [null as File | null, [Validators.required]],
     });
 
     constructor(private apiAuthService: ApiAuthServices, private snack: MatSnackBar,
@@ -67,7 +66,6 @@ export class ProfileComponent implements OnDestroy {
                 dateOfBirth: userProfile.dateOfBirth ? new Date(userProfile.dateOfBirth) : null,
                 gender: userProfile.gender || '',
                 level: userProfile.level || '',
-                avatar: userProfile.avatarUrl ? new File([], userProfile.avatarUrl) : null,
             });
             this.previewUrl = null;
             this.selectedFile = null;
@@ -76,17 +74,24 @@ export class ProfileComponent implements OnDestroy {
 
     onSubmit() {
         this.profileForm.markAllAsTouched();
-        if (this.selectedFile) {
-            this.apiUser.uploadAvatar(this.selectedFile!).subscribe((response) => {
-                this.snack.open("Update profile successfully", '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
-                this.loadUserProfile();
-                this.authService.setAvatarCurrentUser(response.url);
-            });
-        }
+        console.log(this.selectedFile);
+        if (!this.profileForm.valid) return;
 
-        this.apiAuthService.updateUserInfo(this.profileForm.value).subscribe((response) => {
+        // return;
+        this.apiAuthService.updateUserInfo({
+            fullName: this.profileForm.value.fullName,
+            phone: this.profileForm.value.phone,
+            location: this.profileForm.value.location,
+            dateOfBirth: this.profileForm.value.dateOfBirth,
+            gender: this.profileForm.value.gender,
+            avatar: this.selectedFile,
+        }).subscribe((response : any) => {
             this.authService.updateUserInfo(this.profileForm.value);
+            this.userProfile = response;
+            this.clearPreview();
             this.snack.open("Update profile successfully", '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
+        }, error => {
+            this.snack.open("Update profile failed", '', { duration: 2200, panelClass: ['error-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
         });
     }
 
