@@ -185,3 +185,17 @@ export interface DocumentItem {
     content: string;
     isCorrect: boolean;
   }
+
+export interface CourseEnrollment {
+    courseId: number;
+    name: string;
+    description: string;
+    courseTypeId: number;
+    targetLevelId: number;
+    image: string;
+    createdByName: string;
+    startDay: string;
+    endDate: string;
+    percentage: number;
+    isEnrolled: boolean;
+}
