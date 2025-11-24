@@ -19,7 +19,16 @@ export class ApiAuthServices {
   }
 
   updateUserInfo(payload: any): Observable<any> {
-    return this.http.put<any>(API_URLS.USER_INFO, payload);
+    const formData = new FormData();
+    formData.append('FullName', payload.fullName);
+    formData.append('Phone', payload.phone);
+    formData.append('Location', payload.location);
+    formData.append('DateOfBirth', payload.dateOfBirth.toISOString());
+    formData.append('Gender', payload.gender);
+    if (payload.avatar) {
+      formData.append('Avatar', payload.avatar);
+    }
+    return this.http.put<any>(API_URLS.UPDATE_USER_INFO, formData);
   }
 
   refreshToken(refreshToken: string) {

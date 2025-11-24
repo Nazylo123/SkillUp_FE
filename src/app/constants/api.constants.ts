@@ -24,6 +24,7 @@ export const API_URLS = {
   REFRESH_TOKEN: BASE_POINTS.AUTH + "/refresh-token",
   REVOKE_TOKEN: BASE_POINTS.AUTH + "/revoke-token",
   USER_INFO: BASE_POINTS.USER + "/me",
+  UPDATE_USER_INFO: BASE_POINTS.USER + "/me/update-with-avatar",
 
   //Api User
   GET_USERS_ADMIN_LIST: BASE_POINTS.USER,
@@ -55,11 +56,35 @@ export const API_URLS = {
   COURSE_ENROLLMENT: BASE_POINTS.COURSE + "/me",
 
   //API Quiz
-  GET_QUIZZES: BASE_POINTS.QUIZ + "/get-all",
-  GET_QUIZ_BY_ID: BASE_POINTS.QUIZ + "/get-by-id",
-  CREATE_QUIZ: BASE_POINTS.QUIZ + "/create",
-  UPDATE_QUIZ: BASE_POINTS.QUIZ + "/update",
-  DELETE_QUIZ: BASE_POINTS.QUIZ + "/delete",
+  GET_QUIZZES: BASE_POINTS.QUIZ, // GET /api/Quizzes (paginated)
+  GET_QUIZ_BY_ID: BASE_POINTS.QUIZ, // GET /api/Quizzes/{quizId}
+  GET_QUIZ_BY_COURSE: BASE_POINTS.QUIZ + "/by-course", // GET /api/Quizzes/by-course/{courseId}
+  CREATE_QUIZ: BASE_POINTS.QUIZ, // POST /api/Quizzes
+  UPDATE_QUIZ: BASE_POINTS.QUIZ, // PUT /api/Quizzes/{quizId}
+  DELETE_QUIZ: BASE_POINTS.QUIZ, // DELETE /api/Quizzes/{quizId}
+  RESTORE_QUIZ: BASE_POINTS.QUIZ, // PATCH /api/Quizzes/{quizId}/restore
+
+  // Quiz Questions
+  GET_QUIZ_QUESTIONS: BASE_POINTS.QUIZ, // GET /api/Quizzes/{quizId}/questions
+  CREATE_QUESTION: BASE_POINTS.QUIZ, // POST /api/Quizzes/{quizId}/questions
+  BATCH_CREATE_QUESTIONS: BASE_POINTS.QUIZ, // POST /api/Quizzes/{quizId}/questions/batch
+  GET_QUESTION_BY_ID: BASE_POINTS.QUIZ + "/questions", // GET /api/Quizzes/questions/{questionId}
+  UPDATE_QUESTION: BASE_POINTS.QUIZ + "/questions", // PUT /api/Quizzes/questions/{questionId}
+  DELETE_QUESTION: BASE_POINTS.QUIZ + "/questions", // DELETE /api/Quizzes/questions/{questionId}
+
+  // Answer Options
+  GET_QUESTION_OPTIONS: BASE_POINTS.QUIZ + "/questions", // GET /api/Quizzes/questions/{questionId}/options
+  CREATE_OPTION: BASE_POINTS.QUIZ + "/questions", // POST /api/Quizzes/questions/{questionId}/options
+  GET_OPTION_BY_ID: BASE_POINTS.QUIZ + "/options", // GET /api/Quizzes/options/{optionId}
+  UPDATE_OPTION: BASE_POINTS.QUIZ + "/options", // PUT /api/Quizzes/options/{optionId}
+  DELETE_OPTION: BASE_POINTS.QUIZ + "/options", // DELETE /api/Quizzes/options/{optionId}
+
+  // Quiz Attempts
+  START_QUIZ_ATTEMPT: BASE_POINTS.QUIZ, // POST /api/Quizzes/{quizId}/start
+  SUBMIT_QUIZ_ATTEMPT: BASE_POINTS.QUIZ + "/attempts", // POST /api/Quizzes/attempts/{attemptId}/submit
+  GET_USER_ATTEMPTS: BASE_POINTS.QUIZ + "/attempts", // GET /api/Quizzes/attempts
+  GET_ATTEMPT_DETAIL: BASE_POINTS.QUIZ + "/attempts", // GET /api/Quizzes/attempts/{attemptId}
+  GET_QUIZ_SUMMARY: BASE_POINTS.QUIZ, // GET /api/Quizzes/{quizId}/summary
 
   //API Document
   UPLOAD_DOCUMENT: BASE_POINTS.DOCUMENT + "/upload",
