@@ -135,4 +135,11 @@ export class ApiCourseServices {
     }
     return this.http.get<any>(API_URLS.COURSE_ENROLLMENT, { params });
   }
+
+  getProgress(courseId: number): Observable<any> {
+    const payload = {
+      "isCompleted": true
+    }
+    return this.http.put<any>(`${API_URLS.GET_PROGRESS}/${courseId}`, payload);
+  }
 }
