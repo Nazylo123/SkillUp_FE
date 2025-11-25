@@ -47,14 +47,16 @@ export interface CourseDetail {
     duration: number;
     createdBy: number;
     createdByName: string;
+    progressPct?: number;
+    completedLessons?: number;
+    totalLessons?: number;
     createdAt: string;
+    deadline: string;
     isEnrolled: boolean;
     lessons: Lesson[];
     quizzes: Quiz;
     documents: DocumentItem[];
 }
-
-
 
 export interface CourseCreateEdit {
     name: string;
@@ -75,6 +77,10 @@ export interface Lesson {
     publicId: string;
     orderIndex: number;
     totalDuration: number;
+    totalSubLessons: number;
+    completedSubLessons: number;
+    progressPct: number;
+    progressStatus: string;
     subLessons: SubLesson[];
 }
 
@@ -91,6 +97,8 @@ export interface SubLesson {
     createdBy: number;
     createdAt: string;
     updatedAt: string;
+    isCompleted: boolean;
+    completedAt: string;
 }
 
 export interface SubLessonCreateEdit {
