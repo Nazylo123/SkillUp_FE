@@ -350,7 +350,7 @@ export class DeleteQuizDialog {
             <div class="question-header">
               <span class="question-number">Question {{ i + 1 }}</span>
               <mat-chip class="type-chip" [class]="getQuestionTypeClass(question.questionType)">
-                {{ question.questionType }}
+                {{ getQuestionTypeLabel(question.questionType) }}
               </mat-chip>
             </div>
 
@@ -657,8 +657,36 @@ export class ViewQuizDialog {
     this.dialogRef.close();
   }
 
-  getQuestionTypeClass(type: string): string {
+  /**
+   * Convert questionType (number or string) to display string and CSS class
+   */
+  getQuestionTypeClass(type: string | number): string {
+    // If it's a number from backend, convert to string
+    if (typeof type === 'number') {
+      switch (type) {
+        case 0: return 'single_choice';
+        case 1: return 'multiple_choice';
+        case 2: return 'true_false';
+        case 3: return 'text';
+        default: return 'single_choice';
+      }
+    }
+    // Already a string
     return type;
+  }
+
+  /**
+   * Get display label for questionType
+   */
+  getQuestionTypeLabel(type: string | number): string {
+    const typeString = this.getQuestionTypeClass(type);
+    switch (typeString) {
+      case 'single_choice': return 'Single Choice';
+      case 'multiple_choice': return 'Multiple Choice';
+      case 'true_false': return 'True/False';
+      case 'text': return 'Text';
+      default: return typeString;
+    }
   }
 
   getLetter(index: number): string {

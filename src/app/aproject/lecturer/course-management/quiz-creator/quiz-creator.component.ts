@@ -98,7 +98,13 @@ export class QuizCreatorComponent implements OnInit {
    * Frontend: 'single_choice', 'multiple_choice', 'true_false', 'text'
    * Backend expects: 0, 1, 2, 3
    */
-  private convertQuestionTypeToNumber(questionType: string): number {
+  private convertQuestionTypeToNumber(questionType: string | number): number {
+    // If already a number, return as-is
+    if (typeof questionType === 'number') {
+      return questionType;
+    }
+
+    // Convert string to number
     switch (questionType) {
       case QuestionType.SINGLE_CHOICE:   return 0;
       case QuestionType.MULTIPLE_CHOICE: return 1;
@@ -594,12 +600,12 @@ export class QuizCreatorComponent implements OnInit {
           if (questionsToUpdate.length > 0) {
             console.log(`Updating ${questionsToUpdate.length} existing questions individually:`);
             const updatePromises = questionsToUpdate.map(question => {
-              console.log(`  UPDATE Request - Question ${question.questionId}:`, {
-                title: question.title,
-                type: question.questionType,
-                answersCount: question.answerOptions.length,
-                answers: question.answerOptions
-              });
+              console.log(`  UPDATE Request - Question ${question.questionId}:`);
+              console.log(`    - Title: ${question.title}`);
+              console.log(`    - QuestionType: ${question.questionType} (type: ${typeof question.questionType})`);
+              console.log(`    - Answers: ${question.answerOptions?.length || 0}`);
+              console.log(`    - Full Question Object:`, question);
+              console.log(`    - Answer Options:`, question.answerOptions);
               return firstValueFrom(this.quizService.updateQuestion(question.questionId!, question));
             });
 
