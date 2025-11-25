@@ -16,12 +16,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-manager-user-list',
+    selector: 'app-manager-employee',
     imports: [FormsModule, MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatProgressBarModule, MatCheckboxModule, CommonModule, MatIcon, MatIconModule],
-    templateUrl: './user-list.component.html',
-    styleUrls: ['./user-list.component.scss']
+    templateUrl: './manager-employee.component.html',
+    styleUrls: ['./manager-employee.component.scss']
 })
-export class ManagerUserList {
+export class ManagerEmployee {
   constructor(private router: Router,public dialog: MatDialog, private apiUserServices: ApiUserServices, private snack: MatSnackBar) {}
 
   displayedColumns: string[] = ['user','progress', 'email', 'level','courses', 'role', 'status', 'action'];
@@ -42,7 +42,7 @@ export class ManagerUserList {
     "Mid-level Developer",
     "Product Manager",
     "Senior Lecturer"
-    ];
+  ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -96,8 +96,8 @@ export class ManagerUserList {
       this.router.navigate([`/manager/users/${element.userId}`])
   }
 
-  openCreateUserDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-      this.dialog.open(CreateUserDialog, {
+  openCreateEmployeeDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+      this.dialog.open(CreateEmployeeDialog, {
           width: '600px',
           enterAnimationDuration,
           exitAnimationDuration
@@ -295,14 +295,14 @@ export class ManagerUserList {
 }
 
 @Component({
-    selector: 'create-user',
-    templateUrl: './dialog-create-user.html',
+    selector: 'create-employee',
+    templateUrl: './dialog-create-employee.html',
     imports:[CommonModule],
 })
-export class CreateUserDialog {
+export class CreateEmployeeDialog {
 
     constructor(
-        public dialogRef: MatDialogRef<CreateUserDialog>
+        public dialogRef: MatDialogRef<CreateEmployeeDialog>
     ) {}
 
     listRole: string[] = ['Intern', 'Fresher', 'Junior', 'Middle', 'Senior']

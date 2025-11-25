@@ -13,7 +13,8 @@ import { AdminCourseList } from './aproject/admin/course-management/course-list/
 import { Manager } from './aproject/manager/manager.component';
 import { ManagerDashboard } from './aproject/manager/manager-dashboard/manager-dashboard.component';
 import { ManagerUserManagement } from './aproject/manager/manager-user/manager-user.component';
-import { ManagerUserList } from './aproject/manager/manager-user/user-list/user-list.component';
+import { ManagerEmployee } from './aproject/manager/manager-user/manager-employee/manager-employee.component';
+import { ManagerLecturer } from './aproject/manager/manager-user/manager-lecturer/manager-lecturer.component';
 import { ManagerUserDetail } from './aproject/manager/manager-user/user-detail/user-detail.component';
 import { ManagerCourseManagement } from './aproject/manager/manager-course/manager-course.component';
 import { ManagerCourseList } from './aproject/manager/manager-course/course-list/course-list.component';
@@ -82,7 +83,8 @@ export const routes: Routes = [
             {path: 'chat', component: ManagerChatComponent},
             {path: 'users', component: ManagerUserManagement,
                 children: [
-                    {path: '', component: ManagerUserList},
+                    {path: 'employee', component: ManagerEmployee},
+                    {path: 'lecturer', component: ManagerLecturer},
                     {path: ':id', component: ManagerUserDetail},
                 ]
             },

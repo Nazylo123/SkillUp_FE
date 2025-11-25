@@ -19,12 +19,6 @@
       <button mat-stroked-button>Submit Course</button>
     </div>
   </mat-card-header>
-    <div >
-        <div class="tagus-search-box" style="margin-bottom: 15px;">
-            <input type="text" class="input-search border-radius" placeholder="Search here" [(ngModel)]="searchTerm" >
-            <button  mat-flat-button class="tagus" (click)="search()"><i class="ri-search-line"></i></button>
-        </div>
-    </div>
   <mat-card-content>
     <mat-accordion *ngIf="lessons && lessons.length > 0" 
                    class="lessons-accordion"

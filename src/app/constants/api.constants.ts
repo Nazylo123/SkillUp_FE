@@ -14,6 +14,7 @@ const BASE_POINTS = {
   LOOKUP: BASE_URLS.SKILL_UP + "/Lookups",
   FEEDBACK: BASE_URLS.SKILL_UP + "/Feedback",
   COMMENT: BASE_URLS.SKILL_UP + "/Comment",
+  PROGRESS: BASE_URLS.SKILL_UP + "/progress",
 }
 
 export const API_URLS = {
@@ -104,5 +105,8 @@ export const API_URLS = {
   //API Feedback
   FEEDBACKS: BASE_POINTS.FEEDBACK,
   COMMENTS: BASE_POINTS.COMMENT,
+
+  //API Progress
+  GET_PROGRESS: BASE_POINTS.PROGRESS + "/sub-lessons",
   
 }

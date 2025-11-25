@@ -2,7 +2,7 @@
     <mat-card-header>
         <h5 class="mb-0">User List</h5>
         <div class="box-button">
-            <button mat-flat-button (click)="openCreateUserDialog('300ms', '100ms')">Add New</button>
+            <button mat-flat-button (click)="openCreateLecturerDialog('300ms', '100ms')">Add New</button>
             <button mat-stroked-button color="primary" (click)="downloadTemplate()" [disabled]="isDownloading">
                 <mat-icon *ngIf="!isDownloading">download</mat-icon>
                 <mat-icon *ngIf="isDownloading">hourglass_empty</mat-icon>
