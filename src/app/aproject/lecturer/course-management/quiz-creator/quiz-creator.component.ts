@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { QuizService } from '../../../../services/quiz.service';
 import { QuizCreateRequest, Question, AnswerOption } from '../../../../models/quiz.models';
 import { QuestionType } from '../../../../enums/api.enums';
@@ -34,7 +35,8 @@ import { firstValueFrom } from 'rxjs';
     MatCheckboxModule,
     MatDividerModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltipModule
   ],
   templateUrl: './quiz-creator.component.html',
   styleUrls: ['./quiz-creator.component.scss']
