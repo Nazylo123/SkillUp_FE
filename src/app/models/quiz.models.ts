@@ -20,7 +20,7 @@ export interface Question {
     questionId?: number;
     quizId?: number;
     title: string;
-    questionType: string;
+    questionType: string | number; // Backend now uses enum number (0,1,2,3), FE uses string ('single_choice', etc)
     points: number;
     orderIndex: number;
     answerOptions: AnswerOption[];
@@ -167,4 +167,45 @@ export interface QuizAttemptsResponse {
     totalCount: number;
     currentPage: number;
     pageSize: number;
+}
+
+// ========== STUDENT QUIZ TAKING MODELS ==========
+
+// Answer in Attempt Detail (from backend)
+export interface AttemptAnswerDetail {
+    attemptAnswerId: number;
+    attemptId: number;
+    questionId: number;
+    questionTitle: string;
+    selectedOptionId: number;
+    selectedOptionContent: string;
+    answerText: string;
+    isCorrect: boolean;
+}
+
+// Quiz Attempt Detail Response (Start Quiz Response)
+export interface QuizAttemptDetail {
+    attemptId: number;
+    quizId: number;
+    quizTitle: string;
+    userId: number;
+    userName: string;
+    startedAt: string;
+    submittedAt: string;
+    score: number;
+    passed: boolean;
+    answers: AttemptAnswerDetail[];
+}
+
+// Submit Answer Request
+export interface SubmitAnswerRequest {
+    questionId: number;
+    selectedOptionId: number;
+    answerText?: string;
+}
+
+// Submit Quiz Request
+export interface SubmitQuizRequest {
+    attemptId: number;
+    answers: SubmitAnswerRequest[];
 }

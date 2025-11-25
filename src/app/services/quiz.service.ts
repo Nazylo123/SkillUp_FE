@@ -10,7 +10,9 @@ import {
   AnswerOption,
   QuizSummary,
   QuizAttempt,
-  QuizAttemptsResponse
+  QuizAttemptsResponse,
+  QuizAttemptDetail,
+  SubmitQuizRequest
 } from '../models/quiz.models';
 
 @Injectable({
@@ -178,22 +180,27 @@ export class QuizService {
     return this.http.delete(`${API_URLS.DELETE_OPTION}/${optionId}`);
   }
 
-  // ========== QUIZ ATTEMPTS (for later use) ==========
+  // ========== STUDENT QUIZ TAKING ==========
 
   /**
    * Start quiz attempt
    * POST /api/Quizzes/{quizId}/start
+   * Returns quiz attempt details with questions
    */
-  startQuizAttempt(quizId: number): Observable<any> {
-    return this.http.post(`${API_URLS.START_QUIZ_ATTEMPT}/${quizId}/start`, {});
+  startQuizAttempt(quizId: number): Observable<QuizAttemptDetail> {
+    return this.http.post<QuizAttemptDetail>(`${API_URLS.START_QUIZ_ATTEMPT}/${quizId}/start`, {});
   }
 
   /**
    * Submit quiz attempt
    * POST /api/Quizzes/attempts/{attemptId}/submit
+   * Returns quiz results with score and correct answers
    */
-  submitQuizAttempt(attemptId: number, answers: any): Observable<any> {
-    return this.http.post(`${API_URLS.SUBMIT_QUIZ_ATTEMPT}/${attemptId}/submit`, answers);
+  submitQuizAttempt(request: SubmitQuizRequest): Observable<QuizAttemptDetail> {
+    return this.http.post<QuizAttemptDetail>(
+      `${API_URLS.SUBMIT_QUIZ_ATTEMPT}/${request.attemptId}/submit`,
+      request
+    );
   }
 
   /**
@@ -222,5 +229,19 @@ export class QuizService {
    */
   getQuizSummary(quizId: number): Observable<QuizSummary> {
     return this.http.get<QuizSummary>(`${API_URLS.GET_QUIZ_SUMMARY}/${quizId}/summary`);
+  }
+
+  // ========== AI QUIZ GENERATION ==========
+
+  /**
+   * Generate quiz questions from course using AI
+   * POST /api/AI/generate-quiz-from-course
+   * Returns generated questions as JSON string
+   */
+  generateQuizFromCourse(courseId: number, numberOfQuestions: number): Observable<{questionsJson: string, timestamp: string}> {
+    return this.http.post<{questionsJson: string, timestamp: string}>(
+      API_URLS.GENERATE_QUIZ_FROM_COURSE,
+      { courseId, numberOfQuestions }
+    );
   }
 }

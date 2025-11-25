@@ -96,6 +96,7 @@ export const API_URLS = {
 
   //API AI
   GET_AI_CHAT: BASE_POINTS.AI + "/chat",
+  GENERATE_QUIZ_FROM_COURSE: BASE_POINTS.AI + "/generate-quiz-from-course",
 
   //API Lookup
   GET_COURSE_TYPES: BASE_POINTS.LOOKUP + "/course-types",

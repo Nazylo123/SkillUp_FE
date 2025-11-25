@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { QuizService } from '../../../../services/quiz.service';
 import { QuizCreateRequest, Question, AnswerOption } from '../../../../models/quiz.models';
 import { QuestionType } from '../../../../enums/api.enums';
@@ -36,7 +37,8 @@ import { firstValueFrom } from 'rxjs';
     MatDividerModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './quiz-creator.component.html',
   styleUrls: ['./quiz-creator.component.scss']
@@ -59,12 +61,62 @@ export class QuizCreatorComponent implements OnInit {
     { value: QuestionType.TEXT, label: 'Text' }
   ];
 
+  /**
+   * Normalize questionType from backend to FE enum string
+   * Backend NOW returns: 0 (SingleChoice), 1 (MultipleChoice), 2 (TrueFalse), 3 (Text)
+   * Frontend uses: string enum ('single_choice', 'multiple_choice', 'true_false', 'text')
+   */
+  private normalizeQuestionType(questionType: any): string {
+    // Backend returns number (0, 1, 2, 3) after recent update
+    if (typeof questionType === 'number') {
+      switch (questionType) {
+        case 0: return QuestionType.SINGLE_CHOICE;  // 'single_choice'
+        case 1: return QuestionType.MULTIPLE_CHOICE; // 'multiple_choice'
+        case 2: return QuestionType.TRUE_FALSE;      // 'true_false'
+        case 3: return QuestionType.TEXT;            // 'text'
+        default:
+          console.warn('Unknown questionType number:', questionType);
+          return QuestionType.SINGLE_CHOICE;
+      }
+    }
+
+    // Legacy: If backend still returns string for some reason
+    if (typeof questionType === 'string') {
+      const validTypes = ['single_choice', 'multiple_choice', 'true_false', 'text'];
+      if (validTypes.includes(questionType)) {
+        return questionType;
+      }
+    }
+
+    // Default fallback
+    console.warn('Unknown questionType format:', questionType);
+    return QuestionType.SINGLE_CHOICE;
+  }
+
+  /**
+   * Convert FE enum string to backend number format
+   * Frontend: 'single_choice', 'multiple_choice', 'true_false', 'text'
+   * Backend expects: 0, 1, 2, 3
+   */
+  private convertQuestionTypeToNumber(questionType: string): number {
+    switch (questionType) {
+      case QuestionType.SINGLE_CHOICE:   return 0;
+      case QuestionType.MULTIPLE_CHOICE: return 1;
+      case QuestionType.TRUE_FALSE:      return 2;
+      case QuestionType.TEXT:            return 3;
+      default:
+        console.warn('Unknown questionType string:', questionType);
+        return 0; // Default to SINGLE_CHOICE
+    }
+  }
+
   constructor(
     private fb: FormBuilder,
     private quizService: QuizService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.quizForm = this.fb.group({
       title: ['', Validators.required],
@@ -137,10 +189,13 @@ export class QuizCreatorComponent implements OnInit {
 
     // Populate questions
     if (quiz.questions && quiz.questions.length > 0) {
-      quiz.questions.forEach((q: any) => {
+      quiz.questions.forEach((q: any, index: number) => {
+        const normalizedType = this.normalizeQuestionType(q.questionType);
+        console.log(`Loading Q${index + 1}: type="${q.questionType}" → normalized="${normalizedType}", title="${q.title}"`);
+
         const questionGroup = this.fb.group({
           questionId: [q.questionId], // Store question ID for update/delete
-          type: [q.questionType, Validators.required],
+          type: [normalizedType, Validators.required],
           question: [q.title, Validators.required],
           answers: this.fb.array([]),
           textAnswer: ['']
@@ -211,6 +266,72 @@ export class QuizCreatorComponent implements OnInit {
 
   removeQuestion(index: number): void {
     this.questions.removeAt(index);
+  }
+
+  /**
+   * Open AI Gen Quiz Dialog
+   */
+  openAIGenDialog(): void {
+    if (!this.courseId) {
+      this.snackBar.open('Course ID is required to generate questions', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AIGenQuizDialog, {
+      width: '700px',
+      maxWidth: '95vw',
+      data: { courseId: this.courseId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.questions) {
+        this.loadGeneratedQuestions(result.questions);
+      }
+    });
+  }
+
+  /**
+   * Load AI generated questions into form
+   */
+  private loadGeneratedQuestions(generatedQuestions: any[]): void {
+    this.isPopulatingForm = true;
+
+    generatedQuestions.forEach((genQ: any) => {
+      const normalizedType = this.normalizeQuestionType(genQ.questionType);
+
+      const questionGroup = this.fb.group({
+        questionId: [null],
+        type: [normalizedType, Validators.required],
+        question: [genQ.title, Validators.required],
+        answers: this.fb.array([]),
+        textAnswer: [normalizedType === QuestionType.TEXT ? genQ.answerOptions[0]?.content || '' : '']
+      });
+
+      this.questions.push(questionGroup);
+      const questionIndex = this.questions.length - 1;
+
+      // Add answer options
+      if (genQ.answerOptions && genQ.answerOptions.length > 0) {
+        genQ.answerOptions.forEach((option: any) => {
+          const answerGroup = this.fb.group({
+            text: [option.content, Validators.required],
+            isCorrect: [option.isCorrect]
+          });
+          this.getAnswers(questionIndex).push(answerGroup);
+        });
+      }
+    });
+
+    this.isPopulatingForm = false;
+
+    this.snackBar.open(
+      `✨ Generated ${generatedQuestions.length} questions successfully!`,
+      'Close',
+      { duration: 3000, panelClass: ['success-snackbar'] }
+    );
   }
 
   onQuestionTypeChange(questionIndex: number): void {
@@ -502,9 +623,23 @@ export class QuizCreatorComponent implements OnInit {
               });
             });
 
-            const createPromises = questionsToCreate.map((question, idx) => {
+            const createPromises = questionsToCreate.map(async (question, idx) => {
               console.log(`  Creating question ${idx + 1}:`, question);
-              return firstValueFrom(this.quizService.createQuestion(this.existingQuizId!, question));
+              try {
+                const response = await firstValueFrom(this.quizService.createQuestion(this.existingQuizId!, question));
+                console.log(`  ✅ Question ${idx + 1} created successfully:`, response);
+                return response;
+              } catch (error: any) {
+                console.error(`  ❌ Failed to create question ${idx + 1}:`, error);
+                console.error(`  Error details:`, {
+                  status: error.status,
+                  statusText: error.statusText,
+                  message: error.error?.message || error.message,
+                  errors: error.error?.errors,
+                  fullError: error.error
+                });
+                throw error;
+              }
             });
 
             const createResponses = await Promise.all(createPromises);
@@ -562,7 +697,7 @@ export class QuizCreatorComponent implements OnInit {
   private transformSingleQuestionToAPI(formQuestion: any, orderIndex: number): Question {
     const question: Question = {
       title: formQuestion.question,
-      questionType: formQuestion.type,
+      questionType: this.convertQuestionTypeToNumber(formQuestion.type) as any, // Convert string enum to number for backend
       points: 1,
       orderIndex: orderIndex,
       answerOptions: []
@@ -591,7 +726,7 @@ export class QuizCreatorComponent implements OnInit {
     return formQuestions.map((q, index) => {
       const question: Question = {
         title: q.question,
-        questionType: q.type,
+        questionType: this.convertQuestionTypeToNumber(q.type) as any, // Convert string enum to number for backend
         points: 1, // Default 1 point per question
         orderIndex: index,
         answerOptions: []
@@ -633,5 +768,319 @@ export class QuizCreatorComponent implements OnInit {
         this.markFormGroupTouched(control);
       }
     });
+  }
+}
+
+// ============================================================
+// AI Gen Quiz Dialog Component
+// ============================================================
+@Component({
+  selector: 'ai-gen-quiz-dialog',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule
+  ],
+  template: `
+    <div class="ai-gen-dialog">
+      <h2 mat-dialog-title>
+        <mat-icon class="dialog-icon">auto_awesome</mat-icon>
+        AI Generate Quiz Questions
+      </h2>
+
+      <mat-dialog-content>
+        <p class="dialog-description">
+          Let AI generate quiz questions automatically from your course content.
+        </p>
+
+        <form [formGroup]="genForm">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Number of Questions</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="numberOfQuestions"
+              min="1"
+              max="50"
+              placeholder="e.g., 10">
+            <mat-icon matPrefix>quiz</mat-icon>
+            <mat-hint>Choose between 1 and 50 questions</mat-hint>
+            <mat-error *ngIf="genForm.get('numberOfQuestions')?.hasError('required')">
+              Number of questions is required
+            </mat-error>
+            <mat-error *ngIf="genForm.get('numberOfQuestions')?.hasError('min')">
+              Minimum 1 question
+            </mat-error>
+            <mat-error *ngIf="genForm.get('numberOfQuestions')?.hasError('max')">
+              Maximum 50 questions
+            </mat-error>
+          </mat-form-field>
+        </form>
+
+        <div *ngIf="isGenerating" class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p class="loading-text">Generating questions with AI...</p>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="end">
+        <button
+          mat-button
+          (click)="onCancel()"
+          [disabled]="isGenerating">
+          Cancel
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onGenerate()"
+          [disabled]="genForm.invalid || isGenerating">
+          <mat-icon>auto_awesome</mat-icon>
+          Generate
+        </button>
+      </mat-dialog-actions>
+    </div>
+  `,
+  styles: [`
+    .ai-gen-dialog {
+      h2 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        font-size: 24px;
+        color: #1a202c;
+
+        .dialog-icon {
+          color: #4299e1;
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+        }
+      }
+
+      mat-dialog-content {
+        min-width: 500px;
+        padding: 24px 0;
+
+        .dialog-description {
+          color: #718096;
+          margin-bottom: 24px;
+          line-height: 1.6;
+        }
+
+        .full-width {
+          width: 100%;
+        }
+
+        .loading-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+          padding: 24px 0;
+
+          .loading-text {
+            color: #4299e1;
+            font-weight: 500;
+            margin: 0;
+          }
+        }
+
+        .error-message {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 16px;
+          background: #fff5f5;
+          border-left: 4px solid #f56565;
+          border-radius: 8px;
+          color: #c53030;
+          margin-top: 16px;
+          max-width: 100%;
+
+          mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+          }
+
+          span {
+            flex: 1;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            font-size: 14px;
+          }
+        }
+      }
+
+      mat-dialog-actions {
+        padding: 16px 0 0 0;
+        margin: 0;
+
+        button {
+          mat-icon {
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 600px) {
+      .ai-gen-dialog mat-dialog-content {
+        min-width: 300px;
+      }
+    }
+  `]
+})
+export class AIGenQuizDialog {
+  genForm: FormGroup;
+  isGenerating = false;
+  errorMessage: string | null = null;
+
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<AIGenQuizDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: { courseId: number },
+    private quizService: QuizService,
+    private snackBar: MatSnackBar
+  ) {
+    this.genForm = this.fb.group({
+      numberOfQuestions: [10, [Validators.required, Validators.min(1), Validators.max(50)]]
+    });
+  }
+
+  onCancel(): void {
+    this.dialogRef.close();
+  }
+
+  async onGenerate(): Promise<void> {
+    if (this.genForm.invalid) return;
+
+    this.isGenerating = true;
+    this.errorMessage = null;
+
+    const numberOfQuestions = this.genForm.get('numberOfQuestions')?.value;
+
+    try {
+      const response = await firstValueFrom(
+        this.quizService.generateQuizFromCourse(this.data.courseId, numberOfQuestions)
+      );
+
+      console.log('AI Gen Response:', response);
+
+      // Check if response has questionsJson
+      if (!response || !response.questionsJson) {
+        throw new Error('Invalid response from server: missing questionsJson');
+      }
+
+      // Parse the questionsJson string
+      let questions;
+      try {
+        // Remove markdown code blocks if present (```json ... ```)
+        let cleanedJson = response.questionsJson.trim();
+        if (cleanedJson.startsWith('```')) {
+          // Remove starting ```json or ```
+          cleanedJson = cleanedJson.replace(/^```(?:json)?\s*\n?/, '');
+          // Remove ending ```
+          cleanedJson = cleanedJson.replace(/\n?```\s*$/, '');
+        }
+
+        const parsedData = JSON.parse(cleanedJson);
+
+        // Handle both direct array and wrapped object format
+        if (Array.isArray(parsedData)) {
+          questions = parsedData;
+        } else if (parsedData.questions && Array.isArray(parsedData.questions)) {
+          questions = parsedData.questions;
+        } else {
+          throw new Error('Invalid response format: expected array of questions');
+        }
+
+        console.log('Parsed questions:', questions);
+
+        // Transform BE format to FE format
+        questions = questions.map((q: any) => {
+          // Handle both BE format and FE format
+          if (q.questionType && q.title && q.answerOptions) {
+            // Already in FE format
+            return q;
+          }
+
+          // Transform from BE format: { question, options, correctAnswer, explanation }
+          return {
+            questionType: 0, // Default to SINGLE_CHOICE
+            title: q.question || q.title || '',
+            answerOptions: (q.options || []).map((option: string, index: number) => ({
+              content: option,
+              isCorrect: index === q.correctAnswer
+            }))
+          };
+        });
+
+        console.log('Transformed questions:', questions);
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        console.log('questionsJson value:', response.questionsJson);
+        throw new Error(`Failed to parse questions: ${response.questionsJson.substring(0, 100)}`);
+      }
+
+      if (!Array.isArray(questions) || questions.length === 0) {
+        throw new Error('No questions were generated');
+      }
+
+      this.snackBar.open(
+        `✨ Successfully generated ${questions.length} questions!`,
+        'Close',
+        { duration: 3000, panelClass: ['success-snackbar'] }
+      );
+
+      // Close dialog and return questions
+      this.dialogRef.close({ questions });
+
+    } catch (error: any) {
+      console.error('AI Gen Quiz Error:', error);
+
+      // Display error message with better details
+      if (error.status === 404) {
+        this.errorMessage = 'Course not found. Please check the course ID.';
+      } else if (error.status === 400) {
+        this.errorMessage = error.error?.message || error.error || 'Invalid request. Please check your input.';
+      } else if (error.status === 500) {
+        this.errorMessage = error.error?.message || error.error || 'Server error. Please contact backend team.';
+      } else if (error.message) {
+        // Custom error messages (like JSON parse errors)
+        this.errorMessage = error.message;
+      } else if (typeof error.error === 'string') {
+        // Backend returned plain text error
+        this.errorMessage = error.error;
+      } else {
+        this.errorMessage = 'Failed to generate questions. Please try again or contact backend team.';
+      }
+
+      this.snackBar.open(
+        '❌ Failed to generate quiz questions',
+        'Close',
+        { duration: 4000, panelClass: ['error-snackbar'] }
+      );
+    } finally {
+      this.isGenerating = false;
+    }
   }
 }

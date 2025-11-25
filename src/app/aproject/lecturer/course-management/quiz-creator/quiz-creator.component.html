@@ -59,6 +59,15 @@
         <div class="questions-section">
           <div class="section-header">
             <h3>Question</h3>
+            <button
+              mat-raised-button
+              color="accent"
+              type="button"
+              (click)="openAIGenDialog()"
+              class="ai-gen-btn">
+              <mat-icon>auto_awesome</mat-icon>
+              AI Generate Quiz
+            </button>
           </div>
 
           <!-- Question Cards -->
@@ -79,13 +88,7 @@
                   <mat-label>Question Type</mat-label>
                   <mat-select formControlName="type" (selectionChange)="onQuestionTypeChange(qi)">
                     <mat-option *ngFor="let type of questionTypes" [value]="type.value">
-                      <span [ngSwitch]="type.value">
-                        <span *ngSwitchCase="'single_choice'">{{ type.label }}</span>
-                        <span *ngSwitchCase="'multiple_choice'">{{ type.label }}</span>
-                        <span *ngSwitchCase="'true_false'">{{ type.label }}</span>
-                        <span *ngSwitchCase="'text'">{{ type.label }}</span>
-                        <span *ngSwitchDefault>{{ type.label }}</span>
-                      </span>
+                      {{ type.label }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
