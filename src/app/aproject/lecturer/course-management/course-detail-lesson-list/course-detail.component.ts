@@ -86,6 +86,43 @@ export class LecturerCourseDetail {
     });
   }
 
+  getTimeAgo(date: string | number) {
+    if (!date) {
+      return 'never';
+    }
+
+    const now = new Date();
+    const dateObj = new Date(date);
+    const diff = now.getTime() - dateObj.getTime();
+    
+    if (diff < 0) {
+      return 'just now';
+    }
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (years > 0) {
+      return `${years} ${years > 1 ? 'years' : 'year'} ago`;
+    } else if (months > 0) {
+      return `${months} ${months > 1 ? 'months' : 'month'} ago`;
+    } else if (days > 0) {
+      return `${days} ${days > 1 ? 'days' : 'day'} ago`;
+    } else if (hours > 0) {
+      return `${hours} ${hours > 1 ? 'hours' : 'hour'} ago`;
+    } else if (minutes > 0) {
+      return `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`;
+    } else if (seconds > 5) {
+      return `${seconds} ${seconds > 1 ? 'seconds' : 'second'} ago`;
+    } else {
+      return 'few seconds ago';
+    }
+}
+
   dropLesson(event: CdkDragDrop<Lesson[]>) {
     // Lưu orderIndex của 2 lesson cần swap
     const prev = this.lessons[event.previousIndex];

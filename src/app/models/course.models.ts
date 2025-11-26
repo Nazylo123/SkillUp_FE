@@ -48,6 +48,7 @@ export interface CourseDetail {
     createdBy: number;
     createdByName: string;
     progressPct?: number;
+    lecturerImageUrl?: string;
     completedLessons?: number;
     totalLessons?: number;
     createdAt: string;
