@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,7 +17,6 @@ import { CommonModule } from '@angular/common';
 import { Feedback, FeedbackComment } from '../../../models/feedback.model';
 import { ApiFeedbackServices } from '../../../services/feedback.service';
 import { ConfirmDialogComponent } from '../../../common/confirm-dialog/confirm-dialog.component';
-import { ApiAuthServices } from '../../../services/auth.service';
 import { UserInfo } from '../../../models/user.models';
 import { AuthService } from '../../../common/context/auth.service';
 
@@ -35,7 +34,8 @@ export class CourseDetailComponent {
         private feedbackService: ApiFeedbackServices,
         private dialog: MatDialog,
         private snackBar: MatSnackBar,
-        private authService: AuthService
+        private authService: AuthService,
+        private router: Router
     ) {}
 
     course!: CourseDetail;
@@ -133,6 +133,32 @@ export class CourseDetailComponent {
         this.feedbackService.getFeedbacks(Number(this.id), this.page, this.pageSize).subscribe((feedbacks: any) => {
             this.feedbacks = [...this.feedbacks, ...feedbacks.items];
             this.totalFeedbacks = feedbacks.total;
+        });
+    }
+
+    enrollCourse(): void {
+        if (this.course.isEnrolled) {
+            this.router.navigate(['/course/learn', this.id]);
+            return;
+        }
+
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Delete Feedback',
+                message: 'Are you sure you want to delete this feedback? This action cannot be undone.',
+                type: 'warning'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) return;
+            this.courseService.createEnrollment({ userId: this.currentUser?.userId || '', courseId: Number(this.id) }).subscribe((enrollment: any) => {
+                this.course.isEnrolled = true;
+                this.snackBar.open('Enrollment created successfully', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar', 'custom-snackbar'],    
+                });
+            });
         });
     }
 

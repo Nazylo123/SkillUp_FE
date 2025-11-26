@@ -20,7 +20,7 @@
             </div>
             <!-- <p class="text-white">{{course.description || ''}}</p> -->
              <div>
-                 <a mat-raised-button routerLink="/course/learn/{{course.courseId}}" class="tagus mt-10" >{{course.isEnrolled ? 'Continue' : 'Enroll Now'}}</a>
+                 <a mat-raised-button class="tagus mt-10" (click)="enrollCourse()">{{course.isEnrolled ? 'Continue' : 'Enroll Now'}}</a>
              </div>
         </div>
         <div class="course-details-desc">
@@ -33,7 +33,7 @@
                     <li class="gray-color fw-semibold">
                         Lecturer
                         <div class="d-flex align-items-center">
-                            <img src="img/user/user2.jpg" class="rounded-circle" width="30" alt="user">
+                            <img [src]="course.lecturerImageUrl || 'img/user/user2.jpg'" class="rounded-circle" width="30" alt="user">
                             <span class="d-block fw-semibold">{{course.createdByName || ''}}</span>
                         </div>
                     </li>
@@ -112,7 +112,7 @@
         <div class="p-md-25 feedback-section">
             <div class="d-flex justify-content-between align-items-center feedback-header">
                 <h5 class="mb-0">Student Feedback ({{totalFeedbacks || 0}} reviews)</h5>
-                <button mat-flat-button class="tagus" (click)="toggleWriteFeedback()">Write Feedback</button>
+                <button mat-flat-button class="tagus" *ngIf="course.progressPct && course.progressPct === 100" (click)="toggleWriteFeedback()">Write Feedback</button>
             </div>
 
             <!-- Write Feedback Input -->

@@ -116,8 +116,8 @@ export class DocumentDialog {
       this.isUploading = true;
       
       this.documentService.uploadDocument(this.data.courseId, this.selectedFiles).subscribe({
-        next: (document: DocumentModel) => {
-          this.documents.unshift(document);
+        next: (documents: any) => {
+          this.documents.unshift(...documents.documents);
           this.filterDocuments();
           this.selectedFiles = [];
           this.isUploading = false;

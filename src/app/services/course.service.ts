@@ -142,4 +142,9 @@ export class ApiCourseServices {
     }
     return this.http.put<any>(`${API_URLS.GET_PROGRESS}/${courseId}`, payload);
   }
+
+  createEnrollment(payload: { userId: number | string, courseId: number | string }): Observable<any> {
+    return this.http.post<any>(API_URLS.CREATE_ENROLLMENT, payload);
+  }
+
 }
