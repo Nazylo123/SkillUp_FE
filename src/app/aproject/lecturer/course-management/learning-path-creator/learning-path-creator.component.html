@@ -1,0 +1,214 @@
+<div class="creator-container">
+  <mat-card class="mb-25 tagus-card">
+    <mat-card-header>
+      <div class="header-content">
+        <h5>{{ isEditMode ? 'Edit Learning Path' : 'Create Learning Path' }}</h5>
+        <div class="header-actions">
+          <button mat-button (click)="cancel()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to List
+          </button>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Loading Spinner -->
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+
+      <div *ngIf="!isLoading">
+        <!-- Learning Path Form -->
+        <form [formGroup]="pathForm" class="path-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Learning Path Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter learning path name">
+            <mat-error *ngIf="pathForm.get('name')?.hasError('required')">
+              Name is required
+            </mat-error>
+            <mat-error *ngIf="pathForm.get('name')?.hasError('maxlength')">
+              Name must be less than 200 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              formControlName="description"
+              placeholder="Enter learning path description"
+              rows="4"
+            ></textarea>
+            <mat-error *ngIf="pathForm.get('description')?.hasError('required')">
+              Description is required
+            </mat-error>
+            <mat-error *ngIf="pathForm.get('description')?.hasError('maxlength')">
+              Description must be less than 1000 characters
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="save()"
+              [disabled]="isSaving || pathForm.invalid"
+            >
+              <mat-icon>save</mat-icon>
+              {{ isEditMode ? 'Update Learning Path' : 'Create Learning Path' }}
+            </button>
+            <button mat-button (click)="cancel()" [disabled]="isSaving">
+              Cancel
+            </button>
+          </div>
+        </form>
+
+        <!-- Course Management Section (Only show in edit mode) -->
+        <div *ngIf="isEditMode && pathId" class="course-management">
+          <mat-divider class="section-divider"></mat-divider>
+
+          <h6 class="section-title">Manage Courses</h6>
+
+          <!-- Add Course Form -->
+          <div class="add-course-section">
+            <h6 class="subsection-title">Add Course to Path</h6>
+
+            <div class="add-course-form">
+              <mat-form-field appearance="outline" class="course-select">
+                <mat-label>Select Course</mat-label>
+                <mat-select [(ngModel)]="selectedCourseId">
+                  <mat-option *ngFor="let course of getAvailableCoursesForDropdown()" [value]="course.courseId">
+                    {{ course.courseName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="course-description">
+                <mat-label>Description (Optional)</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="courseDescription"
+                  placeholder="Additional notes for this course in the path"
+                >
+              </mat-form-field>
+
+              <mat-checkbox [(ngModel)]="isMandatory" class="mandatory-checkbox">
+                Mandatory
+              </mat-checkbox>
+
+              <button
+                mat-raised-button
+                color="accent"
+                (click)="addCourse()"
+                [disabled]="!selectedCourseId"
+              >
+                <mat-icon>add</mat-icon>
+                Add Course
+              </button>
+            </div>
+          </div>
+
+          <!-- Courses in Path Table -->
+          <div class="courses-table-section">
+            <h6 class="subsection-title">Courses in This Path ({{ pathItems.length }})</h6>
+
+            <div *ngIf="pathItems.length === 0" class="no-courses">
+              <mat-icon>school</mat-icon>
+              <p>No courses added yet. Add your first course above.</p>
+            </div>
+
+            <div *ngIf="pathItems.length > 0" class="mat-elevation-z8 recentOrdersTable tagus-mat-table">
+              <table mat-table [dataSource]="pathItems">
+
+                <!-- Order Column -->
+                <ng-container matColumnDef="order">
+                  <th mat-header-cell *matHeaderCellDef>Order</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    <div class="order-cell">
+                      <span class="order-number">{{ i + 1 }}</span>
+                      <div class="order-actions">
+                        <button
+                          mat-icon-button
+                          matTooltip="Move Up"
+                          (click)="moveUp(element)"
+                          [disabled]="!canMoveUp(element)"
+                        >
+                          <mat-icon>arrow_upward</mat-icon>
+                        </button>
+                        <button
+                          mat-icon-button
+                          matTooltip="Move Down"
+                          (click)="moveDown(element)"
+                          [disabled]="!canMoveDown(element)"
+                        >
+                          <mat-icon>arrow_downward</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- Course Name Column -->
+                <ng-container matColumnDef="courseName">
+                  <th mat-header-cell *matHeaderCellDef>Course Name</th>
+                  <td mat-cell *matCellDef="let element">
+                    <strong>{{ element.courseName }}</strong>
+                  </td>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <td mat-cell *matCellDef="let element">
+                    <span class="description-text">{{ element.description || 'N/A' }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- Mandatory Column -->
+                <ng-container matColumnDef="isMandatory">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      mat-stroked-button
+                      [color]="element.isMandatory ? 'warn' : 'primary'"
+                      (click)="toggleMandatory(element)"
+                      class="type-badge"
+                    >
+                      {{ element.isMandatory ? 'Mandatory' : 'Optional' }}
+                    </button>
+                  </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      matTooltip="Remove from Path"
+                      (click)="removeCourse(element)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info message for new paths -->
+        <div *ngIf="!isEditMode" class="info-message">
+          <mat-icon>info</mat-icon>
+          <p>After creating the learning path, you'll be able to add courses to it.</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
