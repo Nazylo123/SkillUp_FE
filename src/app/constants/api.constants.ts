@@ -18,6 +18,7 @@ const BASE_POINTS = {
   ENROLLMENT: BASE_URLS.SKILL_UP + "/Enrollment",
   LEARNING_PATH: BASE_URLS.SKILL_UP + "/learning-paths",
   LEARNING_PATH_ITEM: BASE_URLS.SKILL_UP + "/learning-path-items",
+  LEARNING_PATH_ENROLLMENT: BASE_URLS.SKILL_UP + "/learning-path-enrollments",
 }
 
 export const API_URLS = {
@@ -128,5 +129,12 @@ export const API_URLS = {
   UPDATE_LEARNING_PATH_ITEM: BASE_POINTS.LEARNING_PATH_ITEM, // PUT /api/learning-path-items/{id}
   DELETE_LEARNING_PATH_ITEM: BASE_POINTS.LEARNING_PATH_ITEM, // DELETE /api/learning-path-items/{id}
   REORDER_LEARNING_PATH_ITEM: BASE_POINTS.LEARNING_PATH_ITEM, // PATCH /api/learning-path-items/{id}/order
+
+  // Learning Path Enrollments (NEW)
+  CREATE_LEARNING_PATH_ENROLLMENT: BASE_POINTS.LEARNING_PATH_ENROLLMENT, // POST /api/learning-path-enrollments
+  GET_MY_LEARNING_PATH_ENROLLMENTS: BASE_POINTS.LEARNING_PATH_ENROLLMENT + "/my-enrollments", // GET /api/learning-path-enrollments/my-enrollments
+  DELETE_LEARNING_PATH_ENROLLMENT: BASE_POINTS.LEARNING_PATH_ENROLLMENT, // DELETE /api/learning-path-enrollments/{id}
+  GET_LEARNING_PATH_PROGRESS_SUMMARY: BASE_POINTS.LEARNING_PATH, // GET /api/learning-paths/{learningPathId}/progress/summary
+  GET_LEARNING_PATH_STATISTICS: BASE_POINTS.LEARNING_PATH + "/statistics", // GET /api/learning-paths/statistics
 
 }

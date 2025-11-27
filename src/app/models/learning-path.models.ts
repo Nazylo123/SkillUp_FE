@@ -56,3 +56,41 @@ export interface UpdateLearningPathItemRequest {
 export interface ReorderLearningPathItemRequest {
   newOrderIndex: number;
 }
+
+// Learning Path Enrollment Models (NEW APIs)
+
+export interface LearningPathEnrollment {
+  learningPathEnrollmentId: number;
+  userId: number;
+  learningPathId: number;
+  learningPathName: string;
+  userName: string;
+  status: string;
+  progressPct: number;
+  startedAt: string;
+  completedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  items?: LearningPathItem[];
+}
+
+export interface EnrollLearningPathRequest {
+  learningPathId: number;
+  userId?: number;  // Optional, backend can get from token
+}
+
+export interface LearningPathProgressSummary {
+  totalCourses: number;
+  completedCourses: number;
+  mandatoryCourses: number;
+  completedMandatory: number;
+  overallProgress: number;  // Percentage
+  status: 'NotStarted' | 'InProgress' | 'Completed';
+}
+
+export interface LearningPathStatistics {
+  totalPaths: number;
+  activePaths: number;  // Paths with at least 1 enrolled user
+  totalEnrolledUsers: number;
+  averageCompletionRate: number;
+}

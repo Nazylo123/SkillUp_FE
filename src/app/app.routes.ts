@@ -39,8 +39,13 @@ import { ManagerChatComponent } from './aproject/manager/manager-chat/manager-ch
 import { RoadmapFormComponent } from './aproject/manager/manager-roadmap/roadmap-form/roadmap-form.component';
 import { RoadmapDetailComponent } from './aproject/manager/manager-roadmap/roadmap-detail/roadmap-detail.component';
 import { ManagerRoadmapComponent } from './aproject/manager/manager-roadmap/manager-roadmap/manager-roadmap.component';
+import { ManagerLearningPathComponent } from './aproject/manager/manager-learning-path/manager-learning-path/manager-learning-path.component';
+import { LearningPathFormComponent } from './aproject/manager/manager-learning-path/learning-path-form/learning-path-form.component';
+import { LearningPathDetailComponent as ManagerLearningPathDetailComponent } from './aproject/manager/manager-learning-path/learning-path-detail/learning-path-detail.component';
 import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.component';
 import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
+import { LearningPathListComponent as UserLearningPathListComponent } from './aproject/user/learning-path/learning-path-list/learning-path-list.component';
+import { LearningPathDetail as UserLearningPathDetailComponent } from './aproject/user/learning-path/learning-path-detail/learning-path-detail.component';
 
 export const routes: Routes = [
     //project
@@ -57,6 +62,8 @@ export const routes: Routes = [
             {path: 'quiz/:id', component: QuizComponent},
             {path: 'roadmap', component: RoadmapListComponent},
             {path: 'roadmap/:id', component: RoadMap},
+            {path: 'learning-paths', component: UserLearningPathListComponent},
+            {path: 'learning-path/:id', component: UserLearningPathDetailComponent},
             {path: 'chat', component: ChatComponent},
         ]
     },
@@ -101,6 +108,10 @@ export const routes: Routes = [
             {path: 'roadmaps/create', component: RoadmapFormComponent},
             {path: 'roadmaps/edit/:id', component: RoadmapFormComponent},
             {path: 'roadmaps/detail/:id', component: RoadmapDetailComponent},
+            {path: 'learning-paths', component: ManagerLearningPathComponent},
+            {path: 'learning-paths/create', component: LearningPathFormComponent},
+            {path: 'learning-paths/edit/:id', component: LearningPathFormComponent},
+            {path: 'learning-paths/detail/:id', component: ManagerLearningPathDetailComponent},
         ]
     },
     {

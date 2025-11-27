@@ -9,7 +9,11 @@ import {
   CreateLearningPathRequest,
   CreateLearningPathItemRequest,
   UpdateLearningPathItemRequest,
-  ReorderLearningPathItemRequest
+  ReorderLearningPathItemRequest,
+  LearningPathEnrollment,
+  EnrollLearningPathRequest,
+  LearningPathProgressSummary,
+  LearningPathStatistics
 } from '../models/learning-path.models';
 
 @Injectable({
@@ -126,5 +130,50 @@ export class LearningPathService {
     return this.http.patch(`${API_URLS.REORDER_LEARNING_PATH_ITEM}/${id}/order`, {
       newOrderIndex
     });
+  }
+
+  // ========== LEARNING PATH ENROLLMENTS (NEW) ==========
+
+  /**
+   * Enroll in a learning path
+   * POST /api/learning-path-enrollments
+   */
+  enrollInLearningPath(learningPathId: number): Observable<LearningPathEnrollment> {
+    const data: EnrollLearningPathRequest = { learningPathId };
+    return this.http.post<LearningPathEnrollment>(API_URLS.CREATE_LEARNING_PATH_ENROLLMENT, data);
+  }
+
+  /**
+   * Get current user's enrolled learning paths
+   * GET /api/learning-path-enrollments/my-enrollments
+   */
+  getMyEnrollments(): Observable<LearningPathEnrollment[]> {
+    return this.http.get<LearningPathEnrollment[]>(API_URLS.GET_MY_LEARNING_PATH_ENROLLMENTS);
+  }
+
+  /**
+   * Unenroll from a learning path
+   * DELETE /api/learning-path-enrollments/{enrollmentId}
+   */
+  unenrollFromLearningPath(enrollmentId: number): Observable<any> {
+    return this.http.delete(`${API_URLS.DELETE_LEARNING_PATH_ENROLLMENT}/${enrollmentId}`);
+  }
+
+  /**
+   * Get progress summary for a learning path
+   * GET /api/learning-paths/{learningPathId}/progress/summary
+   */
+  getProgressSummary(learningPathId: number): Observable<LearningPathProgressSummary> {
+    return this.http.get<LearningPathProgressSummary>(
+      `${API_URLS.GET_LEARNING_PATH_PROGRESS_SUMMARY}/${learningPathId}/progress/summary`
+    );
+  }
+
+  /**
+   * Get learning path statistics (for Manager dashboard)
+   * GET /api/learning-paths/statistics
+   */
+  getStatistics(): Observable<LearningPathStatistics> {
+    return this.http.get<LearningPathStatistics>(API_URLS.GET_LEARNING_PATH_STATISTICS);
   }
 }
