@@ -55,7 +55,7 @@ export interface CourseDetail {
     deadline: string;
     isEnrolled: boolean;
     lessons: Lesson[];
-    quizzes: Quiz;
+    quiz: Quiz;
     documents: DocumentItem[];
 }
 
@@ -182,7 +182,7 @@ export interface DocumentItem {
     questionId: number;
     quizId: number;
     title: string;
-    questionType: string;
+    questionType: string | number;
     points: number;
     orderIndex: number;
     answerOptions: AnswerOption[];

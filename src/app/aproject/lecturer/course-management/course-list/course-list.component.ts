@@ -14,7 +14,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DialogService } from '../../../../services/dialog.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiCourseServices } from '../../../../services/course.service';
-import { Course, CourseCreateEdit, CoursePaginatedResponse } from '../../../../models/course.models';
+import { Course, CourseCreateEdit, CourseDetail, CoursePaginatedResponse } from '../../../../models/course.models';
 import { CourseType } from '../../../../models/lookup.model';
 import { Level } from '../../../../models/lookup.model';
 import { ApiLookupServices } from '../../../../services/lookup.service';
@@ -172,8 +172,8 @@ export class CreateCourse {
     courseForm = this.fb.group({
       name: ['', [Validators.required]],
       description: ['', []],
-      courseType: ['', [Validators.required]],
-      targetLevel: ['', [Validators.required]],
+      courseType: [null as number | null, [Validators.required]],
+      targetLevel: [null as number | null, [Validators.required]],
       duration: [null as number | null, [Validators.required]],
       image: [null as File | null, [Validators.required]],
     });
@@ -193,12 +193,12 @@ export class CreateCourse {
       this.loadOptions();
       if (this.data.id) {
         this.isEdit = true;
-        this.courseService.getCourseById(this.data.id).subscribe((response: any) => {
+        this.courseService.getCourseById(this.data.id).subscribe((response: CourseDetail) => {
           this.courseForm.patchValue({
             name: response.name,
             duration: response.duration,
-            courseType: response.courseType,
-            targetLevel: response.targetLevel,
+            courseType: response.courseTypeId,
+            targetLevel: response.targetLevelId,
             description: response.description,
             image: new File([], response.imageUrl),
           });
@@ -218,8 +218,8 @@ export class CreateCourse {
       const payload : CourseCreateEdit = {
         name: this.courseForm.value.name as string,
         description: this.courseForm.value.description as string,
-        courseTypeId: this.courseForm.value.courseType as string,
-        targetLevelId: this.courseForm.value.targetLevel as string,
+        courseTypeId: this.courseForm.value.courseType as number,
+        targetLevelId: this.courseForm.value.targetLevel as number,
         duration: this.courseForm.value.duration as number,
         imageUrl: this.courseForm.value.image as File,
       };
