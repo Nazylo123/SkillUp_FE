@@ -326,7 +326,7 @@ export class DeleteQuizDialog {
               <mat-icon>quiz</mat-icon>
               <div class="info-content">
                 <span class="label">Questions</span>
-                <span class="value">{{ data.questions?.length || 0 }}</span>
+                <span class="value">{{ data.questions.length || 0 }}</span>
               </div>
             </div>
           </div>
@@ -338,7 +338,7 @@ export class DeleteQuizDialog {
         <div class="questions-section">
           <h3>
             <mat-icon>list</mat-icon>
-            Questions ({{ data.questions?.length || 0 }})
+            Questions ({{ data.questions.length || 0 }})
           </h3>
 
           <div *ngIf="!data.questions || data.questions.length === 0" class="no-questions">
