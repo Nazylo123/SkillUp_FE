@@ -27,14 +27,16 @@ export class DocumentDialog {
     searchTerm = '';
     isDragOver = false;
     isUploading = false;
+    isDraftCourse = false;
 
     constructor(
         public dialogRef: MatDialogRef<DocumentDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: { courseId: number | string },
+        @Inject(MAT_DIALOG_DATA) public data: { courseId: number | string, isDraftCourse: boolean },
         private documentService: ApiDocumentServices,
         private dialog: MatDialog,
         private snack: MatSnackBar
     ) {
+      this.isDraftCourse = this.data.isDraftCourse;
     }
 
     ngOnInit() {
