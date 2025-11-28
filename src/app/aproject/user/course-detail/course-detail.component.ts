@@ -57,11 +57,19 @@ export class CourseDetailComponent {
 
         this.id = this.route.snapshot.paramMap.get('id')!;
         this.courseService.getCourseById(Number(this.id)).subscribe((course : any) => {
+            this.checkLesson(course);
             this.course = course;
             this.totalDuration = this.course.lessons.reduce((acc, lesson) => acc + lesson.totalDuration, 0);
             this.loadFeedbacks();
         });
     }
+
+    checkLesson(courseDetail: CourseDetail | null): void {
+        if (courseDetail?.status !== 'Approved') {
+            this.router.navigate(['/']);
+        }
+    }
+    
 
     toggleReply(feedbackId: string): void {
         const replyElement = document.getElementById(`reply-${feedbackId}`);
@@ -144,8 +152,8 @@ export class CourseDetailComponent {
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             data: {
-                title: 'Delete Feedback',
-                message: 'Are you sure you want to delete this feedback? This action cannot be undone.',
+                title: 'Enroll Course',
+                message: 'Are you sure you want to enroll this course? This action cannot be undone.',
                 type: 'warning'
             }
         });
