@@ -89,9 +89,6 @@
             <!-- Available Courses List -->
             <div class="courses-list">
               <div class="course-item" *ngFor="let course of filteredAvailableCourses">
-                <mat-checkbox [checked]="false" disabled>
-                </mat-checkbox>
-
                 <div class="course-info">
                   <div class="course-header">
                     <h4 class="course-title">{{getCourseDisplayName(course)}}</h4>
