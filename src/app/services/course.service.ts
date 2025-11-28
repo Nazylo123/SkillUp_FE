@@ -147,4 +147,12 @@ export class ApiCourseServices {
     return this.http.post<any>(API_URLS.CREATE_ENROLLMENT, payload);
   }
 
+  completeCourse(courseId: number): Observable<any> {
+    return this.http.post<any>(`${API_URLS.COURSE}/${courseId}/submit`, {});
+  }
+  
+  changeStatus(courseId: number, status: string): Observable<any> {
+    return this.http.patch<any>(`${API_URLS.COURSE}/${courseId}/status`, { status });
+  }
+
 }
