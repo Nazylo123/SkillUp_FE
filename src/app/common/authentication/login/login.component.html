@@ -11,7 +11,9 @@
                     </div>
                 </div>
                     <div class="login-with-socials d-md-flex align-items-center justify-content-space-between">
-                        <button mat-flat-button class="gray fw-semibold d-block me-5 btn-google"><img src="img/icon/google.png" alt="google"> Login with Google</button>
+                        <button mat-flat-button class="gray fw-semibold d-block me-5 btn-google" (click)="loginWithGoogle()">
+                            <img src="img/icon/google.png" alt="google"> Login with Google
+                        </button>
                     </div>
                     <div class="or text-center position-relative">
                         <span class="fw-semibold fs-16">or</span>

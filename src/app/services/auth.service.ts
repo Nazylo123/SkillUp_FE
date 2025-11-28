@@ -39,4 +39,8 @@ export class ApiAuthServices {
     return this.http.post<any>(API_URLS.LOGOUT, {});
   }
 
+  loginWithGoogle(idToken: string): Observable<any> {
+    return this.http.post<any>(API_URLS.LOGIN_GOOGLE, { idToken });
+  }
+
 }
