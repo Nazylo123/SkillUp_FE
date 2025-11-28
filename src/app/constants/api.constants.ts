@@ -29,6 +29,7 @@ export const API_URLS = {
   LOGOUT: BASE_POINTS.AUTH + "/logout-all",
   REFRESH_TOKEN: BASE_POINTS.AUTH + "/refresh-token",
   REVOKE_TOKEN: BASE_POINTS.AUTH + "/revoke-token",
+  CHANGE_PASSWORD: BASE_POINTS.AUTH + "/me/change-password",
   USER_INFO: BASE_POINTS.USER + "/me",
   UPDATE_USER_INFO: BASE_POINTS.USER + "/me/update-with-avatar",
 

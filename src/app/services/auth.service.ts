@@ -43,4 +43,8 @@ export class ApiAuthServices {
     return this.http.post<any>(API_URLS.LOGIN_GOOGLE, { idToken });
   }
 
+  changePassword(payload: { oldPassword: string, newPassword: string }): Observable<any> {
+    return this.http.put<any>(API_URLS.CHANGE_PASSWORD, payload);
+  }
+
 }
