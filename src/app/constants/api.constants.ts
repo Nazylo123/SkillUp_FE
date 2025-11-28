@@ -25,6 +25,7 @@ export const API_URLS = {
   
   //API Auth
   LOGIN: BASE_POINTS.AUTH + "/login",
+  LOGIN_GOOGLE: BASE_POINTS.AUTH + "/google",
   LOGOUT: BASE_POINTS.AUTH + "/logout-all",
   REFRESH_TOKEN: BASE_POINTS.AUTH + "/refresh-token",
   REVOKE_TOKEN: BASE_POINTS.AUTH + "/revoke-token",
