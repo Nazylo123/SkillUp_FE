@@ -28,6 +28,7 @@ import { ProfileComponent } from './common/profile/profile.component';
 import { SecurityComponent } from './common/security/security.component';
 import { CourseLearnComponent } from './aproject/user/course-learn/course-learn.component';
 import { LoginComponent } from './common/authentication/login/login.component';
+import { ForgotPasswordComponent } from './common/authentication/forgot-password/forgot-password.component';
 import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
 import { QuizListComponent } from './aproject/lecturer/course-management/quiz-list/quiz-list.component';
 import { QuizComponent } from './aproject/user/quiz/quiz.component';
@@ -49,7 +50,9 @@ import { LearningPathDetail as UserLearningPathDetailComponent } from './aprojec
 
 export const routes: Routes = [
     //project
-    {path: 'login', component: LoginComponent},
+    {path: 'authentication/login', component: LoginComponent},
+    {path: 'authentication/forgot-password', component: ForgotPasswordComponent},
+    {path: 'login', redirectTo: 'authentication/login', pathMatch: 'full'},
     {
         path: '', component: User,
         children: [

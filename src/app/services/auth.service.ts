@@ -47,4 +47,16 @@ export class ApiAuthServices {
     return this.http.put<any>(API_URLS.CHANGE_PASSWORD, payload);
   }
 
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post<any>(API_URLS.FORGOT_PASSWORD, { email });
+  }
+
+  verifyOtp(payload: { email: string, otp: string }): Observable<any> {
+    return this.http.post<any>(API_URLS.VERIFY_OTP, payload);
+  }
+
+  resetPassword(payload: { resetToken: string, newPassword: string }): Observable<any> {
+    return this.http.post<any>(API_URLS.RESET_PASSWORD, payload);
+  }
+
 }

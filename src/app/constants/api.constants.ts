@@ -30,6 +30,9 @@ export const API_URLS = {
   REFRESH_TOKEN: BASE_POINTS.AUTH + "/refresh-token",
   REVOKE_TOKEN: BASE_POINTS.AUTH + "/revoke-token",
   CHANGE_PASSWORD: BASE_POINTS.AUTH + "/me/change-password",
+  FORGOT_PASSWORD: BASE_POINTS.AUTH + "/forgot-password",
+  VERIFY_OTP: BASE_POINTS.AUTH + "/verify-otp",
+  RESET_PASSWORD: BASE_POINTS.AUTH + "/reset-password",
   USER_INFO: BASE_POINTS.USER + "/me",
   UPDATE_USER_INFO: BASE_POINTS.USER + "/me/update-with-avatar",
 
