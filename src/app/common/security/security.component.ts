@@ -11,6 +11,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiAuthServices } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { TokenService } from '../../context/token.service';
 
 @Component({
     selector: 'app-security',
@@ -29,13 +30,34 @@ export class SecurityComponent {
     constructor(
         private fb: FormBuilder,
         private api: ApiAuthServices,
-        private snack: MatSnackBar
+        private snack: MatSnackBar,
+        private tokenService : TokenService
     ) {
         this.changePasswordForm = this.fb.group({
             oldPassword: ['', [Validators.required, Validators.minLength(6)]],
             newPassword: ['', [Validators.required, Validators.minLength(6)]],
             confirmPassword: ['', [Validators.required]]
         });
+    }
+
+    getRole(): string {
+        return this.tokenService.getRole()?.toLocaleLowerCase() || '';
+    }
+
+    getProfileRoute(): string[] {
+        const role = this.getRole();
+        if (!role) {
+            return ['/'];
+        }
+        return ['/', role, 'profile'];
+    }
+
+    getSecurityRoute(): string[] {
+        const role = this.getRole();
+        if (!role) {
+            return ['/'];
+        }
+        return ['/', role, 'security'];
     }
 
     onSubmit(): void {

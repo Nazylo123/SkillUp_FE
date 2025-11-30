@@ -18,7 +18,7 @@ import { Feedback, FeedbackComment } from '../../../models/feedback.model';
 import { ApiFeedbackServices } from '../../../services/feedback.service';
 import { ConfirmDialogComponent } from '../../../common/confirm-dialog/confirm-dialog.component';
 import { UserInfo } from '../../../models/user.models';
-import { AuthService } from '../../../common/context/auth.service';
+import { AuthService } from '../../../context/auth.service';
 
 @Component({
     selector: 'app-course-detail',

@@ -31,6 +31,10 @@
   }
 }
 
+::ng-deep .mat-mdc-dialog-surface {
+  overflow-x: hidden;
+}
+
 .course-description {
   h6 {
     color: #2d3748;
