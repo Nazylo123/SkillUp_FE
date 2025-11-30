@@ -19,6 +19,7 @@ import { CourseDetail, Lesson, Question, SubLesson } from '../../../../models/co
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { QuestionType } from '../../../../enums/api.enums';
 import { DialogService } from '../../../../services/dialog.service';
+import { InputDialogComponent, InputDialogData } from '../../../../common/input-dialog/input-dialog.component';
 
 @Component({
     selector: 'app-manager-course-detail',
@@ -110,12 +111,6 @@ export class ManagerCourseDetail implements OnInit {
     private load() {
         this.courseService.getCourseById(Number(this.courseId)).subscribe((course: CourseDetail) => {
             this.courseDetail = course;
-            this.snackBar.open('Course detail loaded successfully', '', {
-                duration: 3000,
-                panelClass: ['success-snackbar', 'custom-snackbar'],
-                horizontalPosition: 'right',
-                verticalPosition: 'top'
-            });
         }, (error: any) => {
             this.snackBar.open('Failed to load course detail', '', {
                 duration: 3000,
@@ -137,7 +132,7 @@ export class ManagerCourseDetail implements OnInit {
             if (!ok) {
               return;
             }
-            if (this.courseDetail && confirm(`Are you sure you want to approve "${this.courseDetail.name}"?`)) {
+            if (this.courseDetail) {
                 this.courseService.changeStatus(Number(this.courseId), 'Approved').subscribe(() => {
                     this.load();
                     this.snackBar.open('Course approved successfully', '', {
@@ -170,26 +165,42 @@ export class ManagerCourseDetail implements OnInit {
             if (!ok) {
               return;
             }
-            const reason = prompt(`Please provide a reason for rejecting "${this.courseDetail?.name}"?`);
-            if (reason) {
-                this.courseService.changeStatus(Number(this.courseId), 'Rejected').subscribe(() => {
-                    this.load();
-                        this.snackBar.open('Course rejected successfully', '', {
-                        duration: 3000,
-                        panelClass: ['success-snackbar', 'custom-snackbar'],
-                        horizontalPosition: 'right',
-                        verticalPosition: 'top'
-                    });
+            
+            // Open input dialog to get rejection reason
+            const dialogRef = this.dialog.open(InputDialogComponent, {
+              width: '500px',
+              disableClose: true,
+              data: {
+                title: 'Rejection Reason',
+                message: `Please provide a reason for rejecting "${this.courseDetail?.name}":`,
+                label: 'Reason',
+                placeholder: 'Enter rejection reason...',
+                confirmText: 'Reject',
+                cancelText: 'Cancel',
+                required: true
+              } as InputDialogData
+            });
+
+            dialogRef.afterClosed().subscribe((reason: string | null) => {
+              if (reason && reason.trim()) {
+                this.courseService.changeStatus(Number(this.courseId), 'Rejected', reason).subscribe(() => {
+                  this.load();
+                  this.snackBar.open('Course rejected successfully', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar', 'custom-snackbar'],
+                    horizontalPosition: 'right',
+                    verticalPosition: 'top'
+                  });
                 }, (error: any) => {
-                    this.snackBar.open('Failed to reject course', '', {
-                        duration: 3000,
-                        panelClass: ['error-snackbar', 'custom-snackbar'],
-                        horizontalPosition: 'right',
-                        verticalPosition: 'top'
-                    });
+                  this.snackBar.open('Failed to reject course', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar', 'custom-snackbar'],
+                    horizontalPosition: 'right',
+                    verticalPosition: 'top'
+                  });
                 });
-                
-            }
+              }
+            });
         });
     }
 

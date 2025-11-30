@@ -16,7 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiUserServices } from '../../services/user.service';
-import { AuthService } from '../context/auth.service';
+import { AuthService } from '../../context/auth.service';
+import { TokenService } from '../../context/token.service';
 @Component({
     selector: 'app-profile',
     imports: [RouterLink, MatCardModule, MatButtonModule, MatMenuModule, RouterLinkActive, MatFormFieldModule, MatInputModule,MatIconModule,
@@ -27,6 +28,7 @@ import { AuthService } from '../context/auth.service';
 })
 export class ProfileComponent implements OnDestroy {
     private fb = inject(FormBuilder);
+    role = '';
     profileForm = this.fb.group({
         fullName: ['', [Validators.required]],
         email: [{value: '', disabled: true}, [Validators.required, Validators.email]],
@@ -36,10 +38,30 @@ export class ProfileComponent implements OnDestroy {
         gender: ['', [Validators.required]],
         level: ['', [Validators.required]],
     });
-
     constructor(private apiAuthService: ApiAuthServices, private snack: MatSnackBar,
-        private apiUser : ApiUserServices, private authService : AuthService
+        private apiUser : ApiUserServices, private authService : AuthService, private tokenService : TokenService
     ) {}
+
+    getRole(): string {
+        console.log(this.tokenService.getRole()?.toLocaleLowerCase());
+        return this.tokenService.getRole()?.toLocaleLowerCase() || '';
+    }
+
+    getProfileRoute(): string[] {
+        const role = this.getRole();
+        if (!role) {
+            return ['/'];
+        }
+        return ['/', role, 'profile'];
+    }
+
+    getSecurityRoute(): string[] {
+        const role = this.getRole();
+        if (!role) {
+            return ['/'];
+        }
+        return ['/', role, 'security'];
+    }
 
     userProfile: UserProfile | null = null;
     previewUrl: string | null = null;

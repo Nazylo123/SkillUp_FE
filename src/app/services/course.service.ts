@@ -151,8 +151,8 @@ export class ApiCourseServices {
     return this.http.post<any>(`${API_URLS.COURSE}/${courseId}/submit`, {});
   }
   
-  changeStatus(courseId: number, status: string): Observable<any> {
-    return this.http.patch<any>(`${API_URLS.COURSE}/${courseId}/status`, { status });
+  changeStatus(courseId: number, status: string, reason?: string): Observable<any> {
+    return this.http.patch<any>(`${API_URLS.COURSE}/${courseId}/status`, { status, rejectionReason: reason });
   }
 
 }

@@ -39,6 +39,7 @@ export interface PaginatedResponse<T> {
 }
 
 export interface UserManager {
+    allCourseProgress?: number;
     userId: number;
     fullName: string;
     email: string;

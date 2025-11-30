@@ -6,6 +6,7 @@ export interface Course {
     courseType: CourseType;
     imageUrl: string | null;
     duration: number | null;
+    rejectionReason: string | null;
     level: string;
     createdBy: number;
     createdByName: string;

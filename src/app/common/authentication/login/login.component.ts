@@ -11,8 +11,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiAuthServices } from '../../../services/auth.service';
-import { AuthService } from '../../context/auth.service';
-import { TokenService } from '../../context/token.service';
+import { AuthService } from '../../../context/auth.service';
+import { TokenService } from '../../../context/token.service';
 import { environment } from '../../../../environments/environment';
 
 declare const google: any;
@@ -57,6 +57,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.loadGoogleScript();
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onSubmit();
     }
   }
 

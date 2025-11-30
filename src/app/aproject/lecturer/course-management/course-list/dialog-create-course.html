@@ -87,8 +87,11 @@
             </div>
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="d-block fw-semibold">Description</label>
+                    <label class="d-block fw-semibold">Description <span class="text-danger">*</span></label>
                     <textarea class="input-control input-des" placeholder="Course Description" formControlName="description"></textarea>
+                    <div *ngIf="courseForm.get('description')?.hasError('required') && courseForm.get('description')?.touched" class="error-message">
+                        Description is required
+                    </div>
                 </div>
             </div>
         </div>

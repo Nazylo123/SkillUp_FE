@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { ToggleService } from './common/context/toggle.service';
 import { CommonModule, ViewportScroller } from '@angular/common';
 import { RouterOutlet, Router, Event, NavigationEnd } from '@angular/router';
 import { MatProgressBar } from "@angular/material/progress-bar";
-import { LoadingService } from './common/context/loading.service';
 import { ChatBoxComponent } from './shared/chat-box/chat-box.component';
+import { ToggleService } from './context/toggle.service';
+import { LoadingService } from './context/loading.service';
 
 @Component({
     selector: 'app-root',

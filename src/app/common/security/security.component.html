@@ -8,10 +8,10 @@
         <nav>
             <ul class="ps-0 mt-0">
                 <li>
-                    <a routerLink="/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Profile</a>
+                    <a [routerLink]="getProfileRoute()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Profile</a>
                 </li>
                 <li>
-                    <a routerLink="/security" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Security</a>
+                    <a [routerLink]="getSecurityRoute()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Security</a>
                 </li>
             </ul>
         </nav>
