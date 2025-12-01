@@ -115,6 +115,16 @@ export class LecturerCourseList {
       });
     }
 
+    reasonReject(item: any) {
+      this.dialogService.confirm({
+        type: 'confirm',
+        title: 'Reason Reject',
+        message: `Reason: ${item.rejectionReason}`,
+        confirmText: 'Yes',
+        cancelText: 'No'
+      });
+    }
+
     onDelete(course: Course) {
       this.dialogService.confirm({
         type: 'confirm',
@@ -171,7 +181,7 @@ export class CreateCourse {
     fb = inject(FormBuilder);
     courseForm = this.fb.group({
       name: ['', [Validators.required]],
-      description: ['', []],
+      description: ['', [Validators.required]],
       courseType: [null as number | null, [Validators.required]],
       targetLevel: [null as number | null, [Validators.required]],
       duration: [null as number | null, [Validators.required]],

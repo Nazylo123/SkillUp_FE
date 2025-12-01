@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Inject, inject, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
@@ -9,11 +9,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIcon, MatIconModule } from "@angular/material/icon";
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserManager } from '../../../../models/user.models';
 import { ApiUserServices } from '../../../../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-manager-lecturer',
@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 export class ManagerLecturer {
   constructor(private router: Router,public dialog: MatDialog, private apiUserServices: ApiUserServices, private snack: MatSnackBar) {}
 
-  displayedColumns: string[] = ['user','progress', 'email', 'level','courses', 'role', 'status', 'action'];
+  displayedColumns: string[] = ['user', 'email','courses', 'status', 'action'];
   dataSource = new MatTableDataSource<UserManager>([]);
   searchTerm = '';
   
@@ -52,7 +52,7 @@ export class ManagerLecturer {
 
   loadUsers(page: number = 1, pageSize: number = 10, searchTerm?: string) {
     this.isLoading = true;
-    this.apiUserServices.getUserManagerList(page, pageSize, searchTerm).subscribe(
+    this.apiUserServices.getLecturerManagerList(page, pageSize, searchTerm).subscribe(
       (res: any) => {
         console.log(res);
         this.dataSource = res.items;
@@ -100,7 +100,10 @@ export class ManagerLecturer {
       this.dialog.open(CreateLecturerDialog, {
           width: '600px',
           enterAnimationDuration,
-          exitAnimationDuration
+          exitAnimationDuration,
+          data: {
+            loadUsers: () => this.loadUsers(this.currentPage, this.pageSize, this.searchTerm)
+          }
       });
   }
 
@@ -297,18 +300,59 @@ export class ManagerLecturer {
 @Component({
     selector: 'create-lecturer',
     templateUrl: './dialog-create-lecturer.html',
-    imports:[CommonModule],
+    imports:[CommonModule, FormsModule, ReactiveFormsModule],
+    styleUrls: ['./manager-lecturer.component.scss']
 })
 export class CreateLecturerDialog {
 
+    fb = inject(FormBuilder);
+    lecturerForm = this.fb.group({
+      fullName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+    });
+    
     constructor(
-        public dialogRef: MatDialogRef<CreateLecturerDialog>
+        public dialogRef: MatDialogRef<CreateLecturerDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: { loadUsers: () => void },
+        private apiUserServices: ApiUserServices,
+        private snack: MatSnackBar
     ) {}
-
-    listRole: string[] = ['Intern', 'Fresher', 'Junior', 'Middle', 'Senior']
 
     close(){
         this.dialogRef.close(true);
     }
 
+    onSubmit() {
+      this.lecturerForm.markAllAsTouched();
+      if (!this.lecturerForm.valid) return;
+
+      this.apiUserServices.createLecturer(this.lecturerForm.value).subscribe({
+        next: (res: any) => {
+          
+          this.snack.open('Lecturer created successfully', '', { 
+            duration: 2200, 
+            panelClass: ['success-snackbar', 'custom-snackbar'], 
+            horizontalPosition: 'right', 
+            verticalPosition: 'top' 
+          });
+          
+          // Reload users list
+          if (this.data?.loadUsers) {
+            this.data.loadUsers();
+          }
+          
+          // Close dialog
+          this.close();
+        },
+        error: (error: any) => {
+          console.error('Error creating lecturer:', error);
+          this.snack.open('Failed to create lecturer. Please try again.', '', { 
+            duration: 3000, 
+            panelClass: ['error-snackbar', 'custom-snackbar'], 
+            horizontalPosition: 'right', 
+            verticalPosition: 'top' 
+          });
+        }
+      });
+    }
 }

@@ -3,18 +3,21 @@
         <h4 class="mb-0">Create New User</h4>
         <button class="close-btn bg-transparent p-0 border-none" (click)="close()"><i class="flaticon-close"></i></button>
     </div>
-    <form>
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
         <div class="row">
-            <div class="col-lg-6 col-md-6">
+            <!-- <div class="col-lg-6 col-md-6">
                 <div class="form-group">
                     <label class="d-block fw-semibold">Image</label>
                     <input type="file" class="input-control">
                 </div>
-            </div>
+            </div> -->
             <div class="col-lg-6 col-md-6">
                 <div class="form-group">
                     <label class="d-block fw-semibold">Name</label>
-                    <input type="text" class="input-control" placeholder="Name">
+                    <input type="text" class="input-control" placeholder="Name" formControlName="fullName">
+                    <div *ngIf="employeeForm.get('fullName')?.hasError('required') && employeeForm.get('fullName')?.touched" class="error-message">
+                        Name is required
+                    </div>
                 </div>
             </div>
             <!-- <div class="col-lg-6 col-md-6">
@@ -26,7 +29,13 @@
             <div class="col-lg-6 col-md-6">
                 <div class="form-group">
                     <label class="d-block fw-semibold">Email</label>
-                    <input type="email" class="input-control" placeholder="Email">
+                    <input type="email" class="input-control" placeholder="Email" formControlName="email">
+                    <div *ngIf="employeeForm.get('email')?.hasError('required') && employeeForm.get('email')?.touched" class="error-message">
+                        Email is required
+                    </div>
+                    <div *ngIf="employeeForm.get('email')?.hasError('email') && employeeForm.get('email')?.touched" class="error-message">
+                        Invalid email address
+                    </div>
                 </div>
             </div>
             <!-- <div class="col-lg-6 col-md-6">
@@ -37,12 +46,15 @@
             </div> -->
             <div class="col-lg-6 col-md-6">
                 <div class="form-group">
-                    <label class="d-block fw-semibold">Role</label>
-                    <select class="input-control">
-                        <option *ngFor="let role of listRole" [value]="role">
-                            {{ role }}
+                    <label class="d-block fw-semibold">Level</label>
+                    <select class="input-control" formControlName="levelId">
+                        <option *ngFor="let level of listLevel" [value]="level.levelId">
+                            {{ level.name }}
                         </option>
                     </select>
+                    <div *ngIf="employeeForm.get('levelId')?.hasError('required') && employeeForm.get('levelId')?.touched" class="error-message">
+                        Level is required
+                    </div>
                 </div>
             </div>
         </div>

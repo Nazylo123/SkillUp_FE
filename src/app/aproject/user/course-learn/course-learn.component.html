@@ -96,7 +96,7 @@
                         </mat-expansion-panel-header>
                         <ul class="mb-0 mt-0 ps-0 content-list">
                             <li [class]="detail?.progressPct !== 100 ? 'disabled-link' : ''">
-                                <a routerLink="/final-quiz/9" class="d-flex align-items-center justify-content-space-between">
+                                <a routerLink="/quiz/{{detail?.quiz?.quizId}}" class="d-flex align-items-center justify-content-space-between">
                                     <span class="d-block gray-color fw-medium position-relative"><i class="ri-star-line"></i> Quiz: Getting Started with Node.js</span>
                                     <span class="d-block gray-color fw-medium">45m</span>
                                 </a>

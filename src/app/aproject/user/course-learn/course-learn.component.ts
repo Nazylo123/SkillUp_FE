@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -30,19 +30,27 @@ export class CourseLearnComponent implements OnDestroy {
     constructor(
         private courseService: ApiCourseServices, 
         private route: ActivatedRoute,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private router: Router
     ) {
         this.id = this.route.snapshot.paramMap.get('id')!;
     }
 
     ngOnInit(): void {
         this.courseService.getCourseById(Number(this.id)).subscribe((course : any) => {
+            this.checkLesson(course);
             this.detail = course;
             console.log('Course detail:', this.detail);
             this.currentSubLesson = this.getNextSubLessonToLearn();
             console.log('Current sub lesson:', this.currentSubLesson);
             console.log('Video URL:', this.currentSubLesson?.contentUrl);
         });
+    }
+
+    checkLesson(courseDetail: CourseDetail | null): void {
+        if (courseDetail?.status !== 'Approved') {
+            this.router.navigate(['/']);
+        }
     }
     
     getSubLesson(lessonId: number, subLessonId: number) : SubLesson | null {

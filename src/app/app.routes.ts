@@ -28,6 +28,7 @@ import { ProfileComponent } from './common/profile/profile.component';
 import { SecurityComponent } from './common/security/security.component';
 import { CourseLearnComponent } from './aproject/user/course-learn/course-learn.component';
 import { LoginComponent } from './common/authentication/login/login.component';
+import { ForgotPasswordComponent } from './common/authentication/forgot-password/forgot-password.component';
 import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
 import { QuizListComponent } from './aproject/lecturer/course-management/quiz-list/quiz-list.component';
 import { QuizComponent } from './aproject/user/quiz/quiz.component';
@@ -46,16 +47,22 @@ import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.componen
 import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
 import { LearningPathListComponent as UserLearningPathListComponent } from './aproject/user/learning-path/learning-path-list/learning-path-list.component';
 import { LearningPathDetail as UserLearningPathDetailComponent } from './aproject/user/learning-path/learning-path-detail/learning-path-detail.component';
+import { authGuard } from './guards/auth.guard';
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
     //project
-    {path: 'login', component: LoginComponent},
+    {path: 'authentication/login', component: LoginComponent},
+    {path: 'authentication/forgot-password', component: ForgotPasswordComponent},
+    {path: 'login', redirectTo: 'authentication/login', pathMatch: 'full'},
     {
         path: '', component: User,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['Employee'] },
         children: [
             {path: '', component: Home},
-            {path: 'my-courses', component: MyCoursesComponent},
             {path: 'profile', component: ProfileComponent},
+            {path: 'my-courses', component: MyCoursesComponent},
             {path: 'security', component: SecurityComponent},
             {path: 'course-detail/:id', component: CourseDetailComponent},
             {path: 'course/learn/:id', component: CourseLearnComponent},
@@ -70,8 +77,12 @@ export const routes: Routes = [
     {
         path:'admin', 
         component: Admin,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['Admin'] },
         children: [
             {path: '', component: AdminDashboard},
+            {path: 'profile', component: ProfileComponent},
+            {path: 'security', component: SecurityComponent},
             {path: 'users', component: AdminUserManagement, 
                 children:[
                     {path: '', component: AdminUserList},
@@ -88,8 +99,12 @@ export const routes: Routes = [
     {
         path: 'manager',
         component: Manager,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['Manager'] },
         children: [
             {path: '', component: ManagerDashboard},
+            {path: 'profile', component: ProfileComponent},
+            {path: 'security', component: SecurityComponent},
             {path: 'chat', component: ManagerChatComponent},
             {path: 'users', component: ManagerUserManagement,
                 children: [
@@ -117,8 +132,12 @@ export const routes: Routes = [
     {
         path: 'lecturer',
         component: Lecturer,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['Lecturer'] },
         children: [
             {path: '', component: LecturerCourseList},
+            {path: 'profile', component: ProfileComponent},
+            {path: 'security', component: SecurityComponent},
             {path: 'courses', component: LecturerCourseManagement,
                 children: [
                     {path: '', component:LecturerCourseList},
