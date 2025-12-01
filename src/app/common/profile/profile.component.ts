@@ -16,7 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiUserServices } from '../../services/user.service';
-import { AuthService } from '../context/auth.service';
+import { AuthService } from '../../context/auth.service';
+import { TokenService } from '../../context/token.service';
 @Component({
     selector: 'app-profile',
     imports: [RouterLink, MatCardModule, MatButtonModule, MatMenuModule, RouterLinkActive, MatFormFieldModule, MatInputModule,MatIconModule,
@@ -37,12 +38,14 @@ export class ProfileComponent implements OnDestroy {
         level: ['', [Validators.required]],
     });
 
-    constructor(private apiAuthService: ApiAuthServices, private snack: MatSnackBar,
-        private apiUser : ApiUserServices, private authService : AuthService
+    constructor(
+        private apiAuthService: ApiAuthServices,
+        private snack: MatSnackBar,
+        private apiUser: ApiUserServices,
+        private authService: AuthService,
+        private tokenService: TokenService
     ) {}
 
-<<<<<<< Updated upstream
-=======
     getRole(): string {
         return this.tokenService.getRole()?.toLocaleLowerCase() || '';
     }
@@ -71,7 +74,6 @@ export class ProfileComponent implements OnDestroy {
         return ['/', role, 'security'];
     }
 
->>>>>>> Stashed changes
     userProfile: UserProfile | null = null;
     previewUrl: string | null = null;
     selectedFile: File | null = null;
