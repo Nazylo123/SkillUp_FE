@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -7,25 +8,38 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiAuthServices } from '../../services/auth.service';
+import { TokenService } from '../../context/token.service';
 
 @Component({
     selector: 'app-security',
-    imports: [RouterLink, MatCardModule, MatButtonModule, MatMenuModule, RouterLinkActive, MatFormFieldModule, MatInputModule, MatIconModule, MatCheckboxModule],
+    imports: [
+        RouterLink,
+        RouterLinkActive,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatCheckboxModule
+    ],
     templateUrl: './security.component.html',
     styleUrls: ['./security.component.scss']
 })
 export class SecurityComponent {
 
     hide = true;
+    changePasswordForm: FormGroup;
+    isSubmitting = false;
 
-<<<<<<< Updated upstream
-    constructor() {}
-=======
     constructor(
         private fb: FormBuilder,
         private api: ApiAuthServices,
         private snack: MatSnackBar,
-        private tokenService : TokenService
+        private tokenService: TokenService
     ) {
         this.changePasswordForm = this.fb.group({
             oldPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -126,6 +140,5 @@ export class SecurityComponent {
             }
         });
     }
->>>>>>> Stashed changes
 
 }
