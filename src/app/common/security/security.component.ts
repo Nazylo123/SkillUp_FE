@@ -32,6 +32,8 @@ import { TokenService } from '../../context/token.service';
 export class SecurityComponent {
 
     hide = true;
+    hideNew = true;
+    hideConfirm = true;
     changePasswordForm: FormGroup;
     isSubmitting = false;
 
