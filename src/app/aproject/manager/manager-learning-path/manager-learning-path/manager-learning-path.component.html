@@ -131,9 +131,9 @@
     <div *ngIf="!isLoading" class="tagus-mat-table mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" class="overflow-x-hidden">
 
-        <!-- Learning Path Column -->
-        <ng-container matColumnDef="path">
-          <th mat-header-cell *matHeaderCellDef class="text-start">Learning Path</th>
+        <!-- Roadmap Column -->
+        <ng-container matColumnDef="roadmap">
+          <th mat-header-cell *matHeaderCellDef class="text-start">Roadmap</th>
           <td mat-cell *matCellDef="let element" class="text-start">
             <div class="path-info">
               <strong class="d-block">{{element.name}}</strong>
@@ -142,31 +142,49 @@
           </td>
         </ng-container>
 
-        <!-- Courses Column -->
-        <ng-container matColumnDef="courses">
-          <th mat-header-cell *matHeaderCellDef>Courses</th>
+        <!-- Category Column -->
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>Category</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="badge text-soft-info">{{element.category || 'N/A'}}</span>
+          </td>
+        </ng-container>
+
+        <!-- Users Column -->
+        <ng-container matColumnDef="users">
+          <th mat-header-cell *matHeaderCellDef>Users</th>
           <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center">
-              <mat-icon class="small-icon">school</mat-icon>
-              <span class="ms-1">{{getCourseCount(element)}}</span>
+              <mat-icon class="small-icon">people</mat-icon>
+              <span class="ms-1">{{element.totalEnrolledUsers || 0}}</span>
             </div>
           </td>
         </ng-container>
 
-        <!-- Creator Column -->
-        <ng-container matColumnDef="creator">
-          <th mat-header-cell *matHeaderCellDef>Created By</th>
+        <!-- Avg Progress Column -->
+        <ng-container matColumnDef="avgProgress">
+          <th mat-header-cell *matHeaderCellDef>Avg Progress</th>
           <td mat-cell *matCellDef="let element">
-            <span>{{element.createdByName}}</span>
+            <span>{{element.averageProgress || 0}}%</span>
           </td>
         </ng-container>
 
-        <!-- Created Date Column -->
-        <ng-container matColumnDef="created">
-          <th mat-header-cell *matHeaderCellDef>Created Date</th>
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
           <td mat-cell *matCellDef="let element">
-            <span class="d-block">{{element.createdAt | date:'medium'}}</span>
-            <small class="muted-color">Updated: {{element.updatedAt | date:'short'}}</small>
+            <span class="badge" [ngClass]="getPathStatusClass(element.status)">
+              {{element.status || 'Active'}}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Created Column -->
+        <ng-container matColumnDef="created">
+          <th mat-header-cell *matHeaderCellDef>Created</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="d-block">{{element.createdAt | date:'mediumDate'}}</span>
+            <small class="muted-color">by {{element.createdByName}}</small>
           </td>
         </ng-container>
 
@@ -190,10 +208,10 @@
               </button>
               <button
                 mat-icon-button
-                color="warn"
-                matTooltip="Delete"
-                (click)="deletePath(element)">
-                <mat-icon>delete</mat-icon>
+                [color]="element.status === 'Active' ? 'warn' : 'accent'"
+                [matTooltip]="element.status === 'Active' ? 'Deactivate' : 'Activate'"
+                (click)="togglePathStatus(element)">
+                <mat-icon>{{element.status === 'Active' ? 'block' : 'check_circle'}}</mat-icon>
               </button>
             </div>
           </td>
@@ -226,22 +244,141 @@
   </mat-card-content>
 </mat-card>
 
-<!-- User Progress View (Placeholder) -->
+<!-- User Progress Table -->
 <mat-card class="mb-25 tagus-card" *ngIf="currentView === 'progress'">
   <mat-card-header>
     <h5 class="mb-0">User Progress Tracking</h5>
   </mat-card-header>
 
+  <div class="tagus-search-box mb-15 mt-20">
+    <input
+      type="text"
+      class="input-search border-radius"
+      placeholder="Search users or learning paths..."
+      [(ngModel)]="progressSearchTerm"
+      (input)="searchProgress()">
+    <button mat-flat-button class="tagus" (click)="searchProgress()">
+      <i class="ri-search-line"></i>
+    </button>
+  </div>
+
   <mat-card-content>
-    <div class="placeholder-content">
-      <mat-icon>analytics</mat-icon>
-      <h4>User Progress Tracking</h4>
-      <p class="muted-color">This feature requires additional API endpoints:</p>
-      <ul class="text-start">
-        <li>GET /api/learning-paths/{{'{id}'}}/enrollments - View enrolled users</li>
-        <li>GET /api/learning-paths/{{'{id}'}}/progress - Track user progress</li>
-      </ul>
-      <p class="muted-color">Coming soon...</p>
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoadingProgress" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoadingProgress" class="tagus-mat-table mat-elevation-z8">
+      <table mat-table [dataSource]="progressDataSource" class="overflow-x-hidden">
+
+        <!-- User Column -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef class="text-start">User</th>
+          <td mat-cell *matCellDef="let element" class="text-start">
+            <div class="d-flex align-items-center user-info">
+              <img [src]="element.userAvatar || 'img/user/user12.jpg'" class="rounded-circle me-3" width="40" alt="user">
+              <div class="title">
+                <strong class="d-block">{{element.userName}}</strong>
+                <small class="muted-color">{{element.userEmail}}</small>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Learning Path Column -->
+        <ng-container matColumnDef="learningPath">
+          <th mat-header-cell *matHeaderCellDef>Learning Path</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="learning-path-info">
+              <strong class="d-block">{{element.learningPathName}}</strong>
+              <small class="muted-color">{{element.completedCourses}} / {{element.totalCourses}} courses</small>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="progress">
+          <th mat-header-cell *matHeaderCellDef>Progress</th>
+          <td mat-cell *matCellDef="let element" class="text-start">
+            <span class="d-block gray-color mb-5 fw-normal">{{element.progressPct}}%</span>
+            <mat-progress-bar
+              mode="determinate"
+              [value]="element.progressPct"
+              [color]="element.progressPct === 100 ? 'accent' : 'primary'">
+            </mat-progress-bar>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="badge" [ngClass]="getStatusBadgeClass(element.status)">
+              {{element.status}}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Start Date Column -->
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef>Started</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="d-block">{{formatDate(element.startedAt)}}</span>
+            <small class="muted-color" *ngIf="element.completedAt">
+              Completed: {{formatDate(element.completedAt)}}
+            </small>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="action-buttons">
+              <button
+                mat-icon-button
+                matTooltip="View Progress Details"
+                (click)="viewEnrollmentProgress(element)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="Unenroll User"
+                (click)="unenrollUser(element)">
+                <mat-icon>person_remove</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="progressDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: progressDisplayedColumns;"></tr>
+
+        <!-- No data row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="progressDisplayedColumns.length">
+            <div class="no-data">
+              <mat-icon>analytics</mat-icon>
+              <p>No enrollment data found</p>
+              <small class="muted-color">
+                Note: This feature requires additional backend APIs to be implemented.
+              </small>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Paginator -->
+      <mat-paginator
+        [length]="progressTotal"
+        [pageSize]="progressPageSize"
+        [pageIndex]="progressCurrentPage - 1"
+        [pageSizeOptions]="[5, 10, 20, 50]"
+        (page)="onProgressPaginatorChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
     </div>
   </mat-card-content>
 </mat-card>

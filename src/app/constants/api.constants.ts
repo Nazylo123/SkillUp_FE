@@ -137,4 +137,8 @@ export const API_URLS = {
   GET_LEARNING_PATH_PROGRESS_SUMMARY: BASE_POINTS.LEARNING_PATH, // GET /api/learning-paths/{learningPathId}/progress/summary
   GET_LEARNING_PATH_STATISTICS: BASE_POINTS.LEARNING_PATH + "/statistics", // GET /api/learning-paths/statistics
 
+  // Learning Path Enrollment Management (for Manager)
+  GET_ENROLLMENT_STATISTICS: BASE_POINTS.LEARNING_PATH_ENROLLMENT + "/statistics", // GET /api/learning-path-enrollments/statistics
+  GET_ALL_ENROLLMENTS: BASE_POINTS.LEARNING_PATH_ENROLLMENT + "/all", // GET /api/learning-path-enrollments/all
+
 }

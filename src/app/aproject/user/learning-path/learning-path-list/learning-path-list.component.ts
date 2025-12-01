@@ -32,7 +32,7 @@ export class LearningPathListComponent implements OnInit {
   isLoading = false;
   learningPaths: LearningPath[] = [];
 
-  // TODO: These will be populated when enrollment APIs are available
+  // Enrollment status loaded from API
   enrolledPathIds: number[] = [];
   pathProgress: { [pathId: number]: number } = {};
 
@@ -53,13 +53,40 @@ export class LearningPathListComponent implements OnInit {
       );
       this.learningPaths = response.items;
 
-      // TODO: Load enrollment status and progress when APIs are available
-      // await this.loadEnrollmentStatus();
-      // await this.loadProgress();
+      // Load enrollment status from API
+      await this.loadEnrollmentStatus();
     } catch (error) {
       console.error('Error loading learning paths:', error);
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  /**
+   * Load user's enrollment status and progress from API
+   */
+  async loadEnrollmentStatus(): Promise<void> {
+    try {
+      const enrollments = await firstValueFrom(
+        this.learningPathService.getMyEnrollments()
+      );
+
+      // Clear existing data
+      this.enrolledPathIds = [];
+      this.pathProgress = {};
+
+      // Populate from API response
+      enrollments.forEach(enrollment => {
+        this.enrolledPathIds.push(enrollment.learningPathId);
+        this.pathProgress[enrollment.learningPathId] = enrollment.progressPct || 0;
+      });
+
+      console.log('Loaded enrollments:', {
+        enrolledPaths: this.enrolledPathIds,
+        progress: this.pathProgress
+      });
+    } catch (error) {
+      console.error('Error loading enrollment status:', error);
     }
   }
 
@@ -106,13 +133,21 @@ export class LearningPathListComponent implements OnInit {
   async enrollPath(path: LearningPath, event: Event): Promise<void> {
     event.stopPropagation();
 
-    // TODO: Implement actual enrollment when API is available
-    // For now, just mark as enrolled locally
-    this.enrolledPathIds.push(path.learningPathId);
-    this.pathProgress[path.learningPathId] = 0;
+    try {
+      // Call enrollment API
+      const enrollment = await firstValueFrom(
+        this.learningPathService.enrollInLearningPath(path.learningPathId)
+      );
 
-    console.log('Enrolled in path:', path.name);
-    // await this.enrollmentService.enrollInPath(path.learningPathId);
+      console.log('Successfully enrolled in path:', path.name);
+
+      // Update local state
+      this.enrolledPathIds.push(path.learningPathId);
+      this.pathProgress[path.learningPathId] = enrollment.progressPct || 0;
+    } catch (error) {
+      console.error('Error enrolling in learning path:', error);
+      alert('Failed to enroll in learning path. Please try again.');
+    }
   }
 
   continuePath(path: LearningPath, event: Event): void {

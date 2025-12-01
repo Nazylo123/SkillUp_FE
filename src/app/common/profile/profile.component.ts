@@ -41,6 +41,37 @@ export class ProfileComponent implements OnDestroy {
         private apiUser : ApiUserServices, private authService : AuthService
     ) {}
 
+<<<<<<< Updated upstream
+=======
+    getRole(): string {
+        return this.tokenService.getRole()?.toLocaleLowerCase() || '';
+    }
+
+    getProfileRoute(): string[] {
+        const role = this.getRole();
+        if (!role) {
+            return ['/'];
+        }
+        // Employee doesn't need prefix, only admin/manager/lecturer do
+        if (role === 'employee') {
+            return ['/profile'];
+        }
+        return ['/', role, 'profile'];
+    }
+
+    getSecurityRoute(): string[] {
+        const role = this.getRole();
+        if (!role) {
+            return ['/'];
+        }
+        // Employee doesn't need prefix, only admin/manager/lecturer do
+        if (role === 'employee') {
+            return ['/security'];
+        }
+        return ['/', role, 'security'];
+    }
+
+>>>>>>> Stashed changes
     userProfile: UserProfile | null = null;
     previewUrl: string | null = null;
     selectedFile: File | null = null;

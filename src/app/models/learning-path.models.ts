@@ -5,6 +5,10 @@ export interface LearningPath {
   learningPathId: number;
   name: string;
   description: string;
+  category?: string;                    // NEW: Category (Backend, Frontend, Full-Stack, etc.)
+  totalEnrolledUsers?: number;          // NEW: Number of users enrolled
+  averageProgress?: number;             // NEW: Average progress % of all users
+  status?: 'Active' | 'Inactive' | 'Draft';  // NEW: Learning path status
   createdBy: number;
   createdByName: string;
   createdAt: string;
@@ -93,4 +97,37 @@ export interface LearningPathStatistics {
   activePaths: number;  // Paths with at least 1 enrolled user
   totalEnrolledUsers: number;
   averageCompletionRate: number;
+}
+
+// Learning Path Enrollment Statistics (for Manager dashboard cards)
+export interface LearningPathEnrollmentStatistics {
+  totalEnrollments: number;      // Total user enrollments
+  activeEnrollments: number;     // InProgress status
+  completedEnrollments: number;  // Completed status
+}
+
+// Detailed Enrollment for User Progress Table
+export interface DetailedEnrollment {
+  learningPathEnrollmentId: number;
+  userId: number;
+  userName: string;
+  userEmail: string;
+  userAvatar?: string;
+  learningPathId: number;
+  learningPathName: string;
+  progressPct: number;
+  status: 'NotStarted' | 'InProgress' | 'Completed';
+  startedAt: string;
+  completedAt?: string;
+  totalCourses: number;
+  completedCourses: number;
+}
+
+// Paginated Response for Detailed Enrollments
+export interface DetailedEnrollmentsResponse {
+  items: DetailedEnrollment[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }

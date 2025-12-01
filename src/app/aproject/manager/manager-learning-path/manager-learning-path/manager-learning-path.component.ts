@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LearningPathService } from '../../../../services/learning-path.service';
-import { LearningPath } from '../../../../models/learning-path.models';
+import { LearningPath, DetailedEnrollment } from '../../../../models/learning-path.models';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -38,20 +38,34 @@ export class ManagerLearningPathComponent implements OnInit {
   // View state
   currentView: 'paths' | 'progress' = 'paths';
 
-  // Stats data (placeholder - waiting for API)
+  // Stats data for cards
   totalPaths = 0;
   activePaths = 0;
   totalEnrolledUsers = 0;
   averageCompletionRate = 0;
 
-  // Table data
-  displayedColumns: string[] = ['path', 'courses', 'creator', 'created', 'actions'];
+  // Enrollment statistics (for User tab cards)
+  totalEnrollments = 0;
+  activeEnrollments = 0;
+  completedEnrollments = 0;
+
+  // Learning Paths table data
+  displayedColumns: string[] = ['roadmap', 'category', 'users', 'avgProgress', 'status', 'created', 'actions'];
   dataSource: LearningPath[] = [];
   total = 0;
   currentPage = 1;
   pageSize = 10;
   searchTerm = '';
   isLoading = false;
+
+  // User Progress table data
+  progressDisplayedColumns: string[] = ['user', 'learningPath', 'progress', 'status', 'startDate', 'actions'];
+  progressDataSource: DetailedEnrollment[] = [];
+  progressTotal = 0;
+  progressCurrentPage = 1;
+  progressPageSize = 10;
+  progressSearchTerm = '';
+  isLoadingProgress = false;
 
   constructor(
     private router: Router,
@@ -62,6 +76,7 @@ export class ManagerLearningPathComponent implements OnInit {
   ngOnInit(): void {
     this.loadLearningPaths();
     this.loadStats();
+    this.loadUserProgress();
   }
 
   loadLearningPaths(): void {
@@ -83,14 +98,35 @@ export class ManagerLearningPathComponent implements OnInit {
   }
 
   loadStats(): void {
-    // Placeholder - waiting for statistics API
-    // TODO: Replace with actual API call when backend implements:
-    // GET /api/learning-paths/statistics
-    this.learningPathService.getLearningPaths(1, 1000).subscribe({
+    this.learningPathService.getStatistics().subscribe({
+      next: (stats) => {
+        this.totalPaths = stats.totalPaths;
+        this.activePaths = stats.activePaths;
+        this.totalEnrolledUsers = stats.totalEnrolledUsers;
+        this.averageCompletionRate = stats.averageCompletionRate;
+      },
+      error: (error) => {
+        console.error('Error loading statistics:', error);
+        this.snackBar.open('Failed to load statistics', 'Close', { duration: 3000 });
+      }
+    });
+  }
+
+
+  loadUserProgress(): void {
+    this.isLoadingProgress = true;
+    this.learningPathService.getAllEnrollments(this.progressCurrentPage, this.progressPageSize, this.progressSearchTerm).subscribe({
       next: (response) => {
-        this.totalPaths = response.total;
-        this.activePaths = response.items.length; // Temporary: all paths considered active
-        // totalEnrolledUsers and averageCompletionRate will come from new API
+        this.progressDataSource = response.items;
+        this.progressTotal = response.total;
+        this.progressCurrentPage = response.page;
+        this.progressPageSize = response.pageSize;
+        this.isLoadingProgress = false;
+      },
+      error: (error) => {
+        console.error('Error loading user progress:', error);
+        this.snackBar.open('Failed to load user progress', 'Close', { duration: 3000 });
+        this.isLoadingProgress = false;
       }
     });
   }
@@ -100,10 +136,21 @@ export class ManagerLearningPathComponent implements OnInit {
     this.loadLearningPaths();
   }
 
+  searchProgress(): void {
+    this.progressCurrentPage = 1;
+    this.loadUserProgress();
+  }
+
   onPaginatorChange(event: PageEvent): void {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex + 1;
     this.loadLearningPaths();
+  }
+
+  onProgressPaginatorChange(event: PageEvent): void {
+    this.progressPageSize = event.pageSize;
+    this.progressCurrentPage = event.pageIndex + 1;
+    this.loadUserProgress();
   }
 
   switchView(view: 'paths' | 'progress'): void {
@@ -122,27 +169,93 @@ export class ManagerLearningPathComponent implements OnInit {
     this.router.navigate(['/manager/learning-paths/edit', path.learningPathId]);
   }
 
-  async deletePath(path: LearningPath): Promise<void> {
-    if (!confirm(`Are you sure you want to delete "${path.name}"?`)) {
+  async togglePathStatus(path: LearningPath): Promise<void> {
+    const isActive = path.status === 'Active';
+    const action = isActive ? 'deactivate' : 'activate';
+    const confirmMsg = `Are you sure you want to ${action} "${path.name}"?`;
+
+    if (!confirm(confirmMsg)) {
+      return;
+    }
+
+    try {
+      if (isActive) {
+        // Deactivate = Delete (soft delete)
+        await firstValueFrom(
+          this.learningPathService.deleteLearningPath(path.learningPathId)
+        );
+        this.snackBar.open('Learning path deactivated successfully', 'Close', { duration: 3000 });
+      } else {
+        // Activate = Restore
+        await firstValueFrom(
+          this.learningPathService.restoreLearningPath(path.learningPathId)
+        );
+        this.snackBar.open('Learning path activated successfully', 'Close', { duration: 3000 });
+      }
+      this.loadLearningPaths();
+      this.loadStats();
+    } catch (error) {
+      console.error(`Error ${action}ing learning path:`, error);
+      this.snackBar.open(`Failed to ${action} learning path`, 'Close', { duration: 3000 });
+    }
+  }
+
+  // Helper methods
+  getPathStatusClass(status?: string): string {
+    switch (status) {
+      case 'Active':
+        return 'text-soft-success';
+      case 'Inactive':
+        return 'text-soft-secondary';
+      case 'Draft':
+        return 'text-soft-warning';
+      default:
+        return 'text-soft-success';
+    }
+  }
+
+  getStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'Completed':
+        return 'text-soft-success';
+      case 'InProgress':
+        return 'text-soft-info';
+      case 'NotStarted':
+        return 'text-soft-secondary';
+      default:
+        return '';
+    }
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  // User Progress Actions
+  viewEnrollmentProgress(enrollment: DetailedEnrollment): void {
+    // Navigate to user's learning path progress detail page
+    this.router.navigate(['/manager/learning-paths/user-progress', enrollment.learningPathEnrollmentId]);
+  }
+
+  async unenrollUser(enrollment: DetailedEnrollment): Promise<void> {
+    if (!confirm(`Are you sure you want to unenroll "${enrollment.userName}" from "${enrollment.learningPathName}"?`)) {
       return;
     }
 
     try {
       await firstValueFrom(
-        this.learningPathService.deleteLearningPath(path.learningPathId)
+        this.learningPathService.unenrollFromLearningPath(enrollment.learningPathEnrollmentId)
       );
-      this.snackBar.open('Learning path deleted successfully', 'Close', { duration: 3000 });
-      this.loadLearningPaths();
-      this.loadStats();
+      this.snackBar.open('User unenrolled successfully', 'Close', { duration: 3000 });
+      this.loadUserProgress();
     } catch (error) {
-      console.error('Error deleting learning path:', error);
-      this.snackBar.open('Failed to delete learning path', 'Close', { duration: 3000 });
+      console.error('Error unenrolling user:', error);
+      this.snackBar.open('Failed to unenroll user', 'Close', { duration: 3000 });
     }
-  }
-
-  // Helper to get course count - will be improved when we have path items loaded
-  getCourseCount(_path: LearningPath): string {
-    // Placeholder - will need to load items or get from API
-    return 'N/A';
   }
 }

@@ -9,11 +9,11 @@ import {
   CreateLearningPathRequest,
   CreateLearningPathItemRequest,
   UpdateLearningPathItemRequest,
-  ReorderLearningPathItemRequest,
   LearningPathEnrollment,
   EnrollLearningPathRequest,
   LearningPathProgressSummary,
-  LearningPathStatistics
+  LearningPathStatistics,
+  DetailedEnrollmentsResponse
 } from '../models/learning-path.models';
 
 @Injectable({
@@ -175,5 +175,21 @@ export class LearningPathService {
    */
   getStatistics(): Observable<LearningPathStatistics> {
     return this.http.get<LearningPathStatistics>(API_URLS.GET_LEARNING_PATH_STATISTICS);
+  }
+
+  /**
+   * Get all enrollments with details (for Manager user progress table)
+   * GET /api/learning-path-enrollments/all?page=1&pageSize=10&search=query
+   */
+  getAllEnrollments(page: number = 1, pageSize: number = 10, search: string = ''): Observable<DetailedEnrollmentsResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    return this.http.get<DetailedEnrollmentsResponse>(API_URLS.GET_ALL_ENROLLMENTS, { params });
   }
 }
