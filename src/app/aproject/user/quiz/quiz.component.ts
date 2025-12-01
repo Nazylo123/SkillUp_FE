@@ -68,6 +68,7 @@ interface UserAnswer {
 })
 export class QuizComponent implements OnInit, OnDestroy {
   quizId!: number;
+  courseId!: number;
   quizTitle = '';
   quizDuration = 30; // minutes - will be updated from backend
   currentQuestionIndex = 0;
@@ -149,6 +150,7 @@ export class QuizComponent implements OnInit, OnDestroy {
 
       // Set quiz metadata
       this.quizTitle = this.quizData!.title;
+      this.courseId = this.quizData!.courseId;
       this.passScore = this.quizData!.passScore;
       // this.quizDuration = this.quizData.duration || 30; // Backend may not have duration yet
 
@@ -411,11 +413,22 @@ export class QuizComponent implements OnInit, OnDestroy {
       this.isSubmitting = true;
 
       // Build submission request
-      const answers: SubmitAnswerRequest[] = this.userAnswers.map(ua => ({
-        questionId: ua.questionId,
-        selectedOptionId: ua.answerIds?.[0] || 0, // Backend expects single selectedOptionId
-        answerText: ua.textAnswer || ''
-      }));
+      const answers: SubmitAnswerRequest[] = this.userAnswers.map(ua => {
+        const answer: SubmitAnswerRequest = {
+          questionId: ua.questionId,
+          selectedOptionId: ua.answerIds && ua.answerIds.length > 0 ? ua.answerIds[0] : undefined,
+          answerText: ua.textAnswer?.trim() || undefined
+        } as SubmitAnswerRequest;
+
+        if (answer.selectedOptionId === undefined) {
+          delete (answer as any).selectedOptionId;
+        }
+        if (!answer.answerText) {
+          delete answer.answerText;
+        }
+
+        return answer;
+      });
 
       const request: SubmitQuizRequest = {
         attemptId: this.attemptId,
@@ -449,8 +462,12 @@ export class QuizComponent implements OnInit, OnDestroy {
         },
         disableClose: true
       }).afterClosed().subscribe(() => {
-        // Navigate back to course
-        this.router.navigate(['/']);
+        // Navigate back to course detail page
+        if (this.courseId) {
+          this.router.navigate(['/course-detail', this.courseId]);
+        } else {
+          this.router.navigate(['/']);
+        }
       });
 
     } catch (error: any) {
