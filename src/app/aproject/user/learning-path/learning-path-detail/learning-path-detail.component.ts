@@ -182,7 +182,7 @@ export class LearningPathDetail implements OnInit {
 
   viewCourse(course: CourseWithStatus): void {
     // Navigate to course detail
-    this.router.navigate(['/course', course.courseId]);
+    this.router.navigate(['/course-detail', course.courseId]);
   }
 
   goBack(): void {

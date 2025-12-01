@@ -87,11 +87,11 @@
 
                   <div class="course-meta">
                     <mat-chip *ngIf="course.isMandatory" class="mandatory-chip">
-                      <mat-icon>star</mat-icon>
-                      Mandatory
+                      <span>Mandatory</span>
                     </mat-chip>
                     <mat-chip *ngIf="!course.isMandatory" class="optional-chip">
-                      Optional
+                      <mat-icon>check_circle_outline</mat-icon>
+                      <span>Optional</span>
                     </mat-chip>
                   </div>
 
