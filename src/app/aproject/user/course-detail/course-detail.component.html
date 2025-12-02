@@ -72,16 +72,38 @@
                             </ul>
                         </mat-expansion-panel>
                         
-                        <mat-expansion-panel>
+                        <mat-expansion-panel *ngIf="course.quiz">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     Final Quiz
+                                    <span class="ms-10" *ngIf="course.quiz.isCompleted" style="color: #22c55e; font-weight: bold;">
+                                        <i class="ri-check-line"></i> Completed
+                                    </span>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <ul class="mb-0 mt-0 ps-0 content-list">
                                 <li class="d-flex align-items-center justify-content-space-between">
-                                    <span class="d-block gray-color fw-medium position-relative"><i class="ri-star-line"></i> Quiz: {{course.name}}</span>
-                                    <span class="d-block gray-color fw-medium">{{course.duration || 0}}</span>
+                                    <span class="d-block gray-color fw-medium position-relative">
+                                        <!-- Passed: Green checkbox -->
+                                        <mat-icon *ngIf="course.quiz.isCompleted && course.quiz.userScore >= course.quiz.passScore"
+                                                  style="color: #22c55e; vertical-align: middle; margin-right: 8px;">
+                                            check_box
+                                        </mat-icon>
+                                        <!-- Failed: Red checkbox -->
+                                        <mat-icon *ngIf="course.quiz.isCompleted && course.quiz.userScore < course.quiz.passScore"
+                                                  style="color: #ef4444; vertical-align: middle; margin-right: 8px;">
+                                            check_box
+                                        </mat-icon>
+                                        <!-- Not completed: Gray checkbox outline -->
+                                        <mat-icon *ngIf="!course.quiz.isCompleted"
+                                                  style="color: #9ca3af; vertical-align: middle; margin-right: 8px;">
+                                            check_box_outline_blank
+                                        </mat-icon>
+                                        Quiz: {{course.quiz.title || course.name}}
+                                    </span>
+                                    <span class="d-block gray-color fw-medium" *ngIf="course.quiz.userScore !== undefined">
+                                        {{course.quiz.userScore}}%
+                                    </span>
                                 </li>
                             </ul>
                         </mat-expansion-panel>

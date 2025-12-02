@@ -177,6 +177,8 @@ export interface DocumentItem {
     createdAt: string;
     updatedAt: string;
     questions: Question[];
+    isCompleted?: boolean;
+    userScore?: number;
   }
   
   export interface Question {

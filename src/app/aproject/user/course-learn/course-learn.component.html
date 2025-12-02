@@ -88,17 +88,26 @@
                         </ul>
                     </mat-expansion-panel>
                     
-                    <mat-expansion-panel>
+                    <mat-expansion-panel *ngIf="detail?.quiz">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 Final Quiz
+                                <span class="ms-10" *ngIf="detail?.quiz?.isCompleted" style="color: #22c55e; font-weight: bold;">
+                                    <i class="ri-check-line"></i> Completed
+                                </span>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="mb-0 mt-0 ps-0 content-list">
                             <li [class]="detail?.progressPct !== 100 ? 'disabled-link' : ''">
                                 <a routerLink="/quiz/{{detail?.quiz?.quizId}}" class="d-flex align-items-center justify-content-space-between">
-                                    <span class="d-block gray-color fw-medium position-relative"><i class="ri-star-line"></i> Quiz: Getting Started with Node.js</span>
-                                    <span class="d-block gray-color fw-medium">45m</span>
+                                    <span class="d-block gray-color fw-medium position-relative">
+                                        <i class="ri-checkbox-circle-fill" style="color: #22c55e;" *ngIf="detail?.quiz?.isCompleted"></i>
+                                        <i class="ri-star-line" *ngIf="!detail?.quiz?.isCompleted"></i>
+                                        Quiz: {{detail?.quiz?.title || 'Final Quiz'}}
+                                    </span>
+                                    <span class="d-block gray-color fw-medium" *ngIf="detail?.quiz?.userScore !== undefined">
+                                        {{detail?.quiz?.userScore}}%
+                                    </span>
                                 </a>
                             </li>
                         </ul>
