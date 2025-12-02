@@ -67,16 +67,33 @@
               <div
                 class="course-item"
                 *ngFor="let course of courses; let i = index"
-                [ngClass]="getStatusClass(course.status)"
-                (click)="viewCourse(course)">
-                <div class="course-number">{{i + 1}}</div>
+                [ngClass]="{
+                  'completed': course.status === 'completed',
+                  'in-progress': course.status === 'in-progress',
+                  'upcoming': course.status === 'upcoming',
+                  'locked': !isCourseUnlocked(course)
+                }"
+                (click)="viewCourse(course)"
+                [style.cursor]="isCourseUnlocked(course) ? 'pointer' : 'not-allowed'"
+                [style.opacity]="isCourseUnlocked(course) ? '1' : '0.5'">
+                <div class="course-number">
+                  {{i + 1}}
+                  <mat-icon *ngIf="!isCourseUnlocked(course)" style="font-size: 16px; margin-left: 4px;">lock</mat-icon>
+                </div>
 
                 <div class="course-main">
                   <div class="course-header">
                     <div class="course-info">
-                      <h3 class="course-title">{{course.courseName}}</h3>
+                      <h3 class="course-title">
+                        {{course.courseName}}
+                        <mat-icon *ngIf="!isCourseUnlocked(course)" style="font-size: 18px; vertical-align: middle; margin-left: 8px; color: #999;">lock</mat-icon>
+                      </h3>
                       <p class="course-description" *ngIf="course.description">
                         {{course.description}}
+                      </p>
+                      <p class="course-description" *ngIf="!isCourseUnlocked(course)" style="color: #f44336; font-size: 12px; margin-top: 4px;">
+                        <mat-icon style="font-size: 14px; vertical-align: middle;">info</mat-icon>
+                        Complete previous mandatory course to unlock
                       </p>
                     </div>
 
@@ -103,7 +120,7 @@
                     <mat-progress-bar mode="determinate" [value]="course.progress"></mat-progress-bar>
                   </div>
 
-                  <div class="course-actions" *ngIf="course.status !== 'upcoming'">
+                  <div class="course-actions" *ngIf="isCourseUnlocked(course) && course.status !== 'upcoming'">
                     <button
                       mat-flat-button
                       [color]="course.status === 'in-progress' ? 'primary' : 'accent'"
