@@ -16,6 +16,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angu
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { QuizService } from '../../../services/quiz.service';
+import { ApiCourseServices } from '../../../services/course.service';
 import { QuizResponse, QuizAttemptDetail, SubmitAnswerRequest, SubmitQuizRequest } from '../../../models/quiz.models';
 import { firstValueFrom } from 'rxjs';
 
@@ -117,6 +118,7 @@ export class QuizComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private quizService: QuizService,
+    private courseService: ApiCourseServices,
     private snackBar: MatSnackBar
   ) {}
 
@@ -461,10 +463,28 @@ export class QuizComponent implements OnInit, OnDestroy {
           attemptId: this.attemptId
         },
         disableClose: true
-      }).afterClosed().subscribe(() => {
-        // Navigate back to course detail page
+      }).afterClosed().subscribe(async () => {
+        // Mark course as complete
         if (this.courseId) {
-          this.router.navigate(['/course-detail', this.courseId]);
+          try {
+            await firstValueFrom(this.courseService.completeCourse(this.courseId));
+            console.log('✅ Course marked as complete');
+            
+            // Refresh course data to update quiz status
+            try {
+              await firstValueFrom(this.courseService.getCourseById(this.courseId));
+              console.log('✅ Course data refreshed');
+            } catch (refreshError) {
+              console.error('Error refreshing course data:', refreshError);
+            }
+          } catch (error) {
+            console.error('Error marking course as complete:', error);
+          }
+        }
+
+        // Navigate back to course learn page
+        if (this.courseId) {
+          this.router.navigate(['/course/learn', this.courseId]);
         } else {
           this.router.navigate(['/']);
         }
