@@ -71,8 +71,8 @@
                         </mat-expansion-panel-header>
                         <ul class="mb-0 mt-0 ps-0 content-list">
                             <li *ngFor="let subLesson of lesson.subLessons">
-                                <a (click)="selectSubLesson(subLesson)" 
-                                   class="d-flex align-items-center justify-content-space-between" 
+                                <a (click)="selectSubLesson(subLesson)"
+                                   class="d-flex align-items-center justify-content-space-between"
                                    [class.disabled-link]="!isLearnNext(subLesson)"
                                    [class.active-lesson]="currentSubLesson?.id === subLesson.id"
                                    style="cursor: pointer;">
@@ -80,9 +80,16 @@
                                         <i class="ri-checkbox-circle-fill" style="color: green;" *ngIf="subLesson.isCompleted"></i>
                                         <i class="ri-play-circle-line" *ngIf="!subLesson.isCompleted && isLearnNext(subLesson)"></i>
                                         <i class="ri-git-repository-private-fill" style="color: black;" *ngIf="!isLearnNext(subLesson)"></i>
-                                         {{subLesson.title}} 
+                                         {{subLesson.title}}
                                     </span>
-                                    <span class="d-block gray-color fw-medium">{{formatDuration(subLesson.duration || 0)}}</span>
+                                    <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                                color: white;
+                                                                padding: 4px 12px;
+                                                                border-radius: 6px;
+                                                                font-size: 12px;
+                                                                font-weight: 600;">
+                                        {{formatDuration(subLesson.duration || 0)}}
+                                    </span>
                                 </a>
                             </li>
                         </ul>
@@ -92,23 +99,70 @@
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 Final Quiz
-                                <span class="ms-10" *ngIf="detail?.quiz?.isCompleted" style="color: #22c55e; font-weight: bold;">
-                                    <i class="ri-check-line"></i> Completed
+                                <!-- Passed: Green -->
+                                <span class="ms-10" *ngIf="detail?.quiz?.isCompleted && (detail?.quiz?.userScore ?? 0) >= (detail?.quiz?.passScore ?? 70)"
+                                      style="color: #22c55e; font-weight: bold;">
+                                    <i class="ri-check-line"></i> Passed
+                                </span>
+                                <!-- Failed: Red -->
+                                <span class="ms-10" *ngIf="detail?.quiz?.isCompleted && (detail?.quiz?.userScore ?? 0) < (detail?.quiz?.passScore ?? 70)"
+                                      style="color: #ef4444; font-weight: bold;">
+                                    <i class="ri-close-line"></i> Failed
                                 </span>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="mb-0 mt-0 ps-0 content-list">
-                            <li [class]="detail?.progressPct !== 100 ? 'disabled-link' : ''">
+                            <!-- Not started yet - can take quiz -->
+                            <li *ngIf="!detail?.quiz?.isCompleted" [class]="detail?.progressPct !== 100 ? 'disabled-link' : ''">
                                 <a routerLink="/quiz/{{detail?.quiz?.quizId}}" class="d-flex align-items-center justify-content-space-between">
                                     <span class="d-block gray-color fw-medium position-relative">
-                                        <i class="ri-checkbox-circle-fill" style="color: #22c55e;" *ngIf="detail?.quiz?.isCompleted"></i>
-                                        <i class="ri-star-line" *ngIf="!detail?.quiz?.isCompleted"></i>
+                                        <i class="ri-play-circle-line"></i>
                                         Quiz: {{detail?.quiz?.title || 'Final Quiz'}}
                                     </span>
-                                    <span class="d-block gray-color fw-medium" *ngIf="detail?.quiz?.userScore !== undefined">
+                                </a>
+                            </li>
+
+                            <!-- Passed - View only, no retake -->
+                            <li *ngIf="detail?.quiz?.isCompleted && (detail?.quiz?.userScore ?? 0) >= (detail?.quiz?.passScore ?? 70)">
+                                <div class="d-flex align-items-center justify-content-space-between">
+                                    <span class="d-block gray-color fw-medium position-relative">
+                                        <i class="ri-checkbox-circle-fill" style="color: #22c55e;"></i>
+                                        Quiz: {{detail?.quiz?.title || 'Final Quiz'}}
+                                    </span>
+                                    <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                                color: white;
+                                                                padding: 4px 12px;
+                                                                border-radius: 6px;
+                                                                font-size: 12px;
+                                                                font-weight: 600;">
                                         {{detail?.quiz?.userScore}}%
                                     </span>
-                                </a>
+                                </div>
+                            </li>
+
+                            <!-- Failed - Can retake -->
+                            <li *ngIf="detail?.quiz?.isCompleted && (detail?.quiz?.userScore ?? 0) < (detail?.quiz?.passScore ?? 70)">
+                                <div class="d-flex align-items-center justify-content-space-between">
+                                    <span class="d-block gray-color fw-medium position-relative">
+                                        <i class="ri-close-circle-fill" style="color: #ef4444;"></i>
+                                        Quiz: {{detail?.quiz?.title || 'Final Quiz'}}
+                                    </span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                                    color: white;
+                                                                    padding: 4px 12px;
+                                                                    border-radius: 6px;
+                                                                    font-size: 12px;
+                                                                    font-weight: 600;">
+                                            {{detail?.quiz?.userScore}}%
+                                        </span>
+                                        <a routerLink="/quiz/{{detail?.quiz?.quizId}}"
+                                           class="btn btn-sm btn-outline-primary"
+                                           style="padding: 4px 12px; font-size: 12px;">
+                                            <i class="ri-refresh-line"></i> Retake
+                                        </a>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </mat-expansion-panel>

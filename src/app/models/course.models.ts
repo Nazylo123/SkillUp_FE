@@ -208,6 +208,6 @@ export interface CourseEnrollment {
     createdByName: string;
     startDay: string;
     endDate: string;
-    percentage: number;
+    progressPct: number;
     isEnrolled: boolean;
 }
