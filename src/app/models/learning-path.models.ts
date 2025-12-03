@@ -24,6 +24,8 @@ export interface LearningPathItem {
   description: string;
   orderIndex: number;            // Thứ tự trong path (0, 1, 2, ...)
   isMandatory: boolean;          // Bắt buộc hay optional
+  progressPct?: number;          // Progress của course này (0-100) - từ backend
+  enrollmentStatus?: 'NotStarted' | 'InProgress' | 'Completed';  // Enrollment status - từ backend
 }
 
 // Paginated Learning Paths Response

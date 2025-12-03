@@ -270,28 +270,67 @@
 
   .course-meta {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     margin-bottom: 16px;
+    align-items: center;
+    flex-wrap: wrap;
 
     .mandatory-chip {
-      background: #fef3c7;
-      color: #92400e;
-      font-weight: 600;
-      font-size: 12px;
-      height: 28px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
 
-      mat-icon {
-        font-size: 16px;
-        color: #f59e0b;
+      &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 3s infinite;
+      }
+
+      span {
+        position: relative;
+        z-index: 1;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
       }
     }
 
     .optional-chip {
-      background: #e0e7ff;
-      color: #3730a3;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
       font-weight: 600;
-      font-size: 12px;
-      height: 28px;
+      font-size: 13px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      }
     }
   }
 
@@ -485,6 +524,25 @@
     color: #6b7280;
     margin: 0 0 24px 0;
     max-width: 400px;
+  }
+}
+
+// Animations
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
   }
 }
 

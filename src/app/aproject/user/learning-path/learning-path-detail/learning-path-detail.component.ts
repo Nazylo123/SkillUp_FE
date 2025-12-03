@@ -88,11 +88,11 @@ export class LearningPathDetail implements OnInit {
       // Check enrollment status
       await this.checkEnrollmentStatus();
 
-      // Map courses with status
+      // Map courses with status and progress from backend
       this.courses = items.map((item, index) => ({
         ...item,
-        status: this.getCourseStatus(index),
-        progress: this.getCourseProgress(item.courseId)
+        status: this.getCourseStatus(item),
+        progress: item.progressPct || 0  // Use progressPct from backend
       }));
 
     } catch (error) {
@@ -116,27 +116,17 @@ export class LearningPathDetail implements OnInit {
     }
   }
 
-  getCourseStatus(index: number): CourseStatus {
-    if (!this.progressSummary) return 'upcoming';
+  getCourseStatus(item: LearningPathItem): CourseStatus {
+    // Use enrollmentStatus from backend
+    if (!item.enrollmentStatus) return 'upcoming';
 
-    if (index < this.progressSummary.completedCourses) {
+    if (item.enrollmentStatus === 'Completed' || (item.progressPct && item.progressPct >= 100)) {
       return 'completed';
-    } else if (index === this.progressSummary.completedCourses) {
+    } else if (item.enrollmentStatus === 'InProgress') {
       return 'in-progress';
     } else {
       return 'upcoming';
     }
-  }
-
-  getCourseProgress(courseId: number): number {
-    // TODO: Implement actual course progress tracking
-    // For now, return 100 for completed, 50 for in-progress, 0 for upcoming
-    const course = this.courses.find(c => c.courseId === courseId);
-    if (!course) return 0;
-
-    if (course.status === 'completed') return 100;
-    if (course.status === 'in-progress') return 50;
-    return 0;
   }
 
   get overallProgress(): number {
@@ -181,8 +171,30 @@ export class LearningPathDetail implements OnInit {
   }
 
   viewCourse(course: CourseWithStatus): void {
+    // Check if course is unlocked
+    if (!this.isCourseUnlocked(course)) {
+      this.snackBar.open('Complete previous courses to unlock this one', 'Close', { duration: 3000 });
+      return;
+    }
+
     // Navigate to course detail
-    this.router.navigate(['/course', course.courseId]);
+    this.router.navigate(['/course-detail', course.courseId]);
+  }
+
+  isCourseUnlocked(course: CourseWithStatus): boolean {
+    // First course is always unlocked
+    if (course.orderIndex === 0) return true;
+
+    // Check if previous mandatory course is completed
+    const previousCourse = this.courses.find(c => c.orderIndex === course.orderIndex - 1);
+    if (!previousCourse) return true;
+
+    // If previous course is mandatory and not completed, current course is locked
+    if (previousCourse.isMandatory && previousCourse.status !== 'completed') {
+      return false;
+    }
+
+    return true;
   }
 
   goBack(): void {

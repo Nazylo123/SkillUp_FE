@@ -177,6 +177,8 @@ export interface DocumentItem {
     createdAt: string;
     updatedAt: string;
     questions: Question[];
+    isCompleted?: boolean;
+    userScore?: number;
   }
   
   export interface Question {
@@ -206,6 +208,6 @@ export interface CourseEnrollment {
     createdByName: string;
     startDay: string;
     endDate: string;
-    percentage: number;
+    progressPct: number;
     isEnrolled: boolean;
 }

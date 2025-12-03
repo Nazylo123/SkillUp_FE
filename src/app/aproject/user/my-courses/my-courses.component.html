@@ -33,13 +33,19 @@
                     </td>
                 </ng-container>
 
-                <!-- Role Column -->
+                <!-- Result Column -->
                 <ng-container matColumnDef="status">
                     <th mat-header-cell *matHeaderCellDef>Result</th>
                     <td mat-cell *matCellDef="let element">
-                        @if (element.percentage) {<span class="badge ">{{element.percentage}}</span>}
-                        @if (element.passed) {<span class="badge text-soft-success">{{element.passed}}</span>}
-                        @if (element.failed) {<span class="badge text-soft-danger">{{element.failed}}</span>}
+                        <!-- Show course completion percentage -->
+                        <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                   color: white;
+                                                   padding: 4px 12px;
+                                                   border-radius: 6px;
+                                                   font-size: 12px;
+                                                   font-weight: 600;">
+                            {{element.progressPct || 0}}%
+                        </span>
                     </td>
                 </ng-container>
 

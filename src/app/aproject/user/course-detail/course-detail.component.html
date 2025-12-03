@@ -66,22 +66,57 @@
                             <ul class="mb-0 mt-0 ps-0 content-list">
                                 <li class="d-flex align-items-center justify-content-space-between" *ngFor="let subLesson of lesson.subLessons">
                                     <span class="d-block gray-color fw-medium position-relative"><i class="ri-play-circle-line"></i> {{subLesson.title}}</span>
-                                    <span class="d-block gray-color fw-medium">{{formatSeconds(subLesson.duration) || 0}}</span>
+                                    <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                                color: white;
+                                                                padding: 4px 12px;
+                                                                border-radius: 6px;
+                                                                font-size: 12px;
+                                                                font-weight: 600;">
+                                        {{formatSeconds(subLesson.duration) || 0}}
+                                    </span>
                                 </li>
-                                
+
                             </ul>
                         </mat-expansion-panel>
                         
-                        <mat-expansion-panel>
+                        <mat-expansion-panel *ngIf="course.quiz">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     Final Quiz
+                                    <!-- Passed: Green -->
+                                    <span class="ms-10" *ngIf="course.quiz.isCompleted && (course.quiz.userScore ?? 0) >= course.quiz.passScore"
+                                          style="color: #22c55e; font-weight: bold;">
+                                        <i class="ri-check-line"></i> Passed
+                                    </span>
+                                    <!-- Failed: Red -->
+                                    <span class="ms-10" *ngIf="course.quiz.isCompleted && (course.quiz.userScore ?? 0) < course.quiz.passScore"
+                                          style="color: #ef4444; font-weight: bold;">
+                                        <i class="ri-close-line"></i> Failed
+                                    </span>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <ul class="mb-0 mt-0 ps-0 content-list">
                                 <li class="d-flex align-items-center justify-content-space-between">
-                                    <span class="d-block gray-color fw-medium position-relative"><i class="ri-star-line"></i> Quiz: {{course.name}}</span>
-                                    <span class="d-block gray-color fw-medium">{{course.duration || 0}}</span>
+                                    <span class="d-block gray-color fw-medium position-relative">
+                                        <!-- Passed: Green check icon -->
+                                        <i class="ri-checkbox-circle-fill" style="color: #22c55e;"
+                                           *ngIf="course.quiz.isCompleted && (course.quiz.userScore ?? 0) >= course.quiz.passScore"></i>
+                                        <!-- Failed: Red X icon -->
+                                        <i class="ri-close-circle-fill" style="color: #ef4444;"
+                                           *ngIf="course.quiz.isCompleted && (course.quiz.userScore ?? 0) < course.quiz.passScore"></i>
+                                        <!-- Not completed: Play icon -->
+                                        <i class="ri-play-circle-line" *ngIf="!course.quiz.isCompleted"></i>
+                                        Quiz: {{course.quiz.title || course.name}}
+                                    </span>
+                                    <span class="badge" *ngIf="course.quiz.userScore !== undefined"
+                                          style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                 color: white;
+                                                 padding: 4px 12px;
+                                                 border-radius: 6px;
+                                                 font-size: 12px;
+                                                 font-weight: 600;">
+                                        {{course.quiz.userScore}}%
+                                    </span>
                                 </li>
                             </ul>
                         </mat-expansion-panel>
