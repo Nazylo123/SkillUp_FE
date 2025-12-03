@@ -19,6 +19,7 @@ const BASE_POINTS = {
   LEARNING_PATH: BASE_URLS.SKILL_UP + "/learning-paths",
   LEARNING_PATH_ITEM: BASE_URLS.SKILL_UP + "/learning-path-items",
   LEARNING_PATH_ENROLLMENT: BASE_URLS.SKILL_UP + "/learning-path-enrollments",
+  DASHBOARD: BASE_URLS.SKILL_UP + "/Dashboard",
 }
 
 export const API_URLS = {
@@ -65,6 +66,9 @@ export const API_URLS = {
   GET_COURSES_USER_VIEW: BASE_POINTS.COURSE + "/user/view",
   COURSE_ENROLLMENT: BASE_POINTS.COURSE + "/me",
   CREATE_ENROLLMENT: BASE_POINTS.ENROLLMENT,
+  GET_COURSE_LECTURER: BASE_POINTS.COURSE + "/lecturer",
+  GET_COURSE_EMPLOYEE: BASE_POINTS.COURSE + "/Employee",
+
 
   //API Quiz
   GET_QUIZZES: BASE_POINTS.QUIZ, // GET /api/Quizzes (paginated)
@@ -146,4 +150,8 @@ export const API_URLS = {
   GET_ENROLLMENT_STATISTICS: BASE_POINTS.LEARNING_PATH_ENROLLMENT + "/statistics", // GET /api/learning-path-enrollments/statistics
   GET_ALL_ENROLLMENTS: BASE_POINTS.LEARNING_PATH_ENROLLMENT + "/all", // GET /api/learning-path-enrollments/all
 
+  // Manager Dashboard
+  GET_MANAGER_DASHBOARD_STATS: BASE_POINTS.DASHBOARD + "/statistics", // GET /api/Dashboard/statistics
+  GET_MANAGER_DASHBOARD_MONTHLY_ENROLLMENT_STATS: BASE_POINTS.DASHBOARD + "/monthly-enrollment-stats", // GET /api/Dashboard/monthly-enrollment-stats
+  GET_MANAGER_DASHBOARD_MONTHLY_USER_STATS: BASE_POINTS.DASHBOARD + "/monthly-user-stats", // GET /api/Dashboard/monthly-user-stats
 }

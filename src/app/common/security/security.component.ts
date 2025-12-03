@@ -11,10 +11,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiAuthServices } from '../../services/auth.service';
 import { TokenService } from '../../context/token.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-security',
     imports: [
+        CommonModule,
         RouterLink,
         RouterLinkActive,
         ReactiveFormsModule,

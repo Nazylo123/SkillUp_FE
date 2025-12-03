@@ -59,7 +59,9 @@
                             <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirm" type="button">
                                 <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
-                            <mat-error *ngIf="changePasswordForm.controls['confirmPassword'].hasError('required')">Confirm password is required</mat-error>
+                            @if(changePasswordForm.controls['confirmPassword'].hasError('required')) {
+                                <mat-error>Confirm password is required</mat-error>
+                            }
                         </mat-form-field>
                     </div>
                 </div>
