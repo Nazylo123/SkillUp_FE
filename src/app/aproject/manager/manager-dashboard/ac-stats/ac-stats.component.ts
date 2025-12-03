@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrls: ['./ac-stats.component.scss']
 })
 export class AcStatsComponent {
+    @Input() data:any;
 
     constructor() {}
 
