@@ -11,6 +11,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { LearningPathService } from '../../../../services/learning-path.service';
 import { LearningPath, DetailedEnrollment } from '../../../../models/learning-path.models';
 import { firstValueFrom } from 'rxjs';
@@ -29,7 +31,9 @@ import { firstValueFrom } from 'rxjs';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule,
+    MatDividerModule
   ],
   templateUrl: './manager-learning-path.component.html',
   styleUrls: ['./manager-learning-path.component.scss']
@@ -171,32 +175,50 @@ export class ManagerLearningPathComponent implements OnInit {
 
   async togglePathStatus(path: LearningPath): Promise<void> {
     const isActive = path.status === 'Active';
+    const newStatus = isActive ? 'Inactive' : 'Active';
     const action = isActive ? 'deactivate' : 'activate';
-    const confirmMsg = `Are you sure you want to ${action} "${path.name}"?`;
+    const confirmMsg = `Are you sure you want to ${action} "${path.name}"?\n\n${
+      isActive
+        ? 'This learning path will be marked as Inactive. Users will no longer see it.'
+        : 'This learning path will be marked as Active. Users will be able to see and enroll in it.'
+    }`;
 
     if (!confirm(confirmMsg)) {
       return;
     }
 
     try {
-      if (isActive) {
-        // Deactivate = Delete (soft delete)
-        await firstValueFrom(
-          this.learningPathService.deleteLearningPath(path.learningPathId)
-        );
-        this.snackBar.open('Learning path deactivated successfully', 'Close', { duration: 3000 });
-      } else {
-        // Activate = Restore
-        await firstValueFrom(
-          this.learningPathService.restoreLearningPath(path.learningPathId)
-        );
-        this.snackBar.open('Learning path activated successfully', 'Close', { duration: 3000 });
-      }
+      // Call the new status update API
+      await firstValueFrom(
+        this.learningPathService.updateLearningPathStatus(path.learningPathId, newStatus)
+      );
+      this.snackBar.open(`Learning path ${action}d successfully`, 'Close', { duration: 3000 });
       this.loadLearningPaths();
       this.loadStats();
     } catch (error) {
       console.error(`Error ${action}ing learning path:`, error);
       this.snackBar.open(`Failed to ${action} learning path`, 'Close', { duration: 3000 });
+    }
+  }
+
+  async deletePath(path: LearningPath): Promise<void> {
+    const confirmMsg = `⚠️ WARNING: Delete "${path.name}"?\n\nThis learning path will be soft deleted (IsDeleted = true).\nIt will remain in the database but won't be visible.\n\nAll user enrollments and progress data will be preserved.`;
+
+    if (!confirm(confirmMsg)) {
+      return;
+    }
+
+    try {
+      // Soft delete - set IsDeleted = true in database
+      await firstValueFrom(
+        this.learningPathService.deleteLearningPath(path.learningPathId)
+      );
+      this.snackBar.open('Learning path deleted successfully', 'Close', { duration: 3000 });
+      this.loadLearningPaths();
+      this.loadStats();
+    } catch (error) {
+      console.error('Error deleting learning path:', error);
+      this.snackBar.open('Failed to delete learning path', 'Close', { duration: 3000 });
     }
   }
 
@@ -206,7 +228,7 @@ export class ManagerLearningPathComponent implements OnInit {
       case 'Active':
         return 'text-soft-success';
       case 'Inactive':
-        return 'text-soft-secondary';
+        return 'text-soft-danger';
       case 'Draft':
         return 'text-soft-warning';
       default:
@@ -238,8 +260,8 @@ export class ManagerLearningPathComponent implements OnInit {
 
   // User Progress Actions
   viewEnrollmentProgress(enrollment: DetailedEnrollment): void {
-    // Navigate to user's learning path progress detail page
-    this.router.navigate(['/manager/learning-paths/user-progress', enrollment.learningPathEnrollmentId]);
+    // Navigate to user detail page instead
+    this.router.navigate(['/manager/users', enrollment.userId]);
   }
 
   async unenrollUser(enrollment: DetailedEnrollment): Promise<void> {

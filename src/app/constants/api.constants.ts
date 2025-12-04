@@ -130,6 +130,7 @@ export const API_URLS = {
   CREATE_LEARNING_PATH: BASE_POINTS.LEARNING_PATH, // POST /api/learning-paths
   UPDATE_LEARNING_PATH: BASE_POINTS.LEARNING_PATH, // PUT /api/learning-paths/{id}
   DELETE_LEARNING_PATH: BASE_POINTS.LEARNING_PATH, // DELETE /api/learning-paths/{id}
+  UPDATE_LEARNING_PATH_STATUS: BASE_POINTS.LEARNING_PATH, // PATCH /api/learning-paths/{id}/status
   RESTORE_LEARNING_PATH: BASE_POINTS.LEARNING_PATH, // PATCH /api/learning-paths/{id}/restore
 
   // Learning Path Items (Courses in Path)

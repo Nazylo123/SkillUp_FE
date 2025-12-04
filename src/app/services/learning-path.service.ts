@@ -66,11 +66,19 @@ export class LearningPathService {
   }
 
   /**
-   * Delete learning path
+   * Delete learning path (soft delete)
    * DELETE /api/learning-paths/{id}
    */
   deleteLearningPath(id: number): Observable<any> {
     return this.http.delete(`${API_URLS.DELETE_LEARNING_PATH}/${id}`);
+  }
+
+  /**
+   * Update learning path status (Active/Inactive)
+   * PATCH /api/learning-paths/{id}/status
+   */
+  updateLearningPathStatus(id: number, status: 'Active' | 'Inactive'): Observable<any> {
+    return this.http.patch(`${API_URLS.UPDATE_LEARNING_PATH_STATUS}/${id}/status`, { status });
   }
 
   /**
