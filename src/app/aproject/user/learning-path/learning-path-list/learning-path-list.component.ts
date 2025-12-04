@@ -80,11 +80,6 @@ export class LearningPathListComponent implements OnInit {
         this.enrolledPathIds.push(enrollment.learningPathId);
         this.pathProgress[enrollment.learningPathId] = enrollment.progressPct || 0;
       });
-
-      console.log('Loaded enrollments:', {
-        enrolledPaths: this.enrolledPathIds,
-        progress: this.pathProgress
-      });
     } catch (error) {
       console.error('Error loading enrollment status:', error);
     }
