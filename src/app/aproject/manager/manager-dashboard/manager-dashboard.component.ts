@@ -4,10 +4,11 @@ import { AcUserStatusComponent } from "./ac-user-status/ac-user-status.component
 import { AcStatsComponent } from "./ac-stats/ac-stats.component";
 import { ApiDashboardServices } from '../../../services/dashboard.service';
 import { AcEmployeeComponent } from "./ac-employee/ac-employee.component";
+import { AcBoardComponent } from "./ac-board/ac-board.component";
 
 @Component({
     selector: 'app-manager-dashboard',
-    imports: [AcUserOverviewComponent, AcUserStatusComponent, AcStatsComponent, AcEmployeeComponent],
+    imports: [AcStatsComponent, AcEmployeeComponent, AcBoardComponent],
     templateUrl: './manager-dashboard.component.html',
     styleUrls: ['./manager-dashboard.component.scss']
 })

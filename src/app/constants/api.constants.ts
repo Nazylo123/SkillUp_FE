@@ -154,4 +154,6 @@ export const API_URLS = {
   GET_MANAGER_DASHBOARD_STATS: BASE_POINTS.DASHBOARD + "/statistics", // GET /api/Dashboard/statistics
   GET_MANAGER_DASHBOARD_MONTHLY_ENROLLMENT_STATS: BASE_POINTS.DASHBOARD + "/monthly-enrollment-stats", // GET /api/Dashboard/monthly-enrollment-stats
   GET_MANAGER_DASHBOARD_MONTHLY_USER_STATS: BASE_POINTS.DASHBOARD + "/monthly-user-stats", // GET /api/Dashboard/monthly-user-stats
+  GET_MANAGER_DASHBOARD_COURSE_TYPE_DISTRIBUTION: BASE_POINTS.DASHBOARD + "/course-type-distribution", // GET /api/Dashboard/course-type-distribution
+  GET_MANAGER_DASHBOARD_COURSE_STATUS_DISTRIBUTION: BASE_POINTS.DASHBOARD + "/course-status-distribution", // GET /api/Dashboard/course-status-distribution
 }
