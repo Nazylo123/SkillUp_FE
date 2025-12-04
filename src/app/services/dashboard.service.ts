@@ -15,12 +15,20 @@ export class ApiDashboardServices {
     return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_STATS);
   }
 
-  getManagerDashboardMonthlyEnrollmentStats(): Observable<any> {
-    return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_MONTHLY_ENROLLMENT_STATS);
+  getManagerDashboardMonthlyEnrollmentStats(year: string): Observable<any> {
+    return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_MONTHLY_ENROLLMENT_STATS, { params: new HttpParams().set('year', year) });
   }
 
-  getManagerDashboardMonthlyUserStats(): Observable<any> {
-    return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_MONTHLY_USER_STATS);
+  getManagerDashboardMonthlyUserStats(year: string): Observable<any> {
+    return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_MONTHLY_USER_STATS, { params: new HttpParams().set('year', year) });
+  }
+
+  getManagerDashboardCourseTypeStats(): Observable<any> {
+    return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_COURSE_TYPE_DISTRIBUTION);
+  }
+
+  getManagerDashboardCourseStatusStats(): Observable<any> {
+    return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_COURSE_STATUS_DISTRIBUTION);
   }
 
 }
