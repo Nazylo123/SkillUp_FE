@@ -20,6 +20,7 @@ const BASE_POINTS = {
   LEARNING_PATH_ITEM: BASE_URLS.SKILL_UP + "/learning-path-items",
   LEARNING_PATH_ENROLLMENT: BASE_URLS.SKILL_UP + "/learning-path-enrollments",
   DASHBOARD: BASE_URLS.SKILL_UP + "/Dashboard",
+  SETTINGS: BASE_URLS.SKILL_UP + "/settings",
 }
 
 export const API_URLS = {
@@ -157,4 +158,8 @@ export const API_URLS = {
   GET_MANAGER_DASHBOARD_MONTHLY_USER_STATS: BASE_POINTS.DASHBOARD + "/monthly-user-stats", // GET /api/Dashboard/monthly-user-stats
   GET_MANAGER_DASHBOARD_COURSE_TYPE_DISTRIBUTION: BASE_POINTS.DASHBOARD + "/course-type-distribution", // GET /api/Dashboard/course-type-distribution
   GET_MANAGER_DASHBOARD_COURSE_STATUS_DISTRIBUTION: BASE_POINTS.DASHBOARD + "/course-status-distribution", // GET /api/Dashboard/course-status-distribution
+
+  // Settings Management (Admin only)
+  GET_AI_KEY: BASE_POINTS.SETTINGS + "/ai-key", // GET /api/settings/ai-key
+  UPDATE_AI_KEY: BASE_POINTS.SETTINGS + "/ai-key", // PUT /api/settings/ai-key
 }

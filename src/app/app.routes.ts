@@ -47,6 +47,7 @@ import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.componen
 import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
 import { LearningPathListComponent as UserLearningPathListComponent } from './aproject/user/learning-path/learning-path-list/learning-path-list.component';
 import { LearningPathDetail as UserLearningPathDetailComponent } from './aproject/user/learning-path/learning-path-detail/learning-path-detail.component';
+import { SettingsComponent } from './aproject/admin/settings/settings';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
@@ -93,7 +94,8 @@ export const routes: Routes = [
                 children: [
                     {path: '', component: AdminCourseList}
                 ]
-            }
+            },
+            {path: 'settings', component: SettingsComponent}
         ]
     },
     {
