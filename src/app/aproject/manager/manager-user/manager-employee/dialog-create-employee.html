@@ -18,6 +18,9 @@
                     <div *ngIf="employeeForm.get('fullName')?.hasError('required') && employeeForm.get('fullName')?.touched" class="error-message">
                         Name is required
                     </div>
+                    <div *ngIf="employeeForm.get('fullName')?.hasError('maxlength') && employeeForm.get('fullName')?.touched" class="error-message">
+                        Name must be less than 255 characters
+                    </div>
                 </div>
             </div>
             <!-- <div class="col-lg-6 col-md-6">
@@ -36,6 +39,9 @@
                     <div *ngIf="employeeForm.get('email')?.hasError('email') && employeeForm.get('email')?.touched" class="error-message">
                         Invalid email address
                     </div>
+                    <div *ngIf="employeeForm.get('email')?.hasError('maxlength') && employeeForm.get('email')?.touched" class="error-message">
+                        Email must be less than 255 characters
+                    </div>
                 </div>
             </div>
             <!-- <div class="col-lg-6 col-md-6">
@@ -44,7 +50,7 @@
                     <input type="number" class="input-control" placeholder="Phone">
                 </div>
             </div> -->
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-12 col-md-6">
                 <div class="form-group">
                     <label class="d-block fw-semibold">Level</label>
                     <select class="input-control" formControlName="levelId">

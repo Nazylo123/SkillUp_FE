@@ -162,4 +162,5 @@ export const API_URLS = {
   // Settings Management (Admin only)
   GET_AI_KEY: BASE_POINTS.SETTINGS + "/ai-key", // GET /api/settings/ai-key
   UPDATE_AI_KEY: BASE_POINTS.SETTINGS + "/ai-key", // PUT /api/settings/ai-key
+  DASHBOARD_ADMIN: BASE_POINTS.DASHBOARD + "/admin",
 }

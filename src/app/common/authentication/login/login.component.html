@@ -26,6 +26,7 @@
                                 <input matInput formControlName="email" (keypress)="onKeyDown($event)">
                                 <mat-error *ngIf="loginForm.controls['email'].hasError('required')">Email is required</mat-error>
                                 <mat-error *ngIf="loginForm.controls['email'].hasError('email')">Invalid email format</mat-error>
+                                <mat-error *ngIf="loginForm.controls['email'].hasError('maxlength')">Email must be less than 255 characters</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="tagus-form-group without-icon">
@@ -40,6 +41,7 @@
                                 <mat-error *ngIf="loginForm.controls['password'].hasError('minlength')">
                                     Minimum 6 characters
                                 </mat-error>
+                                <mat-error *ngIf="loginForm.controls['password'].hasError('maxlength')">Password must be less than 255 characters</mat-error>
                             </mat-form-field>
                         </div>
 

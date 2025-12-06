@@ -94,6 +94,10 @@ export class ApiUserServices {
     return this.http.post<any>(API_URLS.CREATE_USER, payload);
   }  
 
+  createUser(payload: any): Observable<any> {
+    return this.http.post<any>(API_URLS.CREATE_USER, payload);
+  }
+
   getCourseLecturers(lecturerId: number | string): Observable<any> {
     return this.http.get<any>(`${API_URLS.GET_COURSE_LECTURER}/${lecturerId}/approved`);
   }

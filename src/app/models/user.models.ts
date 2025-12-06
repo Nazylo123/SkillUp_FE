@@ -53,3 +53,18 @@ export interface UserManager {
     createdAt: string; // ISO datetime string
     roles: string[];
 }
+
+export interface DashBoardAdmin {
+    totalUser: number;
+    totalEmployee: number;
+    totalManager: number;
+    totalLecturer: number;
+    totalEmployeeChart: DashBoardAdminChart[];
+    totalManagerChart: DashBoardAdminChart[];
+    totalLecturerChart: DashBoardAdminChart[];
+}
+
+export interface DashBoardAdminChart {
+    month: string;
+    count: number;
+}

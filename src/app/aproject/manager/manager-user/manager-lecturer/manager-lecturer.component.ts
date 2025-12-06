@@ -307,8 +307,8 @@ export class CreateLecturerDialog {
 
     fb = inject(FormBuilder);
     lecturerForm = this.fb.group({
-      fullName: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      fullName: ['', [Validators.required, Validators.maxLength(255)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
     });
     
     constructor(
@@ -324,7 +324,7 @@ export class CreateLecturerDialog {
 
     onSubmit() {
       this.lecturerForm.markAllAsTouched();
-      if (!this.lecturerForm.valid) return;
+      if (this.lecturerForm.invalid) return;
 
       this.apiUserServices.createLecturer(this.lecturerForm.value).subscribe({
         next: (res: any) => {

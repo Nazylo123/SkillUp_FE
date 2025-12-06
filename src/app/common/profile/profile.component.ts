@@ -30,9 +30,9 @@ export class ProfileComponent implements OnDestroy {
     private fb = inject(FormBuilder);
     profileForm = this.fb.group({
         fullName: ['', [Validators.required]],
-        email: [{value: '', disabled: true}, [Validators.required, Validators.email]],
-        phone: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9]{10,15}$/)]],
-        location: ['', [Validators.required]],
+        email: [{value: '', disabled: true}, [Validators.required, Validators.email, Validators.maxLength(255)]],
+        phone: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9]{10}$/)]],
+        location: ['', [Validators.required, Validators.maxLength(255)]],
         dateOfBirth: [null as Date | null, [Validators.required]],
         gender: ['', [Validators.required]],
         level: ['', [Validators.required]],
