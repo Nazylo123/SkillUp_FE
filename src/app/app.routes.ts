@@ -32,9 +32,6 @@ import { ForgotPasswordComponent } from './common/authentication/forgot-password
 import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
 import { QuizListComponent } from './aproject/lecturer/course-management/quiz-list/quiz-list.component';
 import { QuizComponent } from './aproject/user/quiz/quiz.component';
-import { LearningPathListComponent } from './aproject/lecturer/course-management/learning-path-list/learning-path-list.component';
-import { LearningPathCreatorComponent } from './aproject/lecturer/course-management/learning-path-creator/learning-path-creator.component';
-import { LearningPathDetailComponent } from './aproject/lecturer/course-management/learning-path-detail/learning-path-detail.component';
 import { ChatComponent } from './aproject/user/chat/chat.component';
 import { ManagerChatComponent } from './aproject/manager/manager-chat/manager-chat.component';
 import { RoadmapFormComponent } from './aproject/manager/manager-roadmap/roadmap-form/roadmap-form.component';
@@ -148,10 +145,6 @@ export const routes: Routes = [
                 ]
             },
             {path: 'quizzes', component: QuizListComponent},
-            {path: 'learning-paths', component: LearningPathListComponent},
-            {path: 'learning-paths/create', component: LearningPathCreatorComponent},
-            {path: 'learning-paths/edit/:id', component: LearningPathCreatorComponent},
-            {path: 'learning-paths/view/:id', component: LearningPathDetailComponent},
         ]
     },
     //endProject

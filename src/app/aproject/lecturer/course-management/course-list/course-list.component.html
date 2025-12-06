@@ -28,7 +28,7 @@
                 <!-- Product Column -->
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Course Name</th>
-                    <td mat-cell *matCellDef="let element">{{element.courseName}}</td>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="maxLengthText(element.courseName) ? element.courseName : ''">{{formatText(element.courseName)}}</td>
                 </ng-container>
 
                 <!-- Customer Column -->
@@ -77,6 +77,25 @@
                         >
                             <mat-icon style="color: green;">visibility</mat-icon>
                         </button>
+                        
+                        @if(element.status == 'Draft' || element.status == 'Rejected') {
+                            <button
+                            mat-icon-button
+                                matTooltip="Edit"
+                                (click)="openAddEditEventDialog('300ms', '100ms', element.courseId)"
+                            >
+                                <mat-icon style="color: #007bff;">edit</mat-icon>
+                            </button>
+                            }
+                            @if(element.status == 'Draft') {
+                                <button
+                                mat-icon-button
+                                matTooltip="Delete"
+                                (click)="onDelete(element)"
+                            >
+                                <mat-icon style="color: red;">delete</mat-icon>
+                            </button> 
+                        }
                         @if(element.status == 'Rejected') {
                             <button
                                 mat-icon-button
@@ -85,23 +104,6 @@
                             >
                                 <mat-icon style="color: red;">disabled_by_default</mat-icon>
                             </button>
-                        }
-
-                        @if(element.status == 'Draft') {
-                            <button
-                                mat-icon-button
-                                matTooltip="Edit"
-                                (click)="openAddEditEventDialog('300ms', '100ms', element.courseId)"
-                            >
-                                <mat-icon style="color: #007bff;">edit</mat-icon>
-                            </button>
-                            <button
-                                mat-icon-button
-                                matTooltip="Delete"
-                                (click)="onDelete(element)"
-                            >
-                                <mat-icon style="color: red;">delete</mat-icon>
-                            </button> 
                         }
                         </div>
                     </td>
