@@ -16,10 +16,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Level } from '../../../../models/lookup.model';
 import { ApiCourseServices } from '../../../../services/course.service';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
     selector: 'app-manager-employee',
-    imports: [FormsModule, MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatProgressBarModule, MatCheckboxModule, CommonModule, MatIcon, MatIconModule],
+    imports: [FormsModule, MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatProgressBarModule, MatCheckboxModule, CommonModule, MatIcon, MatIconModule, MatTooltip],
     templateUrl: './manager-employee.component.html',
     styleUrls: ['./manager-employee.component.scss']
 })
@@ -46,6 +47,15 @@ export class ManagerEmployee {
       this.loadUsers();
       this.loadLevels();
   }
+
+  
+  maxLengthText(text: string) : boolean {
+    return text.length > 20;
+}
+
+formatText(text: string) : string {
+    return this.maxLengthText(text) ? text.substring(0, 20) + '...' : text;
+}
 
   loadUsers(page: number = 1, pageSize: number = 10, searchTerm?: string) {
     this.isLoading = true;
@@ -135,8 +145,23 @@ export class ManagerEmployee {
 
   onPaginatorChange(event: PageEvent) {
       this.currentPage = event.pageIndex + 1;
-      this.pageSize = event.pageSize;
+      if (event.pageSize !== this.pageSize) {
+        this.onPageSizeChange(event.pageSize);
+      } else {
+        this.onPageChange(event.pageIndex + 1);
+      }
       this.loadUsers(this.currentPage, this.pageSize, this.searchTerm);
+  }
+
+  onPageSizeChange(s: number) {
+    this.pageSize = s;
+    this.currentPage = 1;
+    this.loadUsers(this.currentPage, this.pageSize, this.searchTerm);
+  }
+
+  onPageChange(p: number) {
+    this.currentPage = p;
+    this.loadUsers(this.currentPage, this.pageSize, this.searchTerm);
   }
 
   downloadTemplate() {

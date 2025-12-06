@@ -160,7 +160,7 @@ export class LecturerCourseDetail {
 }
 
   isDraftCourse(): boolean {
-    return this.courseDetail?.status === 'Draft';
+    return this.courseDetail?.status === 'Draft' || this.courseDetail?.status === 'Rejected';
   }
 
   dropLesson(event: CdkDragDrop<Lesson[]>) {
