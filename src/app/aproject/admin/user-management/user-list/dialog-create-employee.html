@@ -3,7 +3,7 @@
         <h4 class="mb-0">Create New User</h4>
         <button class="close-btn bg-transparent p-0 border-none" (click)="close()"><i class="flaticon-close"></i></button>
     </div>
-    <form [formGroup]="lecturerForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
         <div class="row">
             <!-- <div class="col-lg-6 col-md-6">
                 <div class="form-group">
@@ -15,10 +15,10 @@
                 <div class="form-group">
                     <label class="d-block fw-semibold">Name <span class="text-danger">*</span></label>
                     <input type="text" class="input-control" placeholder="Name" formControlName="fullName">
-                    <div *ngIf="lecturerForm.get('fullName')?.hasError('required') && lecturerForm.get('fullName')?.touched" class="error-message">
+                    <div *ngIf="userForm.get('fullName')?.hasError('required') && userForm.get('fullName')?.touched" class="error-message">
                         Name is required
                     </div>
-                    <div *ngIf="lecturerForm.get('fullName')?.hasError('maxlength') && lecturerForm.get('fullName')?.touched" class="error-message">
+                    <div *ngIf="userForm.get('fullName')?.hasError('maxlength') && userForm.get('fullName')?.touched" class="error-message">
                         Name must be less than 255 characters
                     </div>
                 </div>
@@ -33,15 +33,28 @@
                 <div class="form-group">
                     <label class="d-block fw-semibold">Email <span class="text-danger">*</span></label>
                     <input type="email" class="input-control" placeholder="Email" formControlName="email">
-                    <div *ngIf="lecturerForm.get('email')?.hasError('required') && lecturerForm.get('email')?.touched" class="error-message">
+                    <div *ngIf="userForm.get('email')?.hasError('required') && userForm.get('email')?.touched" class="error-message">
                         Email is required
                     </div>
-                    <div *ngIf="lecturerForm.get('email')?.hasError('email') && lecturerForm.get('email')?.touched" class="error-message">
+                    <div *ngIf="userForm.get('email')?.hasError('email') && userForm.get('email')?.touched" class="error-message">
                         Invalid email address
                     </div>
-                    <div *ngIf="lecturerForm.get('email')?.hasError('maxlength') && lecturerForm.get('email')?.touched" class="error-message">
+                    <div *ngIf="userForm.get('email')?.hasError('maxlength') && userForm.get('email')?.touched" class="error-message">
                         Email must be less than 255 characters
                     </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-6">
+                <div class="form-group">
+                    <label class="d-block fw-semibold">Role <span class="text-danger">*</span></label>
+                    <select class="input-control" formControlName="roleId">
+                        <option *ngFor="let role of listRole" [value]="role.roleId">
+                            {{ role.name }}
+                        </option>
+                    </select>
+                </div>
+                <div *ngIf="userForm.get('roleId')?.hasError('required') && userForm.get('roleId')?.touched" class="error-message">
+                    Role is required
                 </div>
             </div>
             <!-- <div class="col-lg-6 col-md-6">
@@ -52,12 +65,15 @@
             </div> -->
             <!-- <div class="col-lg-6 col-md-6">
                 <div class="form-group">
-                    <label class="d-block fw-semibold">Role</label>
-                    <select class="input-control">
-                        <option *ngFor="let role of listRole" [value]="role">
-                            {{ role }}
+                    <label class="d-block fw-semibold">Level</label>
+                    <select class="input-control" formControlName="levelId">
+                        <option *ngFor="let level of listLevel" [value]="level.levelId">
+                            {{ level.name }}
                         </option>
                     </select>
+                    <div *ngIf="userForm.get('levelId')?.hasError('required') && userForm.get('levelId')?.touched" class="error-message">
+                        Level is required
+                    </div>
                 </div>
             </div> -->
         </div>

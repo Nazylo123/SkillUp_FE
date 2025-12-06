@@ -31,4 +31,8 @@ export class ApiDashboardServices {
     return this.http.get<any>(API_URLS.GET_MANAGER_DASHBOARD_COURSE_STATUS_DISTRIBUTION);
   }
 
+  getDashboardAdmin(): Observable<any> {
+    return this.http.get<any>(API_URLS.DASHBOARD_ADMIN);
+  }
+
 }

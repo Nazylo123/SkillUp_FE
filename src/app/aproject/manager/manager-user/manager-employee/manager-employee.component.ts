@@ -312,8 +312,8 @@ export class CreateEmployeeDialog {
 
     fb = inject(FormBuilder);
     employeeForm = this.fb.group({
-      fullName: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      fullName: ['', [Validators.required, Validators.maxLength(255)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
       levelId: [null as number | null, [Validators.required]],
     });
 
