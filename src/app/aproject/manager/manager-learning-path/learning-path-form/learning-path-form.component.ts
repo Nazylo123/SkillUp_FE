@@ -155,8 +155,12 @@ export class LearningPathFormComponent implements OnInit {
 
   async loadAvailableCourses(): Promise<void> {
     try {
+      // Get selected level from form
+      const selectedLevelId = this.pathForm.get('levelId')?.value;
+      const maxLevelId = selectedLevelId ? Number(selectedLevelId) : undefined;
+
       const response = await firstValueFrom(
-        this.courseService.getCourseListManager(1, 1000) // Load all courses from all lecturers
+        this.courseService.getCourseListManager(1, 1000, undefined, maxLevelId) // Load courses filtered by level
       );
       this.availableCourses = response.items || [];
 
@@ -350,5 +354,32 @@ export class LearningPathFormComponent implements OnInit {
 
   getCourseDisplayName(course: any): string {
     return course.courseName || course.name || course.title || 'Unnamed Course';
+  }
+
+  onLevelChange(): void {
+    // Reload courses when level changes
+    this.loadAvailableCourses();
+  }
+
+  getLevelBadgeClass(level?: string): string {
+    if (!level) return 'level-default';
+
+    switch (level.toLowerCase()) {
+      case 'intern':
+        return 'level-intern';
+      case 'fresher':
+        return 'level-fresher';
+      case 'junior':
+        return 'level-junior';
+      case 'middle':
+      case 'intermediate':
+        return 'level-middle';
+      case 'senior':
+        return 'level-senior';
+      case 'leader':
+        return 'level-leader';
+      default:
+        return 'level-default';
+    }
   }
 }
