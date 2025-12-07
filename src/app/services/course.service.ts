@@ -11,7 +11,7 @@ export class ApiCourseServices {
 
   constructor(private http: HttpClient) { }
 
-  getCourseListManager(page: number = 1, pageSize: number = 10, searchTerm?: string, maxLevelId?: number): Observable<CoursePaginatedResponse<Course>> {
+  getCourseListManager(page: number = 1, pageSize: number = 10, searchTerm?: string, maxLevelId?: number, status?: string): Observable<CoursePaginatedResponse<Course>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
@@ -22,6 +22,10 @@ export class ApiCourseServices {
 
     if (maxLevelId !== undefined && maxLevelId !== null) {
       params = params.set('maxLevelId', maxLevelId.toString());
+    }
+
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
     }
 
     return this.http.get<CoursePaginatedResponse<Course>>(API_URLS.COURSE, { params });
