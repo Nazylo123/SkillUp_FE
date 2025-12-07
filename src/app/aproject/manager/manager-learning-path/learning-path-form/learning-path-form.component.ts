@@ -101,10 +101,11 @@ export class LearningPathFormComponent implements OnInit {
         this.pathId = +params['id'];
         this.loadLearningPath();
         this.loadPathItems();
+      } else {
+        // Only load available courses in create mode (no level filter)
+        this.loadAvailableCourses();
       }
     });
-
-    this.loadAvailableCourses();
   }
 
   async loadLevels(): Promise<void> {
@@ -130,6 +131,9 @@ export class LearningPathFormComponent implements OnInit {
         description: path.description,
         levelId: path.levelId || ''
       });
+
+      // Load available courses after form is populated with levelId
+      await this.loadAvailableCourses();
     } catch (error) {
       console.error('Error loading learning path:', error);
       this.snackBar.open('Failed to load learning path', 'Close', { duration: 3000 });
@@ -160,9 +164,13 @@ export class LearningPathFormComponent implements OnInit {
       const maxLevelId = selectedLevelId ? Number(selectedLevelId) : undefined;
 
       const response = await firstValueFrom(
-        this.courseService.getCourseListManager(1, 1000, undefined, maxLevelId) // Load courses filtered by level
+        this.courseService.getCourseListManager(1, 1000, undefined, maxLevelId, 'Approved') // Only load Approved courses
       );
-      this.availableCourses = response.items || [];
+
+      // Filter only Approved courses (in case backend doesn't support status parameter yet)
+      this.availableCourses = (response.items || []).filter(course =>
+        course.status === 'Approved'
+      );
 
       // Initialize defaults
       this.availableCourses.forEach(course => {
