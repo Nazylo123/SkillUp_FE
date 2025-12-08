@@ -13,6 +13,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { LearningPathService } from '../../../../services/learning-path.service';
 import { LearningPath, DetailedEnrollment } from '../../../../models/learning-path.models';
 import { firstValueFrom } from 'rxjs';
@@ -33,7 +35,9 @@ import { firstValueFrom } from 'rxjs';
     MatSnackBarModule,
     MatTooltipModule,
     MatMenuModule,
-    MatDividerModule
+    MatDividerModule,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   templateUrl: './manager-learning-path.component.html',
   styleUrls: ['./manager-learning-path.component.scss']
@@ -63,12 +67,13 @@ export class ManagerLearningPathComponent implements OnInit {
   isLoading = false;
 
   // User Progress table data
-  progressDisplayedColumns: string[] = ['user', 'learningPath', 'progress', 'status', 'startDate', 'actions'];
+  progressDisplayedColumns: string[] = ['user', 'learningPath', 'enrollmentType', 'progress', 'status', 'startDate', 'actions'];
   progressDataSource: DetailedEnrollment[] = [];
   progressTotal = 0;
   progressCurrentPage = 1;
   progressPageSize = 10;
   progressSearchTerm = '';
+  progressFilterType: 'all' | 'assigned' | 'self-enrolled' = 'all';
   isLoadingProgress = false;
 
   constructor(
@@ -128,12 +133,26 @@ formatText(text: string) : string {
 
   loadUserProgress(): void {
     this.isLoadingProgress = true;
-    this.learningPathService.getAllEnrollments(this.progressCurrentPage, this.progressPageSize, this.progressSearchTerm).subscribe({
+    // Load with larger pageSize to get all data for filtering
+    this.learningPathService.getAllEnrollments(1, 1000, this.progressSearchTerm).subscribe({
       next: (response) => {
-        this.progressDataSource = response.items;
-        this.progressTotal = response.total;
-        this.progressCurrentPage = response.page;
-        this.progressPageSize = response.pageSize;
+        // Filter by enrollment type if needed
+        let filteredItems = response.items;
+        if (this.progressFilterType === 'assigned') {
+          filteredItems = response.items.filter(item => item.enrollmentType === 'assigned');
+        } else if (this.progressFilterType === 'self-enrolled') {
+          filteredItems = response.items.filter(item => item.enrollmentType === 'self-enrolled');
+        }
+        
+        // Apply pagination to filtered results
+        const startIndex = (this.progressCurrentPage - 1) * this.progressPageSize;
+        const endIndex = startIndex + this.progressPageSize;
+        const paginatedItems = filteredItems.slice(startIndex, endIndex);
+        
+        this.progressDataSource = paginatedItems;
+        this.progressTotal = filteredItems.length; // Use filtered count
+        this.progressCurrentPage = this.progressCurrentPage;
+        this.progressPageSize = this.progressPageSize;
         this.isLoadingProgress = false;
       },
       error: (error) => {
@@ -142,6 +161,11 @@ formatText(text: string) : string {
         this.isLoadingProgress = false;
       }
     });
+  }
+
+  onFilterTypeChange(): void {
+    this.progressCurrentPage = 1;
+    this.loadUserProgress();
   }
 
   searchPaths(): void {
