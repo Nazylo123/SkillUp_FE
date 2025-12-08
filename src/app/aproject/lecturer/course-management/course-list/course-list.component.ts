@@ -70,11 +70,11 @@ export class LecturerCourseList {
     
     maxLengthText(text: string) : boolean {
       return text.length > 20;
-  }
+    }
 
-  formatText(text: string) : string {
-      return this.maxLengthText(text) ? text.substring(0, 20) + '...' : text;
-  }
+    formatText(text: string) : string {
+        return this.maxLengthText(text) ? text.substring(0, 20) + '...' : text;
+    }
 
     loadCourses(page: number = 1, pageSize: number = 10, searchTerm?: string) {
       this.courseService.getCourseListCreator(page, pageSize, searchTerm).subscribe({
@@ -195,7 +195,7 @@ export class CreateCourse {
       description: ['', [Validators.required, Validators.maxLength(1000)]],
       courseType: [null as number | null, [Validators.required]],
       targetLevel: [null as number | null, [Validators.required]],
-      duration: [null as number | null, [Validators.required, Validators.min(1)]],
+      duration: [null as number | null, [Validators.required, Validators.min(1), Validators.max(1000)]],
       image: [null as File | null, [Validators.required]],
     });
 
