@@ -272,4 +272,25 @@ export class LearningPathService {
       })
     );
   }
+
+  /**
+   * Export User Progress Tracking to Excel
+   * GET /api/learning-path-enrollments/export-excel
+   */
+  exportUserProgressExcel(searchTerm?: string, enrollmentType?: 'all' | 'assigned' | 'self-enrolled'): Observable<Blob> {
+    let params = new HttpParams();
+    
+    if (searchTerm && searchTerm.trim()) {
+      params = params.set('search', searchTerm.trim());
+    }
+    
+    if (enrollmentType && enrollmentType !== 'all') {
+      params = params.set('enrollmentType', enrollmentType);
+    }
+
+    return this.http.get(API_URLS.EXPORT_USER_PROGRESS_EXCEL, {
+      params,
+      responseType: 'blob'
+    });
+  }
 }

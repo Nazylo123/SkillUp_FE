@@ -42,6 +42,14 @@
                         <div class="text-center">
                             <button
                                 mat-icon-button
+                                [matTooltip]="element.isActive ? 'Deactivate Course Type' : 'Activate Course Type'"
+                                [color]="element.isActive ? 'warn' : 'primary'"
+                                (click)="toggleActive(element)"
+                            >
+                                <mat-icon>{{element.isActive ? 'toggle_on' : 'toggle_off'}}</mat-icon>
+                            </button>
+                            <button
+                                mat-icon-button
                                 matTooltip="Edit Course Type"
                                 (click)="editCourseType(element)"
                             >

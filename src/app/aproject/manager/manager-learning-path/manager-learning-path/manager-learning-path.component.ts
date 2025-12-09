@@ -98,7 +98,51 @@ export class ManagerLearningPathComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    console.log('Exporting to Excel...');
+    this.isLoadingProgress = true;
+    
+    this.learningPathService.exportUserProgressExcel(
+      this.progressSearchTerm,
+      this.progressFilterType
+    ).subscribe({
+      next: (blob: Blob) => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Generate filename with current date
+        const date = new Date();
+        const dateStr = date.toISOString().split('T')[0];
+        const filterStr = this.progressFilterType !== 'all' ? `-${this.progressFilterType}` : '';
+        link.download = `user-progress-tracking${filterStr}-${dateStr}.xlsx`;
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        this.isLoadingProgress = false;
+        this.snackBar.open('Export to Excel completed successfully', 'Close', {
+          duration: 3000,
+          panelClass: ['success-snackbar', 'custom-snackbar'],
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      },
+      error: (error) => {
+        console.error('Error exporting to Excel:', error);
+        this.isLoadingProgress = false;
+        this.snackBar.open('Failed to export Excel file', 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar', 'custom-snackbar'],
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      }
+    });
   }
 
   loadLearningPaths(): void {

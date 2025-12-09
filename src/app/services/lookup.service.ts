@@ -14,7 +14,8 @@ export class ApiLookupServices {
   constructor(private http: HttpClient) { }
 
   getCourseTypes(): Observable<CourseType[]> {
-    return this.http.get<CourseType[]>(`${API_URLS.GET_COURSE_TYPES}`);
+    const params = new HttpParams().set('includeInactive', 'true');
+    return this.http.get<CourseType[]>(`${API_URLS.GET_COURSE_TYPES}`, { params });
   }
 
   createCourseType(name: string): Observable<CourseType> {
@@ -30,7 +31,8 @@ export class ApiLookupServices {
   }
 
   getLevels(): Observable<Level[]> {
-    return this.http.get<Level[]>(`${API_URLS.GET_LEVELS}`);
+    const params = new HttpParams().set('includeInactive', 'true');
+    return this.http.get<Level[]>(`${API_URLS.GET_LEVELS}`, { params });
   }
 
   createLevel(name: string): Observable<Level> {
@@ -43,6 +45,14 @@ export class ApiLookupServices {
 
   deleteLevel(levelId: number): Observable<void> {
     return this.http.delete<void>(`${API_URLS.GET_LEVELS}/${levelId}`);
-  } 
+  }
+
+  activateCourseType(courseTypeId: number, isActive: boolean): Observable<CourseType> {
+    return this.http.patch<CourseType>(`${API_URLS.ACTIVATE_COURSE_TYPE}/${courseTypeId}/activate`, { isActive });
+  }
+
+  activateUserLevel(levelId: number, isActive: boolean): Observable<Level> {
+    return this.http.patch<Level>(`${API_URLS.ACTIVATE_USER_LEVEL}/${levelId}/activate`, { isActive });
+  }
 
 }

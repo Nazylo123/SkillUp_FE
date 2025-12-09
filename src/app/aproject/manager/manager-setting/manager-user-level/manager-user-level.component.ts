@@ -97,6 +97,48 @@ export class ManagerUserLevelComponent implements OnInit {
     });
   }
 
+  toggleActive(level: Level): void {
+    const newStatus = !level.isActive;
+    const action = newStatus ? 'activate' : 'deactivate';
+    const actionTitle = newStatus ? 'Activate' : 'Deactivate';
+    const confirmMsg = `Are you sure you want to ${action} "${level.name}"?`;
+
+    const dialogRef = this.dialog.open(ConfirmDeleteDialog, {
+      width: '400px',
+      data: {
+        title: `${actionTitle} Level`,
+        message: confirmMsg,
+        buttonText: actionTitle,
+        buttonColor: newStatus ? 'primary' : 'warn'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.lookupService.activateUserLevel(level.levelId, newStatus).subscribe({
+          next: () => {
+            this.snackBar.open(`Level ${action}d successfully`, 'Close', { 
+              duration: 3000, 
+              panelClass: ['success-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
+            this.loadLevels();
+          },
+          error: (error: any) => {
+            console.error(`Error ${action}ing level:`, error);
+            this.snackBar.open(`Error ${action}ing level`, 'Close', { 
+              duration: 3000, 
+              panelClass: ['error-snackbar', 'custom-snackbar'],
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
+          }
+        });
+      }
+    });
+  }
+
   deleteLevel(level: Level): void {
     // Show confirmation dialog
     const dialogRef = this.dialog.open(ConfirmDeleteDialog, {
@@ -252,13 +294,13 @@ export class UserLevelDialog {
   ],
   template: `
     <div class="confirm-dialog">
-      <h2 mat-dialog-title>{{ data.title || 'Confirm Delete' }}</h2>
+      <h2 mat-dialog-title>{{ data.title || 'Confirm' }}</h2>
       <mat-dialog-content>
-        <p>{{ data.message || 'Are you sure you want to delete this item?' }}</p>
+        <p>{{ data.message || 'Are you sure you want to proceed?' }}</p>
       </mat-dialog-content>
       <mat-dialog-actions align="end">
         <button mat-stroked-button (click)="close(false)">Cancel</button>
-        <button mat-flat-button color="warn" (click)="close(true)">Delete</button>
+        <button mat-flat-button [color]="data.buttonColor || 'warn'" (click)="close(true)">{{ data.buttonText || 'Confirm' }}</button>
       </mat-dialog-actions>
     </div>
   `,
@@ -280,7 +322,7 @@ export class UserLevelDialog {
 export class ConfirmDeleteDialog {
   constructor(
     public dialogRef: MatDialogRef<ConfirmDeleteDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: { title?: string; message?: string }
+    @Inject(MAT_DIALOG_DATA) public data: { title?: string; message?: string; buttonText?: string; buttonColor?: string }
   ) {}
 
   close(result: boolean): void {
