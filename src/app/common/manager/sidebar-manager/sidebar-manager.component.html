@@ -90,6 +90,36 @@
                     </mat-expansion-panel-header>
                     </mat-expansion-panel>
 
+                    <mat-expansion-panel
+                        [expanded]="false"
+                    >
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i class="material-symbols-outlined">settings</i>
+                                <span class="title">Setting</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item">
+                                <a
+                                    routerLink="/manager/course-type"
+                                    routerLinkActive="active"
+                                    class="sidemenu-link"
+                                >
+                                    Course Type
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a
+                                    routerLink="/manager/user-level"
+                                    routerLinkActive="active"
+                                    class="sidemenu-link"
+                                >
+                                    User Level
+                                </a>
+                            </li>
+                        </ul>
+                    </mat-expansion-panel>
                 </mat-accordion>
             </div>
         </div>

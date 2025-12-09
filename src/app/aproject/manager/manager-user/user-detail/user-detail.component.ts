@@ -57,7 +57,6 @@ export type ChartOptions = {
         MatCardModule, 
         MatButtonModule, 
         MatMenuModule, 
-        ChartComponent, 
         MatCheckboxModule, 
         MatTableModule, 
         MatProgressBar, 

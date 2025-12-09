@@ -91,11 +91,15 @@ export class ManagerLearningPathComponent implements OnInit {
   
   maxLengthText(text: string) : boolean {
     return text.length > 20;
-}
+  }
 
-formatText(text: string) : string {
-    return this.maxLengthText(text) ? text.substring(0, 20) + '...' : text;
-}
+  formatText(text: string) : string {
+      return this.maxLengthText(text) ? text.substring(0, 20) + '...' : text;
+  }
+
+  exportToExcel(): void {
+    console.log('Exporting to Excel...');
+  }
 
   loadLearningPaths(): void {
     this.isLoading = true;

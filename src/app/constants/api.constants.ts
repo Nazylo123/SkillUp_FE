@@ -164,6 +164,10 @@ export const API_URLS = {
   UPDATE_AI_KEY: BASE_POINTS.SETTINGS + "/ai-key", // PUT /api/settings/ai-key
   DASHBOARD_ADMIN: BASE_POINTS.DASHBOARD + "/admin",
 
+  // Settings Management (Manager only)
+  GET_COURSE_MANAGER_TYPES: BASE_POINTS.SETTINGS + "/course-types", // GET /api/settings/course-types
+  GET_USER_MANAGER_LEVELS: BASE_POINTS.SETTINGS + "/user-levels", // GET /api/settings/user-levels
+
   //API Report
   GET_USER_REPORT: BASE_POINTS.USER + "/employees/detail-statistics", // GET /api/Users/employees/detail-statistics
   EXPORT_USER_REPORT_EXCEL: BASE_POINTS.USER + "/employees/detail-statistics/export-excel", // GET /api/Users/employees/detail-statistics/export-excel

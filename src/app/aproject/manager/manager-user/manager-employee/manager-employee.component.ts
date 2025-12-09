@@ -17,6 +17,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { Level } from '../../../../models/lookup.model';
 import { ApiCourseServices } from '../../../../services/course.service';
 import { MatTooltip } from "@angular/material/tooltip";
+import { ChatBoxComponent } from '../../../../shared/chat-box/chat-box.component';
 
 @Component({
     selector: 'app-manager-employee',
@@ -26,7 +27,8 @@ import { MatTooltip } from "@angular/material/tooltip";
 })
 export class ManagerEmployee {
   constructor(private router: Router,public dialog: MatDialog, private apiUserServices: ApiUserServices,
-     private snack: MatSnackBar, private apiCourseServices: ApiCourseServices) {}
+     private snack: MatSnackBar, private apiCourseServices: ApiCourseServices) {
+     }
 
   displayedColumns: string[] = ['user','progress', 'email', 'level','courses', 'role', 'status', 'action'];
   dataSource = new MatTableDataSource<UserManager>([]);
