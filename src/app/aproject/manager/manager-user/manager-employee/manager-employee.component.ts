@@ -367,7 +367,7 @@ export class CreateEmployeeDialog {
 
       this.apiUserServices.createEmployee(this.employeeForm.value).subscribe(
         (res: any) => {
-          this.snack.open('Employee created successfully', '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
+          this.snack.open('Employee created successfully. Password has been sent to their email.', '', { duration: 4000, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
           if (this.data?.loadUsers) {
             this.data.loadUsers();
           }
