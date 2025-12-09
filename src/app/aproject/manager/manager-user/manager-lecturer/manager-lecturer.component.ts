@@ -356,7 +356,14 @@ export class CreateLecturerDialog {
         },
         error: (error: any) => {
           console.error('Error creating lecturer:', error);
-          this.snack.open('Failed to create lecturer. Please try again.', '', { 
+          let errorMessage = 'Failed to create lecturer. Please try again.';
+          
+          // Handle email domain validation error from backend
+          if (error?.error?.error === 'InvalidEmailDomain') {
+            errorMessage = error.error.message || 'Email must be from @skillup.com domain';
+          }
+          
+          this.snack.open(errorMessage, '', { 
             duration: 3000, 
             panelClass: ['error-snackbar', 'custom-snackbar'], 
             horizontalPosition: 'right', 

@@ -375,7 +375,14 @@ export class CreateEmployeeDialog {
         },
         (error: any) => {
           console.error('Error creating employee:', error);
-          this.snack.open('Failed to create employee. Please try again.', '', { duration: 3000, panelClass: ['error-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
+          let errorMessage = 'Failed to create employee. Please try again.';
+          
+          // Handle email domain validation error from backend
+          if (error?.error?.error === 'InvalidEmailDomain') {
+            errorMessage = error.error.message || 'Email must be from @skillup.com domain';
+          }
+          
+          this.snack.open(errorMessage, '', { duration: 3000, panelClass: ['error-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
         }
       );
     }
