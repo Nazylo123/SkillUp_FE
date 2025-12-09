@@ -339,8 +339,8 @@ export class CreateLecturerDialog {
       this.apiUserServices.createLecturer(this.lecturerForm.value).subscribe({
         next: (res: any) => {
           
-          this.snack.open('Lecturer created successfully', '', { 
-            duration: 2200, 
+          this.snack.open('Lecturer created successfully. Password has been sent to their email.', '', { 
+            duration: 4000, 
             panelClass: ['success-snackbar', 'custom-snackbar'], 
             horizontalPosition: 'right', 
             verticalPosition: 'top' 
