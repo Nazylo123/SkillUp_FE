@@ -107,7 +107,7 @@
       class="input-search border-radius"
       placeholder="Search learning paths..."
       [(ngModel)]="searchTerm"
-      (input)="searchPaths()">
+      (keyup.enter)="searchPaths()">
     <button mat-flat-button class="tagus" (click)="searchPaths()">
       <i class="ri-search-line"></i>
     </button>
