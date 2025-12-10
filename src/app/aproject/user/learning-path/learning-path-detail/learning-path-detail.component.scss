@@ -138,6 +138,10 @@
       font-size: 14px;
       padding: 8px 16px;
       height: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 12px;
 
       mat-icon {
         color: white;
@@ -277,7 +281,7 @@
 
     .mandatory-chip {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      color: white !important;
       font-weight: 700;
       font-size: 13px;
       height: 32px;
@@ -292,14 +296,13 @@
       overflow: hidden;
 
       &::before {
-        content: '';
         position: absolute;
         top: -50%;
         left: -50%;
-        width: 200%;
+        width: 170%;
         height: 200%;
         background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: shimmer 3s infinite;
+        animation: shimmer 2s infinite;
       }
 
       span {
@@ -530,10 +533,10 @@
 // Animations
 @keyframes shimmer {
   0% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    transform: translateX(100%) translateY(100%) rotate(45deg);
   }
   100% {
-    transform: translateX(100%) translateY(100%) rotate(45deg);
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
   }
 }
 

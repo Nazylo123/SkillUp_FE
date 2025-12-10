@@ -48,6 +48,10 @@ export class CourseDetailComponent {
     totalFeedbacks: number = 0;
     page = 1;
     pageSize = 10;
+    feedbackContent: string = '';
+    maxFeedbackLength: number = 2000;
+    commentContents: { [key: number]: string } = {}; // Store comment content for each feedback
+    maxCommentLength: number = 1000;
 
     ngOnInit(): void {
         this.authService.currentUser$.subscribe(user => {
@@ -82,6 +86,7 @@ export class CourseDetailComponent {
 
     toggleReply(feedbackId: string): void {
         const replyElement = document.getElementById(`reply-${feedbackId}`);
+        const feedbackIdNum = Number(feedbackId);
         if (replyElement) {
             if (replyElement.style.display === 'none' || replyElement.style.display === '') {
                 replyElement.style.display = 'block';
@@ -89,8 +94,18 @@ export class CourseDetailComponent {
             } else {
                 replyElement.style.display = 'none';
                 replyElement.classList.remove('show');
+                this.commentContents[feedbackIdNum] = ''; // Clear content when closing
             }
         }
+    }
+
+    getCommentLength(feedbackId: number): number {
+        return this.commentContents[feedbackId] ? this.commentContents[feedbackId].length : 0;
+    }
+
+    isCommentValid(feedbackId: number): boolean {
+        const content = (this.commentContents[feedbackId] || '').trim();
+        return content.length > 0 && content.length <= this.maxCommentLength;
     }
 
     getTimeAgo(date: string) {
@@ -185,8 +200,30 @@ export class CourseDetailComponent {
     }
 
     createFeedback(): void {
-        const feedbackContent = document.getElementById('feedback-content') as HTMLTextAreaElement;
-        this.feedbackService.createFeedback({ courseId: Number(this.id), content: feedbackContent.value }).subscribe((feedback: Feedback) => {
+        const content = this.feedbackContent.trim();
+        
+        // Validation
+        if (!content) {
+            this.snackBar.open('Please enter your feedback', '', {
+                duration: 3000,
+                panelClass: ['error-snackbar', 'custom-snackbar'],
+                horizontalPosition: 'right',
+                verticalPosition: 'top'
+            });
+            return;
+        }
+
+        if (content.length > this.maxFeedbackLength) {
+            this.snackBar.open(`Feedback cannot exceed ${this.maxFeedbackLength} characters`, '', {
+                duration: 3000,
+                panelClass: ['error-snackbar', 'custom-snackbar'],
+                horizontalPosition: 'right',
+                verticalPosition: 'top'
+            });
+            return;
+        }
+
+        this.feedbackService.createFeedback({ courseId: Number(this.id), content: content }).subscribe((feedback: Feedback) => {
             this.feedbacks = [ feedback, ...this.feedbacks];
             this.totalFeedbacks++;
             this.snackBar.open('Feedback created successfully', '', {
@@ -196,7 +233,7 @@ export class CourseDetailComponent {
                 verticalPosition: 'top'
             });
             this.toggleWriteFeedback();
-            feedbackContent.value = '';
+            this.feedbackContent = '';
         }, error => {
             this.snackBar.open('Failed to create feedback', '', {
                 duration: 3000,
@@ -208,8 +245,30 @@ export class CourseDetailComponent {
     }
 
     createComment(feedback: Feedback): void {
-        const commentContent = document.getElementById(`reply-content-${feedback.feedbackId}`) as HTMLTextAreaElement;
-        this.feedbackService.createComment({ feedbackId: feedback.feedbackId, commentText: commentContent.value }).subscribe((comment: FeedbackComment) => {
+        const content = (this.commentContents[feedback.feedbackId] || '').trim();
+        
+        // Validation
+        if (!content) {
+            this.snackBar.open('Please enter your reply', '', {
+                duration: 3000,
+                panelClass: ['error-snackbar', 'custom-snackbar'],
+                horizontalPosition: 'right',
+                verticalPosition: 'top'
+            });
+            return;
+        }
+
+        if (content.length > this.maxCommentLength) {
+            this.snackBar.open(`Reply cannot exceed ${this.maxCommentLength} characters`, '', {
+                duration: 3000,
+                panelClass: ['error-snackbar', 'custom-snackbar'],
+                horizontalPosition: 'right',
+                verticalPosition: 'top'
+            });
+            return;
+        }
+
+        this.feedbackService.createComment({ feedbackId: feedback.feedbackId, commentText: content }).subscribe((comment: FeedbackComment) => {
             feedback.comments = [comment, ...feedback.comments];
             this.snackBar.open('Comment created successfully', '', {
                 duration: 3000,
@@ -217,7 +276,7 @@ export class CourseDetailComponent {
                 horizontalPosition: 'right',
                 verticalPosition: 'top'
             });
-            commentContent.value = '';
+            this.commentContents[feedback.feedbackId] = '';
             this.toggleReply(feedback.feedbackId.toString())
         }, error => {
             this.snackBar.open('Failed to create comment', '', {
@@ -244,8 +303,18 @@ export class CourseDetailComponent {
             } else {
                 writeElement.style.display = 'none';
                 writeElement.classList.remove('show');
+                this.feedbackContent = ''; // Clear content when closing
             }
         }
+    }
+
+    getFeedbackLength(): number {
+        return this.feedbackContent ? this.feedbackContent.length : 0;
+    }
+
+    isFeedbackValid(): boolean {
+        const content = this.feedbackContent.trim();
+        return content.length > 0 && content.length <= this.maxFeedbackLength;
     }
 
     deleteFeedback(feedbackId: number): void {
@@ -326,4 +395,5 @@ export class CourseDetailComponent {
         });
     }
 }
+
 

@@ -297,8 +297,8 @@
             <div class="d-flex align-items-center user-info">
               <img [src]="element.userAvatar || 'img/user/user12.jpg'" class="rounded-circle me-3" width="40" alt="user">
               <div class="title">
-                <strong class="d-block">{{element.userName}}</strong>
-                <small class="muted-color">{{element.userEmail}}</small>
+                <strong class="d-block" [matTooltip]="maxLengthText(element.userName) ? element.userName : ''">{{formatText(element.userName)}}</strong>
+                <small class="muted-color" [matTooltip]="maxLengthText(element.userEmail) ? element.userEmail : ''">{{formatText(element.userEmail)}}</small>
               </div>
             </div>
           </td>
@@ -309,7 +309,7 @@
           <th mat-header-cell *matHeaderCellDef>Learning Path</th>
           <td mat-cell *matCellDef="let element">
             <div class="learning-path-info">
-              <strong class="d-block">{{element.learningPathName}}</strong>
+              <strong class="d-block" [matTooltip]="maxLengthText(element.learningPathName) ? element.learningPathName : ''">{{formatText(element.learningPathName)}}</strong>
               <small class="muted-color">{{element.completedCourses}} / {{element.totalCourses}} courses</small>
             </div>
           </td>

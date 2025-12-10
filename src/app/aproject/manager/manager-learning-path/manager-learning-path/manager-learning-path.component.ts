@@ -88,7 +88,6 @@ export class ManagerLearningPathComponent implements OnInit {
     this.loadUserProgress();
   }
 
-  
   maxLengthText(text: string) : boolean {
     return text.length > 20;
   }

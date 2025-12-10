@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  margin-bottom: 24px;
 }
 
 .tagus-card {
@@ -183,7 +184,7 @@
   font-size: 24px;
   font-weight: 700;
   color: #1f2937;
-  margin-bottom: 24px;
+  margin: 24px 0;
 
   mat-icon {
     color: #667eea;
@@ -365,10 +366,9 @@
       color: #6b7280;
       line-height: 1.5;
       margin: 0 0 16px 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .progress-section {

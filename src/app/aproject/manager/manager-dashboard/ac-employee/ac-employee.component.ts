@@ -19,6 +19,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
+import { finalize } from "rxjs";
 
 export type ChartOptionsUsers = {
     series: ApexAxisChartSeries;
@@ -143,37 +144,198 @@ export class AcEmployeeComponent {
     }
 
     getMonthlyEnrollmentStats() {
-        this.dashboardService.getManagerDashboardMonthlyEnrollmentStats(this.selectedYear).subscribe((res: any) => {
+        this.dashboardService.getManagerDashboardMonthlyEnrollmentStats(this.selectedYear).pipe(finalize(() => this.setupEnrollment())).subscribe((res: any) => {
             this.dataEnrollment = res.monthlyEnrollmentStats.map((item: any) => item.newEnrollments);
-            this.setup();
         });
     }
 
     getMonthlyUserStats() {
-        this.dashboardService.getManagerDashboardMonthlyUserStats(this.selectedYear).subscribe((res: any) => {
+        this.dashboardService.getManagerDashboardMonthlyUserStats(this.selectedYear).pipe(finalize(() => this.setupUsers())).subscribe((res: any) => {
             this.dataUser = res.monthlyUserStats.map((item: any) => item.newUsers);
-            this.setup();
         });
     }
 
     getCourseTypeStats() {
-        this.dashboardService.getManagerDashboardCourseTypeStats().subscribe((res: any) => {
+        this.dashboardService.getManagerDashboardCourseTypeStats().pipe(finalize(() => this.setupCourseType())).subscribe((res: any) => {
             this.dataCourseType = res.courseTypeDistribution.map((item: any) => item.percentage);
             this.dataCourseTypeLabels = res.courseTypeDistribution.map((item: any) => item.courseType);
-            this.setup();
         });
     }
 
     getCourseStatusStats() {
-        this.dashboardService.getManagerDashboardCourseStatusStats().subscribe((res: any) => {
+        this.dashboardService.getManagerDashboardCourseStatusStats().pipe(finalize(() => this.setupStatusDistribution())).subscribe((res: any) => {
             this.dataStatusDistribution = res.courseStatusDistribution.map((item: any) => item.percentage);
             this.dataStatusDistributionLabels = res.courseStatusDistribution.map((item: any) => item.status);
             this.dataStatusDistributionCount = res.courseStatusDistribution.map((item: any) => item.count);
-            this.setup();
         });
     }
 
-    setup() {
+    setupCourseType() {
+        this.chartOptionsCourseType = {
+            series: this.dataCourseType,
+            chart: {
+                width: 380,
+                type: "pie"
+            },
+            labels: this.dataCourseTypeLabels,
+            legend: {
+                offsetY: 0,
+                fontSize: "14px",
+                labels: {
+                    colors: '#5B5B98'
+                }
+            },
+            stroke: {
+                width: 0,
+                show: true
+            },
+            // colors: ["#757fef", "#ee368c", "#2db6f5"],
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '14px',
+                },
+                dropShadow: {
+                    enabled: false
+                }
+            },
+            tooltip: {
+                style: {
+                    fontSize: '14px',
+                },
+                y: {
+                    formatter: function(val:any) {
+                        return val + "%";
+                    }
+                }
+            }
+        };
+    }
+
+    setupStatusDistribution() {
+        this.chartOptionsStatusDistribution = {
+            series: this.dataStatusDistribution,
+            chart: {
+                height: 350,
+                type: "radialBar"
+            },
+            plotOptions: {
+                radialBar: {
+                    offsetY: 0,
+                    startAngle: 0,
+                    endAngle: 270,
+                    hollow: {
+                        margin: 10,
+                        size: "30%",
+                        image: undefined,
+                        background: "transparent"
+                    },
+                    dataLabels: {
+                        name: {
+                            show: false
+                        },
+                        value: {
+                            show: false
+                        }
+                    }
+                }
+            },
+            colors: [
+
+            ],
+            labels: this.dataStatusDistributionLabels,
+            legend: {
+                show: true,
+                offsetY: 0,
+                offsetX: -20,
+                floating: true,
+                position: "left",
+                fontSize: "14px",
+                labels: {
+                    colors: '#5B5B98'
+                },
+                formatter: function(seriesName, opts) {
+                    return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex] + "%";
+                }
+            }
+        };
+    }
+
+    setupEnrollment() {
+        this.chartOptionsEnrollment = {
+            series: [
+                {
+                    name: "New Enrollments",
+                    data: this.dataEnrollment
+                }
+            ],
+            chart: {
+                height: 350,
+                type: "line",
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: true
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            colors: ["#757fef"],
+            stroke: {
+                curve: "straight"
+            },
+            // title: {
+            //     text: "New Enrollments by Month",
+            //     align: "left"
+            // },
+            grid: {
+                show: true,
+                strokeDashArray: 5,
+                borderColor: "#EDEFF5",
+                row: {
+                    colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                    opacity: 0.5
+                }
+            },
+            xaxis: {
+                categories: [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec"
+                ],
+                labels: {
+                    style: {
+                        colors: "#a9a9c8",
+                        fontSize: "14px"
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: "#a9a9c8",
+                        fontSize: "14px"
+                    }
+                },
+                axisBorder: {
+                    show: false
+                }
+            }
+        };
+    }
+
+    setupUsers() {
         this.chartOptionsUsers = {
             series: [
                 {
@@ -258,165 +420,6 @@ export class AcEmployeeComponent {
                     inverseColors: true,
                     opacityFrom: 0.85,
                     opacityTo: 0.85
-                }
-            }
-        };
-
-        this.chartOptionsEnrollment = {
-            series: [
-                {
-                    name: "New Enrollments",
-                    data: this.dataEnrollment
-                }
-            ],
-            chart: {
-                height: 350,
-                type: "line",
-                zoom: {
-                    enabled: false
-                },
-                toolbar: {
-                    show: true
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            colors: ["#757fef"],
-            stroke: {
-                curve: "straight"
-            },
-            // title: {
-            //     text: "New Enrollments by Month",
-            //     align: "left"
-            // },
-            grid: {
-                show: true,
-                strokeDashArray: 5,
-                borderColor: "#EDEFF5",
-                row: {
-                    colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                    opacity: 0.5
-                }
-            },
-            xaxis: {
-                categories: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec"
-                ],
-                labels: {
-                    style: {
-                        colors: "#a9a9c8",
-                        fontSize: "14px"
-                    }
-                }
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: "#a9a9c8",
-                        fontSize: "14px"
-                    }
-                },
-                axisBorder: {
-                    show: false
-                }
-            }
-        };
-
-        this.chartOptionsCourseType = {
-            series: this.dataCourseType,
-            chart: {
-                width: 380,
-                type: "pie"
-            },
-            labels: this.dataCourseTypeLabels,
-            legend: {
-                offsetY: 0,
-                fontSize: "14px",
-                labels: {
-                    colors: '#5B5B98'
-                }
-            },
-            stroke: {
-                width: 0,
-                show: true
-            },
-            // colors: ["#757fef", "#ee368c", "#2db6f5"],
-            dataLabels: {
-                enabled: true,
-                style: {
-                    fontSize: '14px',
-                },
-                dropShadow: {
-                    enabled: false
-                }
-            },
-            tooltip: {
-                style: {
-                    fontSize: '14px',
-                },
-                y: {
-                    formatter: function(val:any) {
-                        return val + "%";
-                    }
-                }
-            }
-        };
-
-        this.chartOptionsStatusDistribution = {
-            series: this.dataStatusDistribution,
-            chart: {
-                height: 350,
-                type: "radialBar"
-            },
-            plotOptions: {
-                radialBar: {
-                    offsetY: 0,
-                    startAngle: 0,
-                    endAngle: 270,
-                    hollow: {
-                        margin: 10,
-                        size: "30%",
-                        image: undefined,
-                        background: "transparent"
-                    },
-                    dataLabels: {
-                        name: {
-                            show: false
-                        },
-                        value: {
-                            show: false
-                        }
-                    }
-                }
-            },
-            colors: [
-
-            ],
-            labels: this.dataStatusDistributionLabels,
-            legend: {
-                show: true,
-                offsetY: 0,
-                offsetX: -20,
-                floating: true,
-                position: "left",
-                fontSize: "14px",
-                labels: {
-                    colors: '#5B5B98'
-                },
-                formatter: function(seriesName, opts) {
-                    return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex] + "%";
                 }
             }
         };
