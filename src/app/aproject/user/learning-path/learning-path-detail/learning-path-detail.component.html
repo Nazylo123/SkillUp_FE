@@ -14,9 +14,9 @@
             <span>Your Learning Journey</span>
           </div>
 
-          <h1 class="hero-title">{{learningPath.name}}</h1>
-          <p class="hero-description">
-            {{learningPath.description}}
+          <h1 class="hero-title" [matTooltip]="maxLengthText(learningPath.name) ? learningPath.name : ''">{{formatText(learningPath.name)}}</h1>
+          <p class="hero-description" [matTooltip]="maxLengthText(learningPath.description) ? learningPath.description : ''">
+            {{formatText(learningPath.description)}}
           </p>
 
           <div class="hero-stats">
@@ -46,10 +46,10 @@
           </div>
 
           <div class="hero-actions" *ngIf="isEnrolled">
-            <mat-chip class="enrolled-chip">
+            <div class="enrolled-chip">
               <mat-icon>check_circle</mat-icon>
               Enrolled
-            </mat-chip>
+            </div>
           </div>
         </div>
       </mat-card-content>
@@ -103,13 +103,13 @@
                   </div>
 
                   <div class="course-meta">
-                    <mat-chip *ngIf="course.isMandatory" class="mandatory-chip">
+                    <div *ngIf="course.isMandatory" class="mandatory-chip">
                       <span>Mandatory</span>
-                    </mat-chip>
-                    <mat-chip *ngIf="!course.isMandatory" class="optional-chip">
+                    </div>
+                    <div *ngIf="!course.isMandatory" class="optional-chip">
                       <mat-icon>check_circle_outline</mat-icon>
                       <span>Optional</span>
-                    </mat-chip>
+                    </div>
                   </div>
 
                   <div class="course-progress" *ngIf="isEnrolled">

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { LearningPathService } from '../../../../services/learning-path.service';
 import { LearningPath } from '../../../../models/learning-path.models';
 import { firstValueFrom } from 'rxjs';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-learning-path-list',
@@ -24,8 +25,9 @@ import { firstValueFrom } from 'rxjs';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    FormsModule
-  ],
+    FormsModule,
+    MatTooltip
+],
   templateUrl: './learning-path-list.component.html',
   styleUrls: ['./learning-path-list.component.scss']
 })

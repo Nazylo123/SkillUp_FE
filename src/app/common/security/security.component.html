@@ -31,6 +31,7 @@
                             </button>
                             <mat-error *ngIf="changePasswordForm.controls['oldPassword'].hasError('required')">Old password is required</mat-error>
                             <mat-error *ngIf="changePasswordForm.controls['oldPassword'].hasError('minlength')">Minimum 6 characters</mat-error>
+                            <mat-error *ngIf="changePasswordForm.controls['oldPassword'].hasError('maxlength')">Maximum 25 characters</mat-error>
                         </mat-form-field>
                     </div>
                 </div>
@@ -46,6 +47,7 @@
                             </button>
                             <mat-error *ngIf="changePasswordForm.controls['newPassword'].hasError('required')">New password is required</mat-error>
                             <mat-error *ngIf="changePasswordForm.controls['newPassword'].hasError('minlength')">Minimum 6 characters</mat-error>
+                            <mat-error *ngIf="changePasswordForm.controls['newPassword'].hasError('maxlength')">Maximum 25 characters</mat-error>
                         </mat-form-field>
                     </div>
                 </div>
@@ -62,6 +64,8 @@
                             @if(changePasswordForm.controls['confirmPassword'].hasError('required')) {
                                 <mat-error>Confirm password is required</mat-error>
                             }
+                            <mat-error *ngIf="changePasswordForm.controls['confirmPassword'].hasError('minlength')">Minimum 6 characters</mat-error>
+                            <mat-error *ngIf="changePasswordForm.controls['confirmPassword'].hasError('maxlength')">Maximum 25 characters</mat-error>
                         </mat-form-field>
                     </div>
                 </div>

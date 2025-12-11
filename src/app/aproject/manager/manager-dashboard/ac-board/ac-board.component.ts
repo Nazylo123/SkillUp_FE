@@ -4,10 +4,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
     selector: 'app-ac-board',
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatMenuModule, MatCheckboxModule],
+    imports: [CommonModule, MatCardModule, MatButtonModule, MatMenuModule, MatCheckboxModule, MatTooltip],
     templateUrl: './ac-board.component.html',
     styleUrls: ['./ac-board.component.scss']
 })
@@ -19,6 +20,8 @@ export class AcBoardComponent {
     topLearningPathsEnrollmentCount: number = 0;
     topLecturers: any[] = [];
     topLecturersEnrollmentCount: number = 0;
+    topEmployees: any[] = [];
+    topEmployeesCount: number = 0;
 
     constructor() {}
 
@@ -28,7 +31,16 @@ export class AcBoardComponent {
             this.getTopCourses();
             this.getTopLearningPaths();
             this.getTopLecturers();
+            this.getTopEmployees();
         }
+    }
+
+    maxLengthText(text: string) : boolean {
+        return text.length > 20;
+    }
+
+    formatText(text: string) : string {
+        return this.maxLengthText(text) ? text.substring(0, 20) + '...' : text;
     }
 
     getTopCourses() {
@@ -57,4 +69,13 @@ export class AcBoardComponent {
             });
         });
     }   
+
+    getTopEmployees() {
+        this.data.topEmployeesByProgress.forEach((employee: any) => {
+            this.topEmployeesCount += employee.overallCourseProgress;
+            this.topEmployees.push({
+                ...employee,
+            });
+        });
+    }
 }

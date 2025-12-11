@@ -1,5 +1,5 @@
 .detail-container {
-  padding: 20px;
+  // padding: 20px;
 }
 
 .header-content {
@@ -33,6 +33,7 @@
   padding: 24px;
   border-radius: 8px;
   margin-bottom: 32px;
+  overflow-x: auto;
 
   .info-row {
     display: flex;

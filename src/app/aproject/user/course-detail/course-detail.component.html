@@ -153,11 +153,32 @@
             <!-- Write Feedback Input -->
             <div class="write-feedback-input" id="write-feedback-input" style="display: none;">
                 <div class="d-flex align-items-start">
-                    <img src="img/user/user1.jpg" class="rounded-circle me-15" width="50" alt="user">
+                    <img [src]="currentUser?.avatarUrl || 'img/user/user1.jpg'" class="rounded-circle me-15 avatar-feedback" alt="user">
                     <div class="flex-grow-1">
-                        <textarea class="feedback-textarea" id="feedback-content" placeholder="Share your experience with this course... What did you like? What could be improved?" rows="5"></textarea>
+                        <textarea 
+                            class="feedback-textarea" 
+                            id="feedback-content" 
+                            [(ngModel)]="feedbackContent"
+                            [maxlength]="maxFeedbackLength"
+                            placeholder="Share your experience with this course... What did you like? What could be improved?" 
+                            rows="5">
+                        </textarea>
+                        <div class="feedback-char-count" [class.error]="getFeedbackLength() > maxFeedbackLength">
+                            <span *ngIf="getFeedbackLength() > maxFeedbackLength" class="text-danger">
+                                Feedback cannot exceed {{ maxFeedbackLength }} characters
+                            </span>
+                            <span *ngIf="getFeedbackLength() <= maxFeedbackLength">
+                                {{ getFeedbackLength() }} / {{ maxFeedbackLength }} characters
+                            </span>
+                        </div>
                         <div class="feedback-actions">
-                            <button mat-flat-button class="tagus me-10" (click)="createFeedback()">Post Feedback</button>
+                            <button 
+                                mat-flat-button 
+                                class="tagus me-10" 
+                                (click)="createFeedback()"
+                                [disabled]="!isFeedbackValid()">
+                                Post Feedback
+                            </button>
                             <button mat-button (click)="toggleWriteFeedback()">Cancel</button>
                         </div>
                     </div>
@@ -169,7 +190,7 @@
                 <!-- Feedback Item 1 -->
                 <div class="feedback-item" *ngFor="let feedback of feedbacks">
                     <div class="d-flex align-items-start">
-                        <img [src]="feedback.userAvatarUrl || 'img/user/user1.jpg'" class="rounded-circle me-15" width="50" alt="user">
+                        <img [src]="feedback.userAvatarUrl || 'img/user/user1.jpg'" class="rounded-circle me-15 avatar-feedback" alt="user">
                         <div class="flex-grow-1">
                             <div class="feedback-header">
                                 <div class="user-info">
@@ -194,11 +215,32 @@
                             <!-- Reply input (hidden by default) -->
                             <div class="reply-input" id="reply-{{feedback.feedbackId}}" style="display: none;">
                                 <div class="d-flex align-items-start">
-                                    <img src="img/user/user1.jpg" class="rounded-circle me-10" width="35" alt="user">
+                                    <img [src]="currentUser?.avatarUrl || 'img/user/user1.jpg'" class="rounded-circle me-10 avatar-feedback" alt="user">
                                     <div class="flex-grow-1">
-                                        <textarea class="reply-textarea" id="reply-content-{{feedback.feedbackId}}" rows="3" placeholder="Write a thoughtful reply..."></textarea>
+                                        <textarea 
+                                            class="reply-textarea" 
+                                            id="reply-content-{{feedback.feedbackId}}" 
+                                            [(ngModel)]="commentContents[feedback.feedbackId]"
+                                            [maxlength]="maxCommentLength"
+                                            rows="3" 
+                                            placeholder="Write a thoughtful reply...">
+                                        </textarea>
+                                        <div class="reply-char-count" [class.error]="getCommentLength(feedback.feedbackId) > maxCommentLength">
+                                            <span *ngIf="getCommentLength(feedback.feedbackId) > maxCommentLength" class="text-danger">
+                                                Reply cannot exceed {{ maxCommentLength }} characters
+                                            </span>
+                                            <span *ngIf="getCommentLength(feedback.feedbackId) <= maxCommentLength">
+                                                {{ getCommentLength(feedback.feedbackId) }} / {{ maxCommentLength }} characters
+                                            </span>
+                                        </div>
                                         <div class="reply-actions">
-                                            <button mat-flat-button class="tagus me-10" (click)="createComment(feedback)">Post Reply</button>
+                                            <button 
+                                                mat-flat-button 
+                                                class="tagus me-10" 
+                                                (click)="createComment(feedback)"
+                                                [disabled]="!isCommentValid(feedback.feedbackId)">
+                                                Post Reply
+                                            </button>
                                             <button mat-button (click)="toggleReply(feedback.feedbackId.toString())">Cancel</button>
                                         </div>
                                     </div>

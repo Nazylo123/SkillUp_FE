@@ -16,6 +16,7 @@ import {
   LearningPathProgressSummary
 } from '../../../../models/learning-path.models';
 import { firstValueFrom } from 'rxjs';
+import { MatTooltip } from "@angular/material/tooltip";
 
 type CourseStatus = 'completed' | 'in-progress' | 'upcoming';
 
@@ -36,8 +37,9 @@ interface CourseWithStatus extends LearningPathItem {
     MatDividerModule,
     MatChipsModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
-  ],
+    MatProgressSpinnerModule,
+    MatTooltip
+],
   templateUrl: './learning-path-detail.component.html',
   styleUrl: './learning-path-detail.component.scss'
 })
@@ -63,6 +65,14 @@ export class LearningPathDetail implements OnInit {
         this.loadLearningPathData();
       }
     });
+  }
+  
+  maxLengthText(text: string) : boolean {
+    return text.length > 40;
+  }
+
+  formatText(text: string) : string {
+      return this.maxLengthText(text) ? text.substring(0, 40) + '...' : text;
   }
 
   async loadLearningPathData(): Promise<void> {
