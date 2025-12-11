@@ -252,7 +252,6 @@ export class LecturerCourseDetail {
         });
       },
       error: (error) => {
-        console.error('Error loading quiz details:', error);
         this.snack.open('Error loading quiz details', 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar'],

@@ -145,10 +145,7 @@ export class QuizComponent implements OnInit, OnDestroy {
       this.isLoading = true;
 
       // Step 1: Load quiz data
-      console.log(`Loading quiz ${this.quizId}...`);
       this.quizData = await firstValueFrom(this.quizService.getQuizById(this.quizId));
-
-      console.log('Quiz loaded:', this.quizData);
 
       // Set quiz metadata
       this.quizTitle = this.quizData!.title;
@@ -157,15 +154,12 @@ export class QuizComponent implements OnInit, OnDestroy {
       // this.quizDuration = this.quizData.duration || 30; // Backend may not have duration yet
 
       // Step 2: Start quiz attempt
-      console.log('Starting quiz attempt...');
       const attemptData = await firstValueFrom(this.quizService.startQuizAttempt(this.quizId));
 
       this.attemptId = attemptData.attemptId;
-      console.log('Attempt started:', this.attemptId);
 
       // Step 3: Transform backend questions to UI format
       this.questions = this.transformQuestions(this.quizData!.questions);
-      console.log(`Transformed ${this.questions.length} questions`);
 
       // Step 4: Initialize user answers
       this.initializeUserAnswers();
@@ -176,8 +170,6 @@ export class QuizComponent implements OnInit, OnDestroy {
       this.isLoading = false;
 
     } catch (error: any) {
-      console.error('Error loading quiz:', error);
-      console.error('Error details:', error.error);
       this.isLoading = false;
 
       // Extract detailed error message
@@ -437,12 +429,8 @@ export class QuizComponent implements OnInit, OnDestroy {
         answers: answers
       };
 
-      console.log('Submitting quiz:', request);
-
       // Submit to backend
       const result = await firstValueFrom(this.quizService.submitQuizAttempt(request));
-
-      console.log('Quiz submitted:', result);
 
       // Backend returns score as percentage (0-100)
       const percentage = result.score || 0;
@@ -468,17 +456,15 @@ export class QuizComponent implements OnInit, OnDestroy {
         if (this.courseId) {
           try {
             await firstValueFrom(this.courseService.completeCourse(this.courseId));
-            console.log('✅ Course marked as complete');
             
             // Refresh course data to update quiz status
             try {
               await firstValueFrom(this.courseService.getCourseById(this.courseId));
-              console.log('✅ Course data refreshed');
             } catch (refreshError) {
-              console.error('Error refreshing course data:', refreshError);
+              // Error refreshing course data
             }
           } catch (error) {
-            console.error('Error marking course as complete:', error);
+            // Error marking course as complete
           }
         }
 
@@ -491,7 +477,6 @@ export class QuizComponent implements OnInit, OnDestroy {
       });
 
     } catch (error: any) {
-      console.error('Error submitting quiz:', error);
       this.snackBar.open(
         error.error?.message || 'Failed to submit quiz. Please try again.',
         'Close',

@@ -63,7 +63,6 @@ formatText(text: string) : string {
     this.isLoading = true;
     this.apiUserServices.getEmployeeManagerList(page, pageSize, searchTerm).subscribe(
       (res: any) => {
-        console.log(res);
         this.dataSource = res.items;
         this.totalItems = res.total;
         this.currentPage = res.page;
@@ -198,7 +197,6 @@ formatText(text: string) : string {
         this.isDownloading = false;
       },
       error: (error) => {
-        console.error('Download error:', error);
         this.snack.open('Failed to download template. Please try again.', '', {
           duration: 3000,
           panelClass: ['error-snackbar', 'custom-snackbar'],
@@ -274,8 +272,6 @@ formatText(text: string) : string {
 
     this.apiUserServices.importExcel(file).subscribe({
       next: (res: any) => {
-        console.log('Import response:', res);
-        
         // Show success message
         this.snack.open(
           res.message || 'Excel file imported successfully!', 
@@ -299,8 +295,6 @@ formatText(text: string) : string {
         }
       },
       error: (error) => {
-        console.error('Import error:', error);
-        
         let errorMessage = 'Failed to import Excel file. Please try again.';
         
         // Handle specific error messages from backend
@@ -376,7 +370,6 @@ export class CreateEmployeeDialog {
           this.close();
         },
         (error: any) => {
-          console.error('Error creating employee:', error);
           let errorMessage = 'Failed to create employee. Please try again.';
           
           // Handle email domain validation error from backend

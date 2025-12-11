@@ -105,7 +105,6 @@ export class LearningPathDetail implements OnInit {
       }));
 
     } catch (error) {
-      console.error('Error loading learning path:', error);
       this.snackBar.open('Failed to load learning path', 'Close', { duration: 3000 });
     } finally {
       this.isLoading = false;
@@ -121,7 +120,7 @@ export class LearningPathDetail implements OnInit {
         e => e.learningPathId === this.learningPathId
       );
     } catch (error) {
-      console.error('Error checking enrollment:', error);
+      // Error checking enrollment
     }
   }
 
@@ -174,7 +173,6 @@ export class LearningPathDetail implements OnInit {
       this.snackBar.open('Successfully enrolled in learning path!', 'Close', { duration: 3000 });
       await this.loadLearningPathData();
     } catch (error) {
-      console.error('Error enrolling:', error);
       this.snackBar.open('Failed to enroll in learning path', 'Close', { duration: 3000 });
     }
   }

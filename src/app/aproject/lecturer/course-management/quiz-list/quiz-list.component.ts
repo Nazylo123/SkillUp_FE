@@ -66,15 +66,12 @@ export class QuizListComponent implements OnInit {
     this.isLoading = true;
     this.quizService.getQuizzes(this.currentPage, this.pageSize, this.searchTerm).subscribe({
       next: (response) => {
-        console.log('=== API Response ===');
-        console.log('Response:', response);
         this.data = response.items || [];
         // Backend might return 'total' instead of 'totalCount'
         this.totalItems = response.totalCount || response.total || 0;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading quizzes:', error);
         this.snackBar.open('Error loading quizzes', 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar']
@@ -108,7 +105,6 @@ export class QuizListComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Error loading quiz details:', error);
         this.snackBar.open('Error loading quiz details', 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar']
@@ -140,7 +136,6 @@ export class QuizListComponent implements OnInit {
             this.loadQuizzes();
           },
           error: (error) => {
-            console.error('Error deleting quiz:', error);
             const errorMessage = error?.error?.message || 'Error deleting quiz';
             this.snackBar.open(errorMessage, 'Close', {
               duration: 3000,

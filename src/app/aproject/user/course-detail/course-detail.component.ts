@@ -342,7 +342,6 @@ export class CourseDetailComponent {
                         });
                     },
                     error: (error) => {
-                        console.error('Error deleting feedback:', error);
                         this.snackBar.open('Failed to delete feedback', '', {
                             duration: 3000,
                             panelClass: ['error-snackbar', 'custom-snackbar'],
@@ -382,7 +381,6 @@ export class CourseDetailComponent {
                         });
                     },
                     error: (error) => {
-                        console.error('Error deleting comment:', error);
                         this.snackBar.open('Failed to delete comment', '', {
                             duration: 3000,
                             panelClass: ['error-snackbar', 'custom-snackbar'],
