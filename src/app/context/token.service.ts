@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, timer, Observable, throwError } from 'rxjs';
 import { ApiAuthServices } from '../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { tap, catchError, share } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({ providedIn: 'root' })
 export class TokenService {
+  private cookieService = inject(CookieService);
 
   private refreshTokenInProgress = false;
   private refreshTokenSubject = new BehaviorSubject<any>(null);
@@ -47,26 +49,15 @@ export class TokenService {
    * Refresh token và trả về Observable để có thể đợi kết quả
    */
   refreshTokenObservable$(): Observable<any> {
-    // Nếu không có refresh token, throw error
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      return throwError(() => new Error('No refresh token available'));
-    }
-
     // Nếu đang refresh, trả về observable hiện tại
     if (this.refreshTokenObservable) {
       return this.refreshTokenObservable;
     }
 
     // Tạo observable mới cho việc refresh
-    this.refreshTokenObservable = this.apiAuthService.refreshToken(refreshToken).pipe(
+    this.refreshTokenObservable = this.apiAuthService.refreshToken().pipe(
       tap((response: any) => {
-        this.setToken(response.accessToken);
-        
-        if (response.refreshToken) {
-          this.setRefreshToken(response.refreshToken);
-        }
-
+        this.setToken(response.accessToken, response.accessTokenExpiry);
         this.refreshTokenInProgress = false;
         this.refreshTokenSubject.next(response.accessToken as string | null);
         this.setupAutoRefresh();
@@ -89,15 +80,9 @@ export class TokenService {
    * Lấy token hợp lệ, tự động refresh nếu cần
    */
   getValidToken(): void {
-    const token = localStorage.getItem('access_token');
+    const token = this.getToken();
     
     if (!token) {
-      this.snack.open('No token available', '', { 
-        duration: 3000, 
-        panelClass: ['error-snackbar', 'custom-snackbar'], 
-        horizontalPosition: 'right', 
-        verticalPosition: 'top' 
-      });
       return;
     }
 
@@ -120,8 +105,9 @@ export class TokenService {
       const now = Date.now();
       
       // Refresh token 5 phút trước khi hết hạn
-      const refreshTime = expiry - now - (1.5 * 60 * 1000);
-      console.log('refreshTime', refreshTime);
+      const refreshTime = expiry - now - (2 * 60 * 1000);
+      const refreshTimeInSeconds = refreshTime / 1000;
+      console.log('refreshTime', refreshTimeInSeconds, 'seconds');
       
       if (refreshTime > 0) {
         timer(refreshTime).subscribe(() => {
@@ -135,25 +121,25 @@ export class TokenService {
     } 
   }
 
-  setToken(token: string) {
-    localStorage.setItem('access_token', token);
+  setToken(token: string, accessTokenExpiry: string) {
+    this.cookieService.set(
+      'accessToken',
+      token,
+      { 
+        path: '/',
+        secure: true,
+        sameSite: 'None',
+        expires: new Date(Number(accessTokenExpiry) * 1000) || 7 * 24 * 60 * 60 * 1000
+      }
+    );
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token');
-  }
-
-  setRefreshToken(refreshToken: string) {
-    localStorage.setItem('refresh_token', refreshToken);
-  }
-
-  getRefreshToken(): string | null {
-    return localStorage.getItem('refresh_token');
+    return this.cookieService.get('accessToken');
   }
 
   clearTokens() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+    this.cookieService.delete('accessToken');
   }
 
 }
