@@ -78,9 +78,24 @@ export class CourseDetailComponent {
     }
 
     checkLesson(courseDetail: CourseDetail | null): void {
-        if (courseDetail?.status !== 'Approved') {
+        if (!courseDetail) {
             this.router.navigate(['/']);
+            return;
         }
+
+        // Allow access if:
+        // 1. Course is Approved (anyone can access)
+        // 2. Course is Rejected BUT user is enrolled (Out of Date logic - allow enrolled users to continue)
+        if (courseDetail.status === 'Approved') {
+            return; // Allow access
+        }
+
+        if (courseDetail.status === 'Rejected' && courseDetail.isEnrolled) {
+            return; // Allow access for enrolled users (Out of Date logic)
+        }
+
+        // Otherwise, redirect to home
+        this.router.navigate(['/']);
     }
     
 
