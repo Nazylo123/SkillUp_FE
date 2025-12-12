@@ -25,12 +25,13 @@ import { ConfirmDialogComponent } from '../../../../common/confirm-dialog/confir
 import { VideoPlayerDialog } from './video-player-dialog/video-player-dialog';
 import { QuizResponse } from '../../../../models/quiz.models';
 import { QuizService } from '../../../../services/quiz.service';
+import { FeedbacksCourseComponent } from "./feedbacks-course/feedbacks-course.component";
 
 @Component({
   selector: 'app-drag-table',
   templateUrl: './course-detail.component.html',
   styleUrls: ['./course-detail.component.scss'],
-  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, CommonModule, FormsModule, RouterLink, MatDialogModule, MatFormFieldModule, MatInputModule, MatDividerModule, MatTooltipModule, MatExpansionModule, MatChipsModule, ReactiveFormsModule]
+  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, CommonModule, FormsModule, RouterLink, MatDialogModule, MatFormFieldModule, MatInputModule, MatDividerModule, MatTooltipModule, MatExpansionModule, MatChipsModule, ReactiveFormsModule, FeedbacksCourseComponent]
 })
 export class LecturerCourseDetail {
   constructor(public dialog: MatDialog, public router: Router, 
@@ -169,6 +170,10 @@ export class LecturerCourseDetail {
 
   isDraftCourse(): boolean {
     return this.courseDetail?.status === 'Draft' || this.courseDetail?.status === 'Rejected';
+  }
+
+  isDraftPending(): boolean {
+    return this.courseDetail?.status === 'Draft' || this.courseDetail?.status === 'Pending';
   }
 
   dropLesson(event: CdkDragDrop<Lesson[]>) {

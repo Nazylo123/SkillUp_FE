@@ -164,4 +164,8 @@ export class ApiCourseServices {
     return this.http.patch<any>(`${API_URLS.COURSE}/${courseId}/status`, { status, rejectionReason: reason });
   }
 
+  getCoursePendingCount(): Observable<any> {
+    return this.http.get<any>(API_URLS.GET_COURSE_COUNT);
+  }
+
 }

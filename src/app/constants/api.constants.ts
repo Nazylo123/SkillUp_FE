@@ -172,6 +172,9 @@ export const API_URLS = {
   GET_COURSE_MANAGER_TYPES: BASE_POINTS.SETTINGS + "/course-types", // GET /api/settings/course-types
   GET_USER_MANAGER_LEVELS: BASE_POINTS.SETTINGS + "/user-levels", // GET /api/settings/user-levels
 
+  //API Course Count
+  GET_COURSE_COUNT: BASE_POINTS.COURSE + "/pending/count", // GET /api/Course/pending/count
+
   //API Report
   GET_USER_REPORT: BASE_POINTS.USER + "/employees/detail-statistics", // GET /api/Users/employees/detail-statistics
   EXPORT_USER_REPORT_EXCEL: BASE_POINTS.USER + "/employees/detail-statistics/export-excel", // GET /api/Users/employees/detail-statistics/export-excel
