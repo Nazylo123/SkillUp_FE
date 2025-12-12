@@ -126,6 +126,7 @@ export class QuizCreatorComponent implements OnInit {
       title: ['', Validators.required],
       attemptLimit: [1, [Validators.required, Validators.min(1)]],
       passScore: [70, [Validators.required, Validators.min(0), Validators.max(100)]],
+      timeLimit: [null, [Validators.min(1)]], // Optional: time limit in minutes (null = no time limit)
       questions: this.fb.array([])
     });
   }
@@ -180,7 +181,8 @@ export class QuizCreatorComponent implements OnInit {
     this.quizForm.patchValue({
       title: quiz.title,
       passScore: quiz.passScore,
-      attemptLimit: quiz.attemptLimit
+      attemptLimit: quiz.attemptLimit,
+      timeLimit: quiz.timeLimit || null // Load timeLimit from backend, null if not set
     });
 
     // Clear existing questions
@@ -461,6 +463,7 @@ export class QuizCreatorComponent implements OnInit {
           title: formValue.title,
           passScore: formValue.passScore,
           attemptLimit: formValue.attemptLimit,
+          timeLimit: formValue.timeLimit && formValue.timeLimit > 0 ? formValue.timeLimit : null,
           questions: this.transformQuestionsToAPI(formValue.questions)
         };
 
@@ -534,6 +537,7 @@ export class QuizCreatorComponent implements OnInit {
       title: formValue.title,
       passScore: formValue.passScore,
       attemptLimit: formValue.attemptLimit,
+      timeLimit: formValue.timeLimit && formValue.timeLimit > 0 ? formValue.timeLimit : null,
       questions: [] // Backend expects this but won't update it
     };
 

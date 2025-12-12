@@ -71,7 +71,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   quizId!: number;
   courseId!: number;
   quizTitle = '';
-  quizDuration = 30; // minutes - will be updated from backend
+  quizDuration: number | null = null; // minutes - null = no time limit, will be updated from backend
   currentQuestionIndex = 0;
   userAnswers: UserAnswer[] = [];
 
@@ -151,7 +151,10 @@ export class QuizComponent implements OnInit, OnDestroy {
       this.quizTitle = this.quizData!.title;
       this.courseId = this.quizData!.courseId;
       this.passScore = this.quizData!.passScore;
-      // this.quizDuration = this.quizData.duration || 30; // Backend may not have duration yet
+      // Load timeLimit from backend. If null/undefined/0, no time limit
+      this.quizDuration = (this.quizData!.timeLimit && this.quizData!.timeLimit > 0) 
+        ? this.quizData!.timeLimit 
+        : null;
 
       // Step 2: Start quiz attempt
       const attemptData = await firstValueFrom(this.quizService.startQuizAttempt(this.quizId));
@@ -244,6 +247,13 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   startTimer() {
+    // Only start timer if timeLimit is set
+    if (!this.quizDuration || this.quizDuration <= 0) {
+      this.isTimerRunning = false;
+      this.timeRemaining = 0;
+      return;
+    }
+
     // Convert minutes to seconds
     this.timeRemaining = this.quizDuration * 60;
     this.isTimerRunning = true;
@@ -280,6 +290,9 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   getTimeRemainingPercentage(): number {
+    if (!this.quizDuration || this.quizDuration <= 0) {
+      return 100; // No time limit, show full progress
+    }
     const totalSeconds = this.quizDuration * 60;
     return (this.timeRemaining / totalSeconds) * 100;
   }
