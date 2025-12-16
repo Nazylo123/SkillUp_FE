@@ -223,6 +223,13 @@ export class LearningPathFormComponent implements OnInit {
           this.learningPathService.updateLearningPath(this.pathId, formData)
         );
         this.snackBar.open('Learning path updated successfully', 'Close', { duration: 3000 });
+        
+        // Redirect to list page after successful update (if has courses)
+        if (this.pathItems.length > 0) {
+          setTimeout(() => {
+            this.router.navigate(['/manager/learning-paths']);
+          }, 3000);
+        }
       } else {
         // Create new path
         const newPath = await firstValueFrom(
@@ -236,8 +243,19 @@ export class LearningPathFormComponent implements OnInit {
 
         this.snackBar.open('Learning path created successfully. Now you can add courses.', 'Close', { duration: 3000 });
       }
-    } catch (error) {
-      this.snackBar.open('Failed to save learning path', 'Close', { duration: 3000 });
+    } catch (error: any) {
+     
+      // 1. Plain text response: error.error = "message"
+      // 2. JSON object: error.error.message = "message"
+      let errorMessage = 'Failed to save learning path';
+      
+      if (typeof error?.error === 'string') {
+        errorMessage = error.error; // Plain text response
+      } else if (error?.error?.message) {
+        errorMessage = error.error.message; // JSON object
+      }
+      
+      this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
     } finally {
       this.isSaving = false;
     }
