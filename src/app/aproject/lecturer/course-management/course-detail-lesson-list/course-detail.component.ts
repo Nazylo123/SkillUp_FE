@@ -223,16 +223,39 @@ export class LecturerCourseDetail {
       const previousOrderIndex = lesson.subLessons[event.previousIndex].orderIndex;
       const currentOrderIndex = lesson.subLessons[event.currentIndex].orderIndex;
       
-      // Move items in array
-      moveItemInArray(lesson.subLessons, event.previousIndex, event.currentIndex);
-      
       // Swap orderIndex của 2 sub-lesson
       if (previousOrderIndex !== undefined && currentOrderIndex !== undefined) {
         lesson.subLessons[event.currentIndex].orderIndex = previousOrderIndex;
         lesson.subLessons[event.previousIndex].orderIndex = currentOrderIndex;
       }
       
-      this.lessons = [...this.lessons];
+      // Move items in array
+      moveItemInArray(lesson.subLessons, event.previousIndex, event.currentIndex);
+
+      this.courseService.reorderSubLessons({
+        lessonId: lesson.lessonId as number,
+        subLessons: lesson.subLessons.map((subLesson: SubLesson) => ({
+          subLessonId: subLesson.id as number,
+          orderIndex: subLesson.orderIndex as number
+        }))
+      }).subscribe({
+        next: () => {
+          this.snack.open('Sub lessons reordered successfully', '', {
+            duration: 3000,
+            panelClass: ['success-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+        },
+        error: (error: any) => {
+          this.snack.open('Failed to reorder sub lessons', '', {
+            duration: 3000,
+            panelClass: ['error-snackbar', 'custom-snackbar'],
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+        }
+      });
     }
   }
 
