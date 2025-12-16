@@ -57,7 +57,8 @@ export class LearningPathListComponent implements OnInit {
       const response = await firstValueFrom(
         this.learningPathService.getLearningPaths(1, 100, this.searchTerm)
       );
-      this.learningPaths = response.items;
+      // Only show Active learning paths for users
+      this.learningPaths = response.items.filter(path => path.status === 'Active');
 
       // Load enrollment status from API
       await this.loadEnrollmentStatus();
@@ -86,8 +87,11 @@ export class LearningPathListComponent implements OnInit {
       enrollments.forEach(enrollment => {
         this.enrolledPathIds.push(enrollment.learningPathId);
         this.pathProgress[enrollment.learningPathId] = enrollment.progressPct || 0;
-        // Store enrollment type (default to 'self-enrolled' if not provided)
-        this.enrollmentTypes[enrollment.learningPathId] = enrollment.enrollmentType || 'self-enrolled';
+        // Store enrollment type - only set if provided by backend
+        // If backend doesn't provide enrollmentType, it will be undefined and won't match assigned/self-enrolled filters
+        if (enrollment.enrollmentType) {
+          this.enrollmentTypes[enrollment.learningPathId] = enrollment.enrollmentType;
+        }
       });
     } catch (error) {
       // Error loading enrollment status
