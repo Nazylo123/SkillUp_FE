@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URLS } from '../constants';
-import { Course, CourseCreateEdit, CoursePaginatedResponse, CourseDetail, Lesson, SubLesson, SubLessonCreateEdit, CourseUserView, reorder, CourseEnrollment } from '../models/course.models';
+import { Course, CourseCreateEdit, CoursePaginatedResponse, CourseDetail, Lesson, SubLesson, SubLessonCreateEdit, CourseUserView, reorder, CourseEnrollment, reorderSubLessons } from '../models/course.models';
 
 @Injectable({
   providedIn: 'root'
@@ -133,6 +133,10 @@ export class ApiCourseServices {
 
   reorderLessons(reorder: reorder): Observable<any> {
     return this.http.patch<any>(API_URLS.REORDER_LESSONS, reorder);
+  }
+
+  reorderSubLessons(reorder: reorderSubLessons): Observable<any> {
+    return this.http.patch<any>(API_URLS.REORDER_SUB_LESSONS, reorder);
   }
 
   getCourseEnrollment(page: number = 1, pageSize: number = 10, searchTerm?: string): Observable<any> {
