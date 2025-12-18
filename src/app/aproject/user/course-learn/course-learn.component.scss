@@ -3,6 +3,12 @@
     margin: auto;
 }
 
+div {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
 .course-details-header {
     padding: 25px;
     background-color: var(--heraBlueColor);

@@ -291,7 +291,7 @@ export class DeleteQuizDialog {
       <h2 mat-dialog-title class="dialog-title">
         <div class="title-content">
           <mat-icon>quiz</mat-icon>
-          <span>{{ data.title }}</span>
+          <span class="value">{{ data.title }}</span>
         </div>
         <button mat-icon-button (click)="onClose()">
           <mat-icon>close</mat-icon>
@@ -405,8 +405,8 @@ export class DeleteQuizDialog {
   styles: [`
   .value {
     word-break: break-word;
-                    overflow-wrap: break-word;
-                    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
   .word-break-all {
     word-break: break-all;
