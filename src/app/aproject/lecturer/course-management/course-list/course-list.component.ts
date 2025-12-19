@@ -45,7 +45,6 @@ import { MatTooltip } from "@angular/material/tooltip";
 })
 export class LecturerCourseList {
     displayedColumns: string[] = [
-        'courseId',
         'name',
         'courseType',
         'duration',
@@ -110,7 +109,8 @@ export class LecturerCourseList {
 
     openAddEditEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, id? : string | number): void {
       const dialogRef = this.dialog.open(CreateCourse, {
-          width: '600px',
+          width: '800px',
+          maxWidth: '800px',
           enterAnimationDuration,
           exitAnimationDuration,
           data:{
