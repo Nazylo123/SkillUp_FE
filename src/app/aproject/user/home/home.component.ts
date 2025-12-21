@@ -6,11 +6,12 @@ import { ApiCourseServices } from '../../../services/course.service';
 import { CourseUserView } from '../../../models/course.models';
 import { CommonModule } from '@angular/common';
 import { MatTooltip } from "@angular/material/tooltip";
+import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'app-home',
-    imports: [CommonModule, MatCard, MatCardContent, MatButtonModule, MatTooltip],
+    imports: [CommonModule, MatCard, MatCardContent, MatButtonModule, MatTooltip, FormsModule],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
 })
@@ -22,14 +23,34 @@ export class Home {
     currentPage = 1;
     pageSize = 16;
     isLoading = false;
+    searchTerm = '';
 
     ngOnInit() {
-        this.courseService.getCoursesUserView(this.currentPage, this.pageSize).subscribe((courses) => {
-            this.courses = this.courses.concat(courses.items as CourseUserView[]);
+        this.loadCourses();
+    }
+
+    loadCourses() {
+        this.isLoading = true;
+        this.courseService.getCoursesUserView(this.currentPage, this.pageSize, this.searchTerm).pipe(
+            finalize(() => {
+                this.isLoading = false;
+            })
+        ).subscribe((courses) => {
+            if (this.currentPage === 1) {
+                this.courses = courses.items as CourseUserView[];
+            } else {
+                this.courses = this.courses.concat(courses.items as CourseUserView[]);
+            }
             this.totalItems = courses.total;
             this.currentPage = courses.page;
             this.pageSize = courses.pageSize;
         });
+    }
+
+    search() {
+        this.currentPage = 1;
+        this.courses = [];
+        this.loadCourses();
     }
 
     maxLengthText(text: string) : boolean {
@@ -62,7 +83,7 @@ export class Home {
     loadMore() {
         this.isLoading = true;
         this.currentPage++;
-        this.courseService.getCoursesUserView(this.currentPage, this.pageSize).pipe(finalize(() => {
+        this.courseService.getCoursesUserView(this.currentPage, this.pageSize, this.searchTerm).pipe(finalize(() => {
             this.isLoading = false;
         })).subscribe((courses) => {
             this.courses = this.courses.concat(courses.items as CourseUserView[]);
