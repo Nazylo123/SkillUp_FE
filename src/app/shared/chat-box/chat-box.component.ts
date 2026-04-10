@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ChatMessage, ConversationModel } from '../../models/ai.models';
-import { ApiAiServices } from '../../services/ai.service';
+import { RagService, RagChatRequest } from '../../services/rag.service';
 import { UserInfo } from '../../models/user.models';
 import { AuthService } from '../../context/auth.service';
 import { Observable, Subscription } from 'rxjs';
@@ -30,7 +30,7 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: ['./chat-box.component.scss']
 })
 export class ChatBoxComponent implements OnInit, AfterViewChecked, OnDestroy {
-  private apiAiServices = inject(ApiAiServices);
+  private ragService = inject(RagService);
   private authService = inject(AuthService);
   private currentUserSubscription?: Subscription;
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
@@ -51,12 +51,7 @@ export class ChatBoxComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.shouldShowChat = user !== null;
       
       if (user !== null && this.messages.length === 0) {
-        const greetingMessage = `Xin chào! Tôi là trợ lý ảo của SkillUp (powered by OpenRouter AI). 🎓
-
-Tôi có thể giúp bạn:
-• 🔍 Tìm khóa học phù hợp với chat: "cho tôi khóa học [tên khóa học lập trình]" (ví dụ: "cho tôi khóa học java")
-• 💡 Tư vấn học tập
-• ❓ Giải đáp thắc mắc`;
+        const greetingMessage = `Xin chào! 🎓 Tôi là trợ lý tư vấn khóa học của SkillUp.\n\nTôi có thể giúp bạn tìm khóa học phù hợp. Hãy cho tôi biết bạn muốn học gì nhé!`;
         this.addBotMessage(greetingMessage);
       }
     });
@@ -93,7 +88,6 @@ Tôi có thể giúp bạn:
   sendMessage(): void {
     if (!this.newMessage.trim()) return;
 
-    // Add user message
     const userMessage: ChatMessage = {
       id: this.generateId(),
       text: this.newMessage.trim(),
@@ -103,10 +97,7 @@ Tôi có thể giúp bạn:
 
     this.messages.push(userMessage);
     this.newMessage = '';
-
-    // Show bot typing indicator
     this.showTypingIndicator();
-
     this.hideTypingIndicator();
     this.getBotResponse(userMessage.text);
   }
@@ -118,10 +109,7 @@ Tôi có thể giúp bạn:
       isBot: true,
       timestamp: timestamp
     };
-
     this.messages.push(botMessage);
-
-    // Increment unread count if chat is minimized
     if (this.isMinimized) {
       this.unreadCount++;
     }
@@ -145,17 +133,27 @@ Tôi có thể giúp bạn:
   }
 
   private getBotResponse(message: string) {
-    const payload: ConversationModel = {
-      message: message.trim(),
-      conversationHistory: this.messages.map((message) => ({
-        role: message.isBot ? 'assistant' : 'user',
-        content: message.text
+    // Homepage chat: courseId = null (uses synced course catalog data)
+    const payload: RagChatRequest = {
+      question: message.trim(),
+      courseId: null,
+      history: this.messages.map((msg) => ({
+        role: msg.isBot ? 'Assistant' : 'User',
+        content: msg.text
       }))
     };
-    this.apiAiServices.getAiChat(payload).subscribe((response) => {
-      this.addBotMessage(response.response, new Date(response.timestamp));
-    }, error => {
-      this.addBotMessage('Xin lỗi, tôi không thể trả lời câu hỏi của bạn.', new Date());
+
+    this.ragService.chat(payload).subscribe({
+      next: (response) => {
+        let replyText = response.answer;
+        if (response.sources && response.sources.length > 0) {
+          replyText += "\n\nNguồn tham khảo: " + response.sources.join(", ");
+        }
+        this.addBotMessage(replyText, new Date());
+      },
+      error: (error) => {
+        this.addBotMessage('Xin lỗi, tôi không thể trả lời câu hỏi của bạn.', new Date());
+      }
     });
   }
 
@@ -169,9 +167,7 @@ Tôi có thể giúp bạn:
         this.messagesContainer.nativeElement.scrollTop = 
           this.messagesContainer.nativeElement.scrollHeight;
       }
-    } catch (err) {
-      // Error scrolling to bottom
-    }
+    } catch (err) {}
   }
 
   onKeyPress(event: KeyboardEvent): void {

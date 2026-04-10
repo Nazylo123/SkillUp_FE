@@ -165,8 +165,8 @@ export const API_URLS = {
   GET_MANAGER_DASHBOARD_COURSE_STATUS_DISTRIBUTION: BASE_POINTS.DASHBOARD + "/course-status-distribution", // GET /api/Dashboard/course-status-distribution
 
   // Settings Management (Admin only)
-  GET_AI_KEY: BASE_POINTS.SETTINGS + "/ai-key", // GET /api/settings/ai-key
-  UPDATE_AI_KEY: BASE_POINTS.SETTINGS + "/ai-key", // PUT /api/settings/ai-key
+  GET_AI_SETTINGS: BASE_POINTS.SETTINGS + "/ai-settings", // GET /api/settings/ai-settings
+  UPDATE_AI_SETTINGS: BASE_POINTS.SETTINGS + "/ai-settings", // PUT /api/settings/ai-settings
   DASHBOARD_ADMIN: BASE_POINTS.DASHBOARD + "/admin",
 
   // Settings Management (Manager only)

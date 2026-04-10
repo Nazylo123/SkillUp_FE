@@ -1,5 +1,5 @@
 <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-space-between">
-    <h5 class="mb-0">Chat</h5>
+    <h5 class="mb-0">Trợ Lý AI Nội Bộ</h5>
     <ol class="breadcrumb mb-0 ps-0">
         <li class="breadcrumb-item">
             <a routerLink="/">
@@ -7,123 +7,62 @@
                 Dashboard
             </a>
         </li>
-        <li class="breadcrumb-item fw-semibold">Chat</li>
+        <li class="breadcrumb-item fw-semibold">AI Chatbot</li>
     </ol>
 </div>
 
 <div class="row">
     <div class="col-12">
-
-        <mat-card
-            class="mb-25 chat-box tagus-card"
-        >
+        <mat-card class="mb-25 chat-box tagus-card">
             <mat-card-content>
-                <div class="chat-header p-15 d-md-flex align-items-center justify-content-space-between">
+                <div class="chat-header p-15 d-md-flex align-items-center justify-content-space-between" style="border-bottom: 1px solid #e1e7f0;">
                     <div class="user d-flex align-items-center">
-                        <img src="img/user/user11.jpg" width="50" class="rounded-circle" alt="user">
+                        <div class="avatar-circle" style="width: 50px; height: 50px; border-radius: 50%; background: #6259ca; color: white; display:flex; align-items:center; justify-content:center; font-size: 24px; font-weight: bold;">
+                            AI
+                        </div>
                         <div class="ms-12">
-                            <h5 class="fs-16 mb-4">Laurent Perrier</h5>
-                            <!-- <span class="d-block active position-relative muted-color fs-14">Active now</span> -->
-                            <!-- <span class="d-block deactive position-relative muted-color fs-14">Active now</span> -->
+                            <h5 class="fs-16 mb-4">Trợ lý SkillUp RAG</h5>
+                            <span class="d-block text-success position-relative fs-14">Online</span>
                         </div>
                     </div>
-                    <!-- <div class="info">
-                        <button mat-icon-button [matMenuTriggerFor]="menu">
-                            <i class="ri-more-2-fill"></i>
-                        </button>
-                        <mat-menu #menu="matMenu" class="dotMenu monthMenu" xPosition="before">
-                            <button mat-menu-item type="button" class="bg-transparent border-none position-relative">
-                                <i class="ri-volume-mute-line"></i> Mute Chat
-                            </button>
-                            <button mat-menu-item type="button" class="bg-transparent border-none position-relative">
-                                <i class="ri-delete-bin-6-line"></i> Delete
-                            </button>
-                            <button mat-menu-item type="button" class="bg-transparent border-none position-relative">
-                                <i class="ri-chat-off-line"></i> Block
-                            </button>
-                        </mat-menu>
-                    </div> -->
                 </div>
-                <div class="chat-body p-15">
+
+                <div class="chat-body p-15" style="height: 500px; overflow-y: auto;" #scrollMe>
                     <ul class="ps-0 list-unstyled mb-0 mt-0">
-                        <li class="position-relative">
-                            <img src="img/user/user11.jpg" width="50" class="rounded-circle user" alt="user">
-                            <div class="message">
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra ligula non varius curabitur etiam malesuada. Congue eget luctus aliquet consectetur.</p>
+                        <ng-container *ngFor="let msg of messages">
+                            <li class="position-relative" [ngClass]="{'right': msg.role === 'User'}">
+                                <!-- Avatar -->
+                                <img *ngIf="msg.role === 'User'" src="img/user/user12.jpg" width="50" class="rounded-circle user" alt="user">
+                                <div *ngIf="msg.role === 'Assistant'" class="user avatar-circle" style="width: 50px; height: 50px; border-radius: 50%; background: #6259ca; color: white; display:flex; align-items:center; justify-content:center; font-size: 20px; position:absolute; top:0;">AI</div>
+                                
+                                <div class="message" [style.margin-left]="msg.role === 'Assistant' ? '65px' : '0'">
+                                    <div>
+                                        <p style="white-space: pre-wrap;">{{msg.content}}</p>
+                                    </div>
+                                    <div *ngIf="msg.sources && msg.sources.length > 0" class="mt-2" style="font-size: 11px; opacity: 0.8; font-style: italic;">
+                                        Nguồn tham khảo: {{msg.sources.join(', ')}}
+                                    </div>
                                 </div>
+                                <span class="time d-block muted-color mt-8 fs-14">{{msg.time}}</span>
+                            </li>
+                        </ng-container>
+                        
+                        <li *ngIf="isTyping" class="position-relative">
+                            <div class="user avatar-circle" style="width: 50px; height: 50px; border-radius: 50%; background: #6259ca; color: white; display:flex; align-items:center; justify-content:center; font-size: 20px; position:absolute; top:0;">AI</div>
+                            <div class="message" style="margin-left: 65px;">
+                                <div><p>Đang phân tích tài liệu nội bộ và trả lời...</p></div>
                             </div>
-                            <span class="time d-block muted-color mt-8 fs-14">19:04</span>
-                        </li>
-                        <li class="position-relative right">
-                            <img src="img/user/user12.jpg" width="50" class="rounded-circle user" alt="user">
-                            <div class="message">
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </div>
-                            <span class="time d-block muted-color mt-8 fs-14">12:12</span>
-                        </li>
-                        <li class="position-relative">
-                            <img src="img/user/user11.jpg" width="50" class="rounded-circle user" alt="user">
-                            <div class="message">
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra ligula non varius.</p>
-                                </div>
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet. 🔥</p>
-                                </div>
-                            </div>
-                            <span class="time d-block muted-color mt-8 fs-14">19:04</span>
-                        </li>
-                        <li class="position-relative right">
-                            <img src="img/user/user12.jpg" width="50" class="rounded-circle user" alt="user">
-                            <div class="message">
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit.</p>
-                                </div>
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </div>
-                            <span class="time d-block muted-color mt-8 fs-14">12:12</span>
-                        </li>
-                        <li class="position-relative">
-                            <img src="img/user/user11.jpg" width="50" class="rounded-circle user" alt="user">
-                            <div class="message">
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra ligula non varius curabitur etiam malesuada. Congue eget luctus aliquet consectetur.</p>
-                                </div>
-                            </div>
-                            <span class="time d-block muted-color mt-8 fs-14">19:04</span>
-                        </li>
-                        <li class="position-relative right">
-                            <img src="img/user/user12.jpg" width="50" class="rounded-circle user" alt="user">
-                            <div class="message">
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </div>
-                            <span class="time d-block muted-color mt-8 fs-14">12:12</span>
                         </li>
                     </ul>
                 </div>
-                <div class="chat-footer p-15 d-md-flex align-items-center">
-                    <div class="list">
-                        <!-- <button mat-icon-button>
-                            <i class="ri-emotion-line"></i>
-                        </button> -->
-                        <button mat-icon-button>
-                            <i class="ri-link-m"></i>
-                        </button>
-                    </div>
-                    <form class="position-relative">
-                        <input type="text" class="input-text" placeholder="Type Something...">
-                        <button type="submit"><i class="ri-send-plane-fill"></i></button>
+
+                <div class="chat-footer p-15 d-md-flex align-items-center" style="border-top: 1px solid #e1e7f0;">
+                    <form class="position-relative w-100" (ngSubmit)="sendMessage()">
+                        <input [(ngModel)]="newMessage" name="message" type="text" class="input-text w-100 p-3" placeholder="Nhập câu hỏi liên quan đến tài liệu nội bộ..." style="border: 1px solid #e1e7f0; border-radius: 30px; padding-right: 50px;" [disabled]="isTyping">
+                        <button type="submit" [disabled]="isTyping" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; font-size: 20px; color: #6259ca;"><i class="ri-send-plane-fill"></i></button>
                     </form>
                 </div>
             </mat-card-content>
         </mat-card>
-
     </div>
 </div>

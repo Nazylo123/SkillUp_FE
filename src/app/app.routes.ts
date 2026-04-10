@@ -50,6 +50,7 @@ import { roleGuard } from './guards/role.guard';
 import { ManagerReportUserComponent } from './aproject/manager/manager-report-user/manager-report-user.component';
 import { ManagerCourseTypeComponent } from './aproject/manager/manager-setting/manager-course-type/manager-course-type.component';
 import { ManagerUserLevelComponent } from './aproject/manager/manager-setting/manager-user-level/manager-user-level.component';
+import { ManagerRagUploadComponent } from './aproject/manager/manager-rag-upload/manager-rag-upload.component';
 
 export const routes: Routes = [
     //project
@@ -95,6 +96,7 @@ export const routes: Routes = [
                     {path: '', component: AdminCourseList}
                 ]
             },
+            {path: 'knowledge-base', component: ManagerRagUploadComponent},
             {path: 'settings', component: SettingsComponent}
         ]
     },
@@ -130,6 +132,7 @@ export const routes: Routes = [
             {path: 'learning-paths/edit/:id', component: LearningPathFormComponent},
             {path: 'learning-paths/detail/:id', component: ManagerLearningPathDetailComponent},
             {path: 'report-user', component: ManagerReportUserComponent},
+            {path: 'knowledge-base', component: ManagerRagUploadComponent},
             {path: 'course-type', component: ManagerCourseTypeComponent},
             {path: 'user-level', component: ManagerUserLevelComponent},
         ]

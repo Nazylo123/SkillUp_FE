@@ -28,7 +28,13 @@ import { SettingsService } from '../../../services/settings.service';
   styleUrl: './settings.scss'
 })
 export class SettingsComponent implements OnInit {
-  aiApiKey: string = '';
+  aiSettings = {
+    provider: 'Ollama',
+    ollamaModelName: 'llama3.2',
+    openRouterModelName: 'google/gemini-2.0-flash-lite-preview-02-05:free',
+    apiKey: ''
+  };
+  
   isLoading = false;
   showApiKey = false;
 
@@ -38,42 +44,49 @@ export class SettingsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadAiKey();
+    this.loadAiSettings();
   }
 
-  loadAiKey(): void {
+  loadAiSettings(): void {
     this.isLoading = true;
-    this.settingsService.getAiKey().subscribe({
+    this.settingsService.getAiSettings().subscribe({
       next: (data) => {
-        this.aiApiKey = data.apiKey;
+        if (data) {
+           this.aiSettings = {
+             provider: data.provider || 'Ollama',
+             ollamaModelName: data.ollamaModelName || 'llama3.2',
+             openRouterModelName: data.openRouterModelName || 'google/gemini-2.0-flash-lite-preview-02-05:free',
+             apiKey: data.apiKey || ''
+           };
+        }
         this.isLoading = false;
       },
       error: (error) => {
-        this.snackBar.open('Failed to load API key', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to load AI settings', 'Close', { duration: 3000 });
         this.isLoading = false;
       }
     });
   }
 
-  saveAiKey(): void {
-    if (!this.aiApiKey || this.aiApiKey.trim() === '') {
-      this.snackBar.open('API key cannot be empty', 'Close', { duration: 3000 });
+  saveAiSettings(): void {
+    if (this.aiSettings.provider === 'OpenRouter' && (!this.aiSettings.apiKey || this.aiSettings.apiKey.trim() === '')) {
+      this.snackBar.open('API key cannot be empty when OpenRouter is selected', 'Close', { duration: 3000 });
       return;
     }
 
-    if (!confirm('Update OpenRouter API Key?')) {
+    if (!confirm('Update System AI Config?')) {
       return;
     }
 
     this.isLoading = true;
-    this.settingsService.updateAiKey(this.aiApiKey).subscribe({
+    this.settingsService.updateAiSettings(this.aiSettings).subscribe({
       next: (data) => {
-        this.aiApiKey = data.apiKey;
-        this.snackBar.open('OpenRouter API Key updated successfully', 'Close', { duration: 3000 });
+        this.aiSettings.apiKey = data.apiKey || '';
+        this.snackBar.open('AI Configuration updated successfully', 'Close', { duration: 3000 });
         this.isLoading = false;
       },
       error: (error) => {
-        this.snackBar.open('Failed to update API key', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to update AI settings', 'Close', { duration: 3000 });
         this.isLoading = false;
       }
     });

@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URLS } from '../constants';
 import {
-  AiKeySettings,
-  UpdateAiKeyRequest
+  AiSettings,
+  UpdateAiSettingsRequest
 } from '../models/settings.models';
 
 @Injectable({
@@ -15,19 +15,18 @@ export class SettingsService {
   constructor(private http: HttpClient) { }
 
   /**
-   * Get AI API Key (masked)
-   * GET /api/settings/ai-key
+   * Get AI Settings
+   * GET /api/settings/ai-settings
    */
-  getAiKey(): Observable<AiKeySettings> {
-    return this.http.get<AiKeySettings>(API_URLS.GET_AI_KEY);
+  getAiSettings(): Observable<AiSettings> {
+    return this.http.get<AiSettings>(API_URLS.GET_AI_SETTINGS);
   }
 
   /**
-   * Update AI API Key
-   * PUT /api/settings/ai-key
+   * Update AI Settings
+   * PUT /api/settings/ai-settings
    */
-  updateAiKey(apiKey: string): Observable<AiKeySettings> {
-    const request: UpdateAiKeyRequest = { apiKey };
-    return this.http.put<AiKeySettings>(API_URLS.UPDATE_AI_KEY, request);
+  updateAiSettings(request: UpdateAiSettingsRequest): Observable<AiSettings> {
+    return this.http.put<AiSettings>(API_URLS.UPDATE_AI_SETTINGS, request);
   }
 }

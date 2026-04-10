@@ -7,10 +7,12 @@ import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionP
 import { CourseDetail, Lesson, SubLesson } from '../../../models/course.models';
 import { ApiCourseServices } from '../../../services/course.service';
 import { CommonModule } from '@angular/common';
+import { ChatBoxComponent } from '../../../shared/chat-box/chat-box.component';
+import { CourseChatComponent } from '../../../shared/course-chat/course-chat.component';
 
 @Component({
     selector: 'app-course-learn',
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatMenuModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, RouterLink],
+    imports: [CommonModule, MatCardModule, MatButtonModule, MatMenuModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, RouterLink, CourseChatComponent],
     templateUrl: './course-learn.component.html',
     styleUrls: ['./course-learn.component.scss']
 })

@@ -1,12 +1,13 @@
-/**
- * System Settings Models
- * Super simple version - only AI API Key
- */
-
-export interface AiKeySettings {
-  apiKey: string;  // Masked: ****...abc123
+export interface AiSettings {
+  provider: string; // "Ollama" or "OpenRouter"
+  ollamaModelName: string;
+  openRouterModelName: string;
+  apiKey?: string;  // Masked or full depending on GET/PUT
 }
 
-export interface UpdateAiKeyRequest {
-  apiKey: string;
+export interface UpdateAiSettingsRequest {
+  provider: string;
+  ollamaModelName: string;
+  openRouterModelName: string;
+  apiKey?: string;
 }

@@ -91,6 +91,15 @@
                     </mat-expansion-panel-header>
                     </mat-expansion-panel>
 
+                    <mat-expansion-panel [expanded]="isActive('/manager/knowledge-base')" hideToggle>
+                    <mat-expansion-panel-header routerLink="/manager/knowledge-base" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                        <mat-panel-title>
+                            <i class="ri-database-2-line"></i>
+                            <span class="title">Knowledge Base</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+
                     <mat-expansion-panel
                         [expanded]="false"
                     >

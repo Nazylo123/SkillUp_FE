@@ -26,12 +26,13 @@ import { VideoPlayerDialog } from './video-player-dialog/video-player-dialog';
 import { QuizResponse } from '../../../../models/quiz.models';
 import { QuizService } from '../../../../services/quiz.service';
 import { FeedbacksCourseComponent } from "./feedbacks-course/feedbacks-course.component";
+import { RagService } from '../../../../services/rag.service';
 
 @Component({
   selector: 'app-drag-table',
   templateUrl: './course-detail.component.html',
   styleUrls: ['./course-detail.component.scss'],
-  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, CommonModule, FormsModule, RouterLink, MatDialogModule, MatFormFieldModule, MatInputModule, MatDividerModule, MatTooltipModule, MatExpansionModule, MatChipsModule, ReactiveFormsModule, FeedbacksCourseComponent]
+  imports: [MatCardModule, MatButtonModule, MatMenuModule, MatTableModule, MatPaginatorModule, MatIcon, DragDropModule, CommonModule, FormsModule, RouterLink, MatDialogModule, MatFormFieldModule, MatInputModule, MatDividerModule, MatTooltipModule, MatExpansionModule, MatChipsModule, ReactiveFormsModule, FeedbacksCourseComponent, MatIconModule]
 })
 export class LecturerCourseDetail {
   constructor(public dialog: MatDialog, public router: Router, 
@@ -450,6 +451,13 @@ export class LecturerCourseDetail {
     }
 
     this.lessons = [...this.lessons];
+  }
+
+  openAIKnowledgeDialog(): void {
+    this.dialog.open(AIKnowledgeDialog, {
+      width: '600px',
+      data: { courseId: Number(this.id), courseName: this.courseDetail?.name }
+    });
   }
 
   search() {}
@@ -963,6 +971,91 @@ export class ViewQuizDialog {
   }
 
   getLetter(index: number): string {
-    return String.fromCharCode(65 + index); // A, B, C, D...
+    return String.fromCharCode(65 + index);
+  }
+}
+
+// AI Knowledge Upload Dialog for Lecturer
+@Component({
+  selector: 'ai-knowledge-dialog',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule],
+  template: `
+    <h2 mat-dialog-title>
+      <mat-icon style="vertical-align: middle; color: #6259ca;">psychology</mat-icon>
+      Upload AI Knowledge - {{ data.courseName }}
+    </h2>
+    <mat-dialog-content>
+      <p class="text-muted" style="margin-bottom: 16px;">
+        Upload tài liệu để AI trợ giảng có thể trả lời câu hỏi của học viên về khóa học này.
+      </p>
+      <mat-form-field appearance="fill" class="w-100 mb-2">
+        <mat-label>Tên tài liệu</mat-label>
+        <input matInput [(ngModel)]="docTitle" name="title" required>
+      </mat-form-field>
+      <div style="border: 2px dashed #ccc; border-radius: 8px; text-align: center; padding: 20px; margin-bottom: 16px;">
+        <input type="file" (change)="onFileSelected($event)" accept=".pdf,.txt" style="display: none;" #fileInput>
+        <button type="button" mat-raised-button color="primary" (click)="fileInput.click()">Chọn file (PDF, TXT)</button>
+        <div *ngIf="selectedFile" style="margin-top: 10px; color: green;">
+          <mat-icon style="vertical-align: middle;">check_circle</mat-icon>
+          {{ selectedFile.name }}
+        </div>
+      </div>
+      <div *ngIf="isUploading" style="margin-bottom: 10px;">
+        <p style="color: #6259ca;">Đang xử lý tài liệu cho AI...</p>
+      </div>
+      <div *ngIf="message" [style.color]="isSuccess ? 'green' : 'red'" style="margin-bottom: 10px;">
+        {{ message }}
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="dialogRef.close()">Đóng</button>
+      <button mat-raised-button color="primary" (click)="upload()" [disabled]="!selectedFile || !docTitle || isUploading">Upload</button>
+    </mat-dialog-actions>
+  `
+})
+export class AIKnowledgeDialog {
+  docTitle = '';
+  selectedFile: File | null = null;
+  isUploading = false;
+  message = '';
+  isSuccess = false;
+
+  constructor(
+    public dialogRef: MatDialogRef<AIKnowledgeDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private ragService: RagService
+  ) {}
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file && (file.type === 'application/pdf' || file.name.endsWith('.txt'))) {
+      this.selectedFile = file;
+      this.message = '';
+    } else {
+      this.message = 'Chỉ hỗ trợ PDF hoặc TXT.';
+      this.isSuccess = false;
+    }
+  }
+
+  upload() {
+    if (!this.selectedFile || !this.docTitle) return;
+    this.isUploading = true;
+    this.message = '';
+
+    this.ragService.uploadDocument(this.selectedFile, this.docTitle, undefined, this.data.courseId).subscribe({
+      next: () => {
+        this.isUploading = false;
+        this.isSuccess = true;
+        this.message = 'Upload thành công! AI trợ giảng đã có thêm tài liệu mới.';
+        this.selectedFile = null;
+        this.docTitle = '';
+      },
+      error: (err) => {
+        this.isUploading = false;
+        this.isSuccess = false;
+        this.message = 'Lỗi: ' + (err.error?.Message || err.message);
+      }
+    });
   }
 }

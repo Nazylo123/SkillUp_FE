@@ -14,6 +14,9 @@
     </div>
     <div class="d-flex" style="gap: 10px;">
       <button mat-flat-button (click)="openDocumentDialog()">Document</button>
+      <button mat-flat-button color="accent" (click)="openAIKnowledgeDialog()">
+        <i class="ri-robot-line"></i> AI Knowledge
+      </button>
       <button mat-stroked-button (click)="finalQuiz()" *ngIf="isDraftCourse()">Final Quiz</button>
       <button mat-stroked-button (click)="viewQuiz()" *ngIf="!isDraftCourse()">View Quiz</button>
       <button mat-flat-button (click)="openAddEventDialog('300ms', '100ms')" *ngIf="isDraftCourse()">+ New Lesson</button>
