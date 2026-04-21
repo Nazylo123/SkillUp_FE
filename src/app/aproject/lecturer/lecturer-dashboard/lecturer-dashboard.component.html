@@ -1,0 +1,63 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <h3 class="mb-0">Lecturer Dashboard</h3>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card bg-white border-0 rounded-3 custom-card h-100 metric-card metric-card--courses">
+            <div class="card-body p-4 metric-body">
+                <div class="metric-content">
+                    <p class="metric-label mb-2">Total Courses Taught</p>
+                    <h2 class="fw-bold mb-0">{{ data?.courses?.length || 0 }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card bg-white border-0 rounded-3 custom-card h-100 metric-card metric-card--students">
+            <div class="card-body p-4 metric-body">
+                <div class="metric-content">
+                    <p class="metric-label mb-2">Total Enrolled Students</p>
+                    <h2 class="fw-bold mb-0">{{ data?.totalEnrollments || 0 }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-white border-0 rounded-3 mb-4 shadow-sm">
+    <div class="card-body p-4">
+        <h4 class="mb-3">My Courses Enrollment</h4>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 lecturer-course-table">
+                <colgroup>
+                    <col class="col-course" />
+                    <col class="col-enrollments" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col" class="course-col">Course Name</th>
+                        <th scope="col" class="enroll-col">Total Enrollments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let c of data?.courses">
+                        <td class="course-col">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="course-dot"></span>
+                                <h5 class="mb-0 fs-14 fw-semibold">{{ c.courseName }}</h5>
+                            </div>
+                        </td>
+                        <td class="enroll-col">
+                            <span class="enrollment-badge">{{ c.enrollments }}</span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!data?.courses || data?.courses?.length === 0">
+                        <td colspan="2" class="text-center text-muted py-4">You have no courses yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

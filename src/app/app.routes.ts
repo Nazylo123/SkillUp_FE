@@ -23,6 +23,7 @@ import { Lecturer } from './aproject/lecturer/lecturer.component';
 import { LecturerCourseList } from './aproject/lecturer/course-management/course-list/course-list.component';
 import { LecturerCourseManagement } from './aproject/lecturer/course-management/course-management.component';
 import { LecturerCourseDetail } from './aproject/lecturer/course-management/course-detail-lesson-list/course-detail.component';
+import { LecturerDashboardComponent } from './aproject/lecturer/lecturer-dashboard/lecturer-dashboard.component';
 import { NotFoundComponent } from './common/not-found/not-found.component';
 import { ProfileComponent } from './common/profile/profile.component';
 import { SecurityComponent } from './common/security/security.component';
@@ -51,6 +52,7 @@ import { ManagerReportUserComponent } from './aproject/manager/manager-report-us
 import { ManagerCourseTypeComponent } from './aproject/manager/manager-setting/manager-course-type/manager-course-type.component';
 import { ManagerUserLevelComponent } from './aproject/manager/manager-setting/manager-user-level/manager-user-level.component';
 import { ManagerRagUploadComponent } from './aproject/manager/manager-rag-upload/manager-rag-upload.component';
+import { ManagerCoursePerformanceComponent } from './aproject/manager/manager-course-performance/manager-course-performance.component';
 
 export const routes: Routes = [
     //project
@@ -135,6 +137,7 @@ export const routes: Routes = [
             {path: 'knowledge-base', component: ManagerRagUploadComponent},
             {path: 'course-type', component: ManagerCourseTypeComponent},
             {path: 'user-level', component: ManagerUserLevelComponent},
+            {path: 'course-performance', component: ManagerCoursePerformanceComponent},
         ]
     },
     {
@@ -143,6 +146,7 @@ export const routes: Routes = [
         canActivate: [authGuard, roleGuard],
         data: { roles: ['Lecturer'] },
         children: [
+            {path: 'dashboard', component: LecturerDashboardComponent},
             {path: '', component: LecturerCourseList},
             {path: 'profile', component: ProfileComponent},
             {path: 'security', component: SecurityComponent},

@@ -179,4 +179,8 @@ export const API_URLS = {
   //API Report
   GET_USER_REPORT: BASE_POINTS.USER + "/employees/detail-statistics", // GET /api/Users/employees/detail-statistics
   EXPORT_USER_REPORT_EXCEL: BASE_POINTS.USER + "/employees/detail-statistics/export-excel", // GET /api/Users/employees/detail-statistics/export-excel
+  
+  // Lecturer KPI & Dashboard
+  GET_LECTURER_STATS: BASE_POINTS.DASHBOARD + "/manager/lecturer-stats",
+  GET_MY_LECTURER_DASHBOARD: BASE_POINTS.DASHBOARD + "/lecturer/my-stats",
 }

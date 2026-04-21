@@ -1,6 +1,7 @@
 export interface Course {
     courseId: number;
     courseName: string;
+    name?: string;
     description: string;
     status: CourseStatus;
     courseType: CourseType;
@@ -13,6 +14,7 @@ export interface Course {
     createdBy: number;
     createdByName: string;
     createdAt: string;
+    enrollmentCount?: number;
     lessons: Lesson[];
 }
 

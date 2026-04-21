@@ -35,4 +35,12 @@ export class ApiDashboardServices {
     return this.http.get<any>(API_URLS.DASHBOARD_ADMIN);
   }
 
+  getManagerLecturerStats(): Observable<any> {
+    return this.http.get<any>(API_URLS.GET_LECTURER_STATS);
+  }
+
+  getLecturerDashboard(): Observable<any> {
+    return this.http.get<any>(API_URLS.GET_MY_LECTURER_DASHBOARD);
+  }
+
 }

@@ -1,0 +1,98 @@
+.custom-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08) !important;
+    }
+}
+
+.metric-card {
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    border: 1px solid #eef2f7 !important;
+
+    .metric-body {
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .metric-content {
+        text-align: center;
+    }
+
+    .metric-label {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #64748b;
+    }
+
+    h2 {
+        color: #0f172a;
+        font-size: 32px;
+        line-height: 1;
+    }
+}
+
+.lecturer-course-table {
+    .col-course,
+    .col-enrollments {
+        width: 50%;
+    }
+
+    thead th {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 14px 16px;
+    }
+
+    tbody td {
+        border-bottom: 1px solid #f1f5f9;
+        padding: 14px 16px;
+        vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .course-col {
+        text-align: left;
+    }
+
+    .enroll-col {
+        text-align: center;
+    }
+}
+
+.course-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #2563eb;
+    flex-shrink: 0;
+}
+
+.enrollment-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background-color: #e2e8f0;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 700;
+}

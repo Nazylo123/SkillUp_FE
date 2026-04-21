@@ -31,6 +31,34 @@ export class ApiCourseServices {
     return this.http.get<CoursePaginatedResponse<Course>>(API_URLS.COURSE, { params });
   }
 
+  getCoursePerformanceManager(
+    page: number = 1,
+    pageSize: number = 10,
+    searchTerm?: string,
+    minEnroll?: number,
+    maxEnroll?: number,
+    enrollSort: 'asc' | 'desc' = 'desc'
+  ): Observable<CoursePaginatedResponse<Course>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString())
+      .set('enrollSort', enrollSort);
+
+    if (searchTerm && searchTerm.trim()) {
+      params = params.set('search', searchTerm.trim());
+    }
+
+    if (minEnroll !== undefined) {
+      params = params.set('minEnroll', minEnroll.toString());
+    }
+
+    if (maxEnroll !== undefined) {
+      params = params.set('maxEnroll', maxEnroll.toString());
+    }
+
+    return this.http.get<CoursePaginatedResponse<Course>>(API_URLS.COURSE, { params });
+  }
+
   getCourseListCreator(page: number = 1, pageSize: number = 10, searchTerm?: string): Observable<CoursePaginatedResponse<Course>> {
     let params = new HttpParams()
       .set('pageNumber', page.toString())

@@ -64,6 +64,15 @@
                     </mat-expansion-panel-header>
                     </mat-expansion-panel>
 
+                    <mat-expansion-panel [expanded]="isActive('/manager/course-performance')" hideToggle>
+                    <mat-expansion-panel-header routerLink="/manager/course-performance" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                        <mat-panel-title>
+                            <i class="ri-bar-chart-box-line"></i>
+                            <span class="title">Course Performance</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+
                     <!-- <mat-expansion-panel [expanded]="isActive('/manager/roadmaps')" hideToggle>
                     <mat-expansion-panel-header routerLink="/manager/roadmaps" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
                         <mat-panel-title>
