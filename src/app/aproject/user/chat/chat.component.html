@@ -1,68 +1,131 @@
-<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-space-between">
-    <h5 class="mb-0">Trợ Lý AI Nội Bộ</h5>
-    <ol class="breadcrumb mb-0 ps-0">
-        <li class="breadcrumb-item">
-            <a routerLink="/">
-                <i class="ri-home-8-line"></i>
-                Dashboard
-            </a>
-        </li>
-        <li class="breadcrumb-item fw-semibold">AI Chatbot</li>
-    </ol>
-</div>
-
-<div class="row">
-    <div class="col-12">
-        <mat-card class="mb-25 chat-box tagus-card">
-            <mat-card-content>
-                <div class="chat-header p-15 d-md-flex align-items-center justify-content-space-between" style="border-bottom: 1px solid #e1e7f0;">
-                    <div class="user d-flex align-items-center">
-                        <div class="avatar-circle" style="width: 50px; height: 50px; border-radius: 50%; background: #6259ca; color: white; display:flex; align-items:center; justify-content:center; font-size: 24px; font-weight: bold;">
-                            AI
-                        </div>
-                        <div class="ms-12">
-                            <h5 class="fs-16 mb-4">Trợ lý SkillUp RAG</h5>
-                            <span class="d-block text-success position-relative fs-14">Online</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chat-body p-15" style="height: 500px; overflow-y: auto;" #scrollMe>
-                    <ul class="ps-0 list-unstyled mb-0 mt-0">
-                        <ng-container *ngFor="let msg of messages">
-                            <li class="position-relative" [ngClass]="{'right': msg.role === 'User'}">
-                                <!-- Avatar -->
-                                <img *ngIf="msg.role === 'User'" src="img/user/user12.jpg" width="50" class="rounded-circle user" alt="user">
-                                <div *ngIf="msg.role === 'Assistant'" class="user avatar-circle" style="width: 50px; height: 50px; border-radius: 50%; background: #6259ca; color: white; display:flex; align-items:center; justify-content:center; font-size: 20px; position:absolute; top:0;">AI</div>
-                                
-                                <div class="message" [style.margin-left]="msg.role === 'Assistant' ? '65px' : '0'">
-                                    <div>
-                                        <p style="white-space: pre-wrap;">{{msg.content}}</p>
-                                    </div>
-                                    <div *ngIf="msg.sources && msg.sources.length > 0" class="mt-2" style="font-size: 11px; opacity: 0.8; font-style: italic;">
-                                        Nguồn tham khảo: {{msg.sources.join(', ')}}
-                                    </div>
-                                </div>
-                                <span class="time d-block muted-color mt-8 fs-14">{{msg.time}}</span>
-                            </li>
-                        </ng-container>
-                        
-                        <li *ngIf="isTyping" class="position-relative">
-                            <div class="user avatar-circle" style="width: 50px; height: 50px; border-radius: 50%; background: #6259ca; color: white; display:flex; align-items:center; justify-content:center; font-size: 20px; position:absolute; top:0;">AI</div>
-                            <div class="message" style="margin-left: 65px;">
-                                <div><p>Đang phân tích tài liệu nội bộ và trả lời...</p></div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="chat-footer p-15 d-md-flex align-items-center" style="border-top: 1px solid #e1e7f0;">
-                    <form class="position-relative w-100" (ngSubmit)="sendMessage()">
-                        <input [(ngModel)]="newMessage" name="message" type="text" class="input-text w-100 p-3" placeholder="Nhập câu hỏi liên quan đến tài liệu nội bộ..." style="border: 1px solid #e1e7f0; border-radius: 30px; padding-right: 50px;" [disabled]="isTyping">
-                        <button type="submit" [disabled]="isTyping" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; font-size: 20px; color: #6259ca;"><i class="ri-send-plane-fill"></i></button>
-                    </form>
-                </div>
-            </mat-card-content>
-        </mat-card>
+<div class="chat-container">
+  <!-- Sidebar Danh sách người dùng -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h3>Trò chuyện</h3>
+      <button class="btn-new-chat" (click)="showUserPicker = !showUserPicker" matTooltip="Bắt đầu trò chuyện mới">
+        <i class="ri-add-line"></i>
+      </button>
     </div>
+
+    <!-- Panel chọn người dùng mới -->
+    <div class="user-picker" *ngIf="showUserPicker">
+      <div class="user-picker-header">
+        <span>Chọn người để chat</span>
+        <button class="btn-close-picker" (click)="showUserPicker = false"><i class="ri-close-line"></i></button>
+      </div>
+      <div *ngIf="availableUsers.length === 0" class="no-chats">Không có người dùng.</div>
+      <div
+        *ngFor="let user of availableUsers"
+        class="user-item"
+        (click)="startNewChat(user)"
+      >
+        <div class="avatar-container">
+          <img [src]="user.avatarUrl || 'assets/images/default-avatar.png'" alt="avatar">
+        </div>
+        <div class="user-info">
+          <h4>{{user.fullName}}</h4>
+          <span class="role-badge">{{user.role}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-content">
+      <div *ngIf="recentChats.length === 0 && !showUserPicker" class="no-chats">
+        Chưa có tin nhắn nào.<br>
+        <small>Nhấn <strong>+</strong> để bắt đầu trò chuyện.</small>
+      </div>
+      <div
+        *ngFor="let chat of recentChats"
+        class="user-item"
+        [class.active]="selectedUser?.userId === chat.userId"
+        (click)="selectUser(chat)"
+      >
+        <div class="avatar-container">
+          <img [src]="chat.avatarUrl || 'assets/images/default-avatar.png'" alt="avatar">
+          <div class="status-indicator" [class.online]="chat.isOnline"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name-row">
+            <h4>{{chat.fullName}}</h4>
+            <span class="time">{{chat.lastMessageTime | date:'shortTime'}}</span>
+          </div>
+          <div class="last-msg-row">
+            <p class="last-msg">{{chat.lastMessage}}</p>
+            <span class="unread-badge" *ngIf="chat.unreadCount > 0">{{chat.unreadCount}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Khung Chat chính -->
+  <div class="chat-area" *ngIf="selectedUser; else noSelection">
+    <div class="chat-header">
+      <div class="user-info-header">
+        <img [src]="selectedUser.avatarUrl || 'assets/images/default-avatar.png'" alt="avatar">
+        <div>
+          <h4>{{selectedUser.fullName}}</h4>
+          <span class="status-text">{{selectedUser.isOnline ? 'Đang hoạt động' : 'Ngoại tuyến'}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-messages" #scrollMe>
+      <div
+        *ngFor="let msg of messages"
+        class="message-wrapper"
+        [class.sent]="msg.senderId === currentUserId"
+      >
+        <img *ngIf="msg.senderId !== currentUserId" [src]="msg.senderAvatar || 'assets/images/default-avatar.png'" class="msg-avatar">
+
+        <div class="message-content">
+          <!-- Text message -->
+          <div class="bubble" *ngIf="msg.content">
+            {{msg.content}}
+          </div>
+          <!-- Attachment -->
+          <div class="attachment" *ngIf="msg.attachmentUrl">
+            <a [href]="msg.attachmentUrl" target="_blank" class="attachment-link">
+              <i class="ri-file-text-line" *ngIf="msg.attachmentType === 'pdf' || msg.attachmentType === 'docx'"></i>
+              <i class="ri-image-line" *ngIf="msg.attachmentType === 'png' || msg.attachmentType === 'jpg'"></i>
+              <span>Xem tệp đính kèm</span>
+            </a>
+          </div>
+          <span class="msg-time">{{msg.createdAt | date:'shortTime'}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Khung nhập tin nhắn -->
+    <div class="chat-input-area">
+      <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
+      <button mat-icon-button (click)="fileInput.click()" matTooltip="Đính kèm tệp" [disabled]="isUploading">
+        <i class="ri-attachment-2"></i>
+      </button>
+
+      <input
+        type="text"
+        class="msg-input"
+        placeholder="Nhập tin nhắn..."
+        [(ngModel)]="newMessage"
+        (keydown.enter)="sendMessage()"
+      >
+
+      <button mat-icon-button color="primary" (click)="sendMessage()" [disabled]="!newMessage.trim() && !isUploading">
+        <i class="ri-send-plane-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <ng-template #noSelection>
+    <div class="no-selection-area">
+      <i class="ri-chat-smile-3-line empty-icon"></i>
+      <h2>Chọn một cuộc trò chuyện</h2>
+      <p>Bắt đầu trao đổi với Mentor hoặc Học viên của bạn</p>
+      <button class="btn-start-chat" (click)="showUserPicker = true">
+        <i class="ri-add-circle-line"></i> Bắt đầu chat mới
+      </button>
+    </div>
+  </ng-template>
 </div>

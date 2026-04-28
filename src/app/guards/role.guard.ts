@@ -21,6 +21,8 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
       router.navigate(['/lecturer']);
     } else if (role === 'Employee') {
       router.navigate(['/']);
+    } else if (role === 'Mentor') {
+      router.navigate(['/mentor']);
     }
     return false;
   }

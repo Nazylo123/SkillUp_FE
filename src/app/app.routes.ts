@@ -35,6 +35,7 @@ import { QuizListComponent } from './aproject/lecturer/course-management/quiz-li
 import { QuizComponent } from './aproject/user/quiz/quiz.component';
 import { ChatComponent } from './aproject/user/chat/chat.component';
 import { ManagerChatComponent } from './aproject/manager/manager-chat/manager-chat.component';
+import { MentorComponent } from './aproject/mentor/mentor.component';
 import { RoadmapFormComponent } from './aproject/manager/manager-roadmap/roadmap-form/roadmap-form.component';
 import { RoadmapDetailComponent } from './aproject/manager/manager-roadmap/roadmap-detail/roadmap-detail.component';
 import { ManagerRoadmapComponent } from './aproject/manager/manager-roadmap/manager-roadmap/manager-roadmap.component';
@@ -158,6 +159,18 @@ export const routes: Routes = [
                 ]
             },
             {path: 'quizzes', component: QuizListComponent},
+        ]
+    },
+    {
+        path: 'mentor',
+        component: MentorComponent,
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['Mentor'] },
+        children: [
+            {path: '', redirectTo: 'chat', pathMatch: 'full'},
+            {path: 'chat', component: ChatComponent},
+            {path: 'profile', component: ProfileComponent},
+            {path: 'security', component: SecurityComponent},
         ]
     },
     //endProject
