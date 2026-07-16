@@ -1,3 +1,36 @@
+<mat-card class="mb-25 tagus-card" *ngIf="courseDetail && courseDetail.learningMaterials && courseDetail.learningMaterials.length > 0">
+  <mat-card-header class="border-bottom">
+    <div class="breadcrumb-card">
+      <h5 class="mb-0">Học liệu từ Mentor</h5>
+      <p class="text-muted mb-0" style="font-size: 13px;">Các tài liệu do Mentor chuẩn bị và đã được Manager gán cho khóa học này</p>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="materials-grid">
+      <div *ngFor="let material of courseDetail.learningMaterials" class="material-card">
+        <div class="material-icon-wrapper" [style.background-color]="getFileTypeColor(material.fileType)">
+          <i class="ri-file-text-line"></i>
+          <span class="file-type-badge">{{material.fileType}}</span>
+        </div>
+        <div class="material-details">
+          <h6 class="material-title" [matTooltip]="material.title">{{material.title}}</h6>
+          <p class="material-desc">{{material.description || 'Không có mô tả'}}</p>
+          <div class="material-meta">
+            <span><i class="ri-user-voice-line"></i> Mentor: <strong>{{material.mentorName}}</strong></span>
+            <span><i class="ri-database-2-line"></i> {{material.fileSizeFormatted}}</span>
+            <span><i class="ri-calendar-event-line"></i> {{material.createdAt | date:'dd/MM/yyyy'}}</span>
+          </div>
+        </div>
+        <div class="material-actions">
+          <button mat-flat-button color="primary" class="download-btn" (click)="downloadMaterial(material.learningMaterialId, material.fileName)">
+            <i class="ri-download-2-line"></i> Tải về
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
 <mat-card class="mb-25 tagus-card">
   <mat-card-header class="border-bottom">
     <div class="breadcrumb-card">

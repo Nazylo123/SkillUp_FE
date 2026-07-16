@@ -22,7 +22,14 @@
                 <!-- Product Column -->
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Course Name</th>
-                    <td mat-cell *matCellDef="let element" [matTooltip]="maxLengthText(element.courseName) ? element.courseName : ''">{{formatText(element.courseName)}}</td>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="maxLengthText(element.courseName) ? element.courseName : ''">
+                        {{formatText(element.courseName)}}
+                        <span *ngIf="element.status === 'Draft' && element.learningMaterialCount > 0" 
+                              class="materials-badge" 
+                              [matTooltip]="element.learningMaterialCount + ' học liệu từ Mentor'">
+                            <i class="ri-book-read-line"></i> {{element.learningMaterialCount}}
+                        </span>
+                    </td>
                 </ng-container>
 
                 <!-- Customer Column -->

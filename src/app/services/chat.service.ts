@@ -127,6 +127,19 @@ export class ChatService {
     if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
       return this.hubConnection.invoke('SendMessage', receiverId, content, attachmentUrl, attachmentType);
     }
-    return Promise.reject('Connection not established');
+    return new Promise((resolve, reject) => {
+      this.http.post(`${this.apiUrl}/send`, {
+        receiverId,
+        content,
+        attachmentUrl,
+        attachmentType,
+      }).subscribe({
+        next: (msg) => {
+          this.messageReceivedSource.next(msg as ChatMessageDto);
+          resolve();
+        },
+        error: (err) => reject(err),
+      });
+    });
   }
 }

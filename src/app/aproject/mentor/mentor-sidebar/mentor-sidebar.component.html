@@ -41,6 +41,17 @@
                     </mat-expansion-panel-header>
                     </mat-expansion-panel>
 
+                    <mat-expansion-panel [expanded]="isActive('/mentor/materials')" hideToggle>
+                    <mat-expansion-panel-header
+                        routerLink="/mentor/materials" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link"
+                    >
+                        <mat-panel-title>
+                            <i class="flaticon-file-1"></i>
+                            <span class="title">Học liệu của tôi</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+
                 </mat-accordion>
             </div>
         </div>

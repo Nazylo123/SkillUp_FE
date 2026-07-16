@@ -15,15 +15,14 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (this.tokenService.isTokenExpired(token)) {
-      this.tokenService.refreshTokenObservable$().subscribe(
-        (response: any) => {
-          this.loadUserInfo();
+      this.tokenService.refreshTokenObservable$().subscribe({
+        next: () => this.loadUserInfo(),
+        error: () => {
+          // Refresh cookie missing/expired — stay logged out until user logs in
+          this.tokenService.clearTokens();
         },
-        (error: any) => {
-          // Error refreshing token
-          // this.tokenService.clearTokens();
-        });
-    }else {
+      });
+    } else {
       this.loadUserInfo();
     }
   }

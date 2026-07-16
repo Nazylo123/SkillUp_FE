@@ -92,7 +92,7 @@ formatText(text: string) : string {
 
   changeLevel(element: UserManager, level: Level) {
 
-    this.apiUserServices.updateUserLevel(element.userId, level.levelId.toString()).subscribe(
+    this.apiUserServices.updateUserLevel(element.userId, level.levelId).subscribe(
         (res: any) => {
             this.snack.open('User level updated successfully', '', { duration: 2200, panelClass: ['success-snackbar', 'custom-snackbar'], horizontalPosition: 'right', verticalPosition: 'top' });
             this.loadUsers(this.currentPage, this.pageSize, this.searchTerm);

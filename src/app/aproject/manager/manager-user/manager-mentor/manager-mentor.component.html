@@ -1,0 +1,102 @@
+<div class="mentor-management-container">
+    <div class="header">
+        <div class="title-section">
+            <h1>Quản lý Đội ngũ Mentor</h1>
+            <p>Điều phối Mentor hỗ trợ cho các khóa học đã được phê duyệt</p>
+        </div>
+        <div class="stats-overview" *ngIf="!isLoading">
+            <div class="stat-item">
+                <span class="value">{{mentors.length}}</span>
+                <span class="label">Tổng số Mentor</span>
+            </div>
+            <div class="stat-item highlight">
+                <span class="value">{{unassignedCourses.length}}</span>
+                <span class="label">Khóa học chờ gán</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-spinner" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu đội ngũ...</p>
+    </div>
+
+    <!-- Mentors List -->
+    <div class="mentor-grid" *ngIf="!isLoading">
+        <mat-card class="mentor-card" *ngFor="let mentor of mentors">
+            <mat-card-header>
+                <div mat-card-avatar class="mentor-avatar">
+                    <img [src]="mentor.avatarUrl || 'assets/images/avatars/user.png'" alt="Avatar">
+                </div>
+                <mat-card-title>{{mentor.fullName}}</mat-card-title>
+                <mat-card-subtitle>{{mentor.email}}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="workload-summary">
+                    <div class="workload-item">
+                        <mat-icon color="primary">library_books</mat-icon>
+                        <span><strong>{{mentor.assignedCourseCount}}</strong> Khóa học</span>
+                    </div>
+                    <div class="workload-item">
+                        <mat-icon color="accent">groups</mat-icon>
+                        <span><strong>{{mentor.totalStudents}}</strong> Học viên hỗ trợ</span>
+                    </div>
+                </div>
+
+                <mat-expansion-panel class="courses-panel" *ngIf="mentor.assignedCourses.length > 0">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Xem danh sách khóa học</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <ul class="assigned-courses-list">
+                        <li *ngFor="let course of mentor.assignedCourses">
+                            <span class="course-name">{{course.courseName}}</span>
+                            <div class="actions">
+                                <span class="student-count">{{course.studentCount}} HV</span>
+                                <button mat-icon-button color="warn" (click)="confirmRemove(course.courseId, course.courseName)" matTooltip="Gỡ Mentor">
+                                    <mat-icon>link_off</mat-icon>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </mat-expansion-panel>
+                <div class="no-courses" *ngIf="mentor.assignedCourses.length === 0">
+                    Chưa được gán khóa học nào.
+                </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+                <button mat-flat-button color="primary" class="w-100" (click)="openAssignModal(mentor)">
+                    <mat-icon>add_task</mat-icon> Gán Khóa Học Mới
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+    <!-- Assign Modal -->
+    <div class="modal-overlay" *ngIf="showAssignModal" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Gán khóa học cho {{selectedMentor?.fullName}}</h2>
+                <button mat-icon-button (click)="closeModal()"><mat-icon>close</mat-icon></button>
+            </div>
+            <div class="modal-body">
+                <p *ngIf="unassignedCourses.length > 0">Chọn một khóa học dưới đây để gán cho Mentor này:</p>
+                <div class="unassigned-list" *ngIf="unassignedCourses.length > 0">
+                    <div class="unassigned-item" *ngFor="let course of unassignedCourses">
+                        <div class="info">
+                            <span class="name">{{course.name}}</span>
+                            <span class="meta">Tạo bởi: {{course.createdByName}} | {{course.enrollmentCount}} Học viên</span>
+                        </div>
+                        <button mat-stroked-button color="primary" (click)="assignCourse(course)">Gán</button>
+                    </div>
+                </div>
+                <div class="empty-state" *ngIf="unassignedCourses.length === 0">
+                    <mat-icon>done_all</mat-icon>
+                    <p>Tất cả các khóa học đã được gán Mentor!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

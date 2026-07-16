@@ -65,8 +65,8 @@ export class ApiUserServices {
     return this.http.post<{ url: string }>(`${API_URLS.UPLOAD_AVATAR}/${2}/upload-avatar`, formData);
   }
   
-  updateUserLevel(id: string | number, level: string): Observable<any> {
-    return this.http.patch<any>(`${API_URLS.UPDATE_USER_ROLE_STATUS}/${id}/level`, { levelId : level });
+  updateUserLevel(id: string | number, level: string | number): Observable<any> {
+    return this.http.patch<any>(`${API_URLS.UPDATE_USER_ROLE_STATUS}/${id}/level`, { levelId: Number(level) });
   }
 
   importExcel(file: File): Observable<any> {

@@ -30,3 +30,36 @@
   background-color: #f8d7da;
   color: #721c24;
 }
+
+.draft {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 8px;
+}
+
+.filter-tab-btn {
+  font-weight: 500 !important;
+  color: #6c757d;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    background-color: #f8f9fa;
+    color: #212529;
+  }
+  
+  &.active-tab {
+    background-color: #3f51b5;
+    color: #fff !important;
+  }
+}

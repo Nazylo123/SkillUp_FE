@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChatService, ChatMessageDto, RecentChatDto, AvailableUserDto } from '../../../services/chat.service';
 import { TokenService } from '../../../context/token.service';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,12 +28,14 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   currentUserId: number = 0;
   isUploading = false;
   showUserPicker = false;  // Ẩn/hiện panel chọn người mới
+  userRole: string = '';   // Lưu role của user hiện tại
 
   private subscriptions = new Subscription();
 
   constructor(
     private chatService: ChatService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private route: ActivatedRoute
   ) {
     const token = this.tokenService.getToken();
     if (token) {
@@ -42,6 +45,12 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         const idValue = payload['UserId'] || payload['sub'] || payload['nameid'] ||
           payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
         this.currentUserId = parseInt(idValue);
+        
+        // Lấy role
+        this.userRole = payload['Role'] || payload['role'] || 
+          payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
+        
+        console.log('Chat currentUserId:', this.currentUserId, 'Role:', this.userRole);
         console.log('Chat currentUserId:', this.currentUserId);
       } catch (e) {
         console.error('Failed to parse token', e);
@@ -52,7 +61,10 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit(): void {
     this.chatService.startConnection();
     this.loadRecentChats();
-    this.loadAvailableUsers();
+    // Chỉ Mentor/Manager mới được tự tìm user mới để chat chủ động
+    if (this.userRole !== 'Employee') {
+      this.loadAvailableUsers();
+    }
 
     // Listen to new messages
     this.subscriptions.add(
@@ -79,6 +91,27 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
           if (this.selectedUser?.userId === status.userId) {
             this.selectedUser.isOnline = status.isOnline;
           }
+        }
+      })
+    );
+
+    // Check for mentorId in query parameters
+    this.subscriptions.add(
+      this.route.queryParams.subscribe(params => {
+        const mentorId = params['mentorId'];
+        if (mentorId) {
+          const mId = parseInt(mentorId);
+          if (mId === this.currentUserId) return; // Don't chat with self
+
+          const mentorName = params['mentorName'] || 'Mentor';
+          const mentorAvatar = params['mentorAvatar'] || 'img/user/user2.jpg';
+
+          this.startNewChat({
+            userId: mId,
+            fullName: mentorName,
+            avatarUrl: mentorAvatar,
+            role: 'Mentor'
+          });
         }
       })
     );

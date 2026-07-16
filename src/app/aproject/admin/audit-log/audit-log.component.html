@@ -1,0 +1,413 @@
+<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-space-between">
+    <h5 class="mb-0">Nhật ký hệ thống (Audit Log)</h5>
+    <div class="d-flex align-items-center gap-2 mt-3 mt-md-0">
+        <button 
+            mat-flat-button 
+            [color]="activeTab === 'logs' ? 'primary' : 'basic'"
+            (click)="activeTab = 'logs'"
+            class="border-radius"
+        >
+            <i class="ri-list-check-2 me-1"></i> Nhật ký
+        </button>
+        <button 
+            mat-flat-button 
+            [color]="activeTab === 'stats' ? 'primary' : 'basic'"
+            (click)="activeTab = 'stats'"
+            class="border-radius"
+            style="margin-left: 8px;"
+        >
+            <i class="ri-bar-chart-2-line me-1"></i> Thống kê
+        </button>
+    </div>
+</div>
+
+<!-- Quick Stats Cards -->
+<div class="row" *ngIf="stats">
+    <div class="col-lg-4 col-sm-6">
+        <mat-card class="mb-25 stats-card tagus-card text-white bg-gradient-purple p-20">
+            <div class="d-flex align-items-center justify-content-space-between">
+                <div>
+                    <span class="d-block text-white-50 fw-medium">Thao tác Hôm nay</span>
+                    <h3 class="mb-0 text-white fw-bold mt-5">{{ stats.totalToday }}</h3>
+                </div>
+                <div class="icon-circle bg-white-10">
+                    <i class="ri-calendar-check-line text-24"></i>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+        <mat-card class="mb-25 stats-card tagus-card text-white bg-gradient-blue p-20">
+            <div class="d-flex align-items-center justify-content-space-between">
+                <div>
+                    <span class="d-block text-white-50 fw-medium">Tổng số Thao tác</span>
+                    <h3 class="mb-0 text-white fw-bold mt-5">{{ stats.totalAll }}</h3>
+                </div>
+                <div class="icon-circle bg-white-10">
+                    <i class="ri-history-line text-24"></i>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+    <div class="col-lg-4 col-sm-12">
+        <mat-card class="mb-25 stats-card tagus-card text-white bg-gradient-green p-20">
+            <div class="d-flex align-items-center justify-content-space-between">
+                <div>
+                    <span class="d-block text-white-50 fw-medium">Hành động phổ biến nhất</span>
+                    <h3 class="mb-0 text-white fw-bold mt-5 text-truncate" style="max-width: 220px;" [title]="stats.byAction[0]?.action || '—'">
+                        {{ stats.byAction[0]?.action || 'N/A' }}
+                    </h3>
+                </div>
+                <div class="icon-circle bg-white-10">
+                    <i class="ri-flashlight-line text-24"></i>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>
+
+<!-- Tab 1: Audit Logs List -->
+<div [hidden]="activeTab !== 'logs'">
+    <mat-card class="mb-25 tagus-card">
+        <mat-card-header class="border-bottom pb-15 mb-20 d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">Danh sách Nhật ký hoạt động</h5>
+            <button 
+                mat-flat-button 
+                color="warn" 
+                class="border-radius" 
+                *ngIf="hasActiveFilters" 
+                (click)="resetFilters()"
+            >
+                <i class="ri-restart-line me-1"></i> Reset bộ lọc
+            </button>
+        </mat-card-header>
+        <mat-card-content>
+            <!-- Filters Area -->
+            <div class="search-filters mb-20">
+                <div class="row align-items-end">
+                    <div class="col-lg-4 col-md-6 mb-15">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5">Tìm kiếm nâng cao</label>
+                            <div class="tagus-search-box">
+                                <input 
+                                    type="text" 
+                                    class="input-search border-radius" 
+                                    placeholder="Email, IP, ID..." 
+                                    [(ngModel)]="searchText"
+                                    (ngModelChange)="onSearchChange()"
+                                >
+                                <button mat-flat-button class="tagus"><i class="ri-search-line"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 mb-15">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5">Hành động</label>
+                            <select class="input-control" [(ngModel)]="selectedAction" (change)="onFilterChange()">
+                                <option value="">Tất cả</option>
+                                <option *ngFor="let opt of filterOptions.actions" [value]="opt">{{ opt }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 mb-15">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5">Loại thực thể</label>
+                            <select class="input-control" [(ngModel)]="selectedEntityType" (change)="onFilterChange()">
+                                <option value="">Tất cả</option>
+                                <option *ngFor="let opt of filterOptions.entityTypes" [value]="opt">{{ opt }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 mb-15">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5">Khoảng thời gian</label>
+                            <div class="d-flex align-items-center justify-content-space-between w-100">
+                                <input type="date" class="input-control" style="width: calc(50% - 10px);" [(ngModel)]="dateFrom" (change)="onFilterChange()">
+                                <span class="mx-2 text-muted">-</span>
+                                <input type="date" class="input-control" style="width: calc(50% - 10px);" [(ngModel)]="dateTo" (change)="onFilterChange()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Area -->
+            <div class="mat-elevation-z8 recentOrdersTable tagus-mat-table">
+                <table mat-table [dataSource]="logs">
+                    <!-- User Column -->
+                    <ng-container matColumnDef="user">
+                        <th mat-header-cell *matHeaderCellDef>Người dùng</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle-sm me-2 bg-light d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%;">
+                                    <i class="ri-user-line text-muted"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-dark">{{ element.UserName || 'Khách / Hệ thống' }}</div>
+                                    <div class="small text-muted" *ngIf="element.UserEmail">{{ element.UserEmail }}</div>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>Hành động</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="badge rounded-pill px-3 py-2 text-11" [ngClass]="getActionClass(element.Action)">
+                                {{ element.Action }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Entity Column -->
+                    <ng-container matColumnDef="entity">
+                        <th mat-header-cell *matHeaderCellDef>Thực thể</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="fw-semibold text-dark">{{ element.EntityType }}</div>
+                            <div class="small text-muted" *ngIf="element.EntityId">ID: {{ element.EntityId }}</div>
+                        </td>
+                    </ng-container>
+
+                    <!-- API Path Column -->
+                    <ng-container matColumnDef="apiPath">
+                        <th mat-header-cell *matHeaderCellDef>Đường dẫn API</th>
+                        <td mat-cell *matCellDef="let element">
+                            <code class="small text-primary fw-bold">{{ element.HttpMethod }}</code>
+                            <span class="small text-muted ms-2 text-truncate d-inline-block" style="max-width: 150px;" [matTooltip]="element.Endpoint">{{ element.Endpoint }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Description Column -->
+                    <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef>Mô tả</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="text-muted text-13">{{ element.Description || '—' }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="statusCode">
+                        <th mat-header-cell *matHeaderCellDef>Kết quả</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="badge px-2 py-1" [ngClass]="getStatusClass(element.StatusCode)">
+                                {{ element.StatusCode || 'Unknown' }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- IP Column -->
+                    <ng-container matColumnDef="ipAddress">
+                        <th mat-header-cell *matHeaderCellDef>IP Address</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="text-muted small">{{ element.IpAddress || '—' }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Created At Column -->
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef>Thời gian</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="text-muted text-12">{{ formatDate(element.CreatedAt) }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef class="text-end">Chi tiết</th>
+                        <td mat-cell *matCellDef="let element" class="text-end">
+                            <div class="actions-container d-inline-flex">
+                                <button mat-icon-button matTooltip="Xem chi tiết" (click)="$event.stopPropagation(); openDetail(element)">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openDetail(row)" class="cursor-pointer"></tr>
+                </table>
+
+                <!-- Loading overlay inside table container -->
+                <div *ngIf="loading" class="loading-container">
+                    <div class="loading-text">Đang tải danh sách nhật ký...</div>
+                </div>
+
+                <!-- Empty state -->
+                <div *ngIf="!loading && logs.length === 0" class="text-center py-5">
+                    <i class="ri-article-line text-48 text-muted d-block mb-3"></i>
+                    <h5 class="text-muted">Không tìm thấy bản ghi log nào thỏa mãn bộ lọc</h5>
+                </div>
+
+                <!-- Paginator -->
+                <mat-paginator 
+                    [pageSizeOptions]="[5, 10, 20, 50]" 
+                    showFirstLastButtons 
+                    [pageSize]="pageSize"
+                    [length]="total"
+                    (page)="onPaginatorChange($event)"
+                ></mat-paginator>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<!-- Tab 2: Stats Visualizations -->
+<div [hidden]="activeTab !== 'stats'" class="row">
+    <div class="col-md-6 mb-25">
+        <mat-card class="tagus-card h-100">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Tỷ lệ theo hành động</h5>
+            </mat-card-header>
+            <mat-card-content class="pt-20">
+                <div class="d-flex flex-column" *ngIf="stats">
+                    <div class="mb-15" *ngFor="let item of stats.byAction">
+                        <div class="d-flex align-items-center justify-content-space-between mb-5">
+                            <span class="fw-semibold text-dark text-14">{{ item.action }}</span>
+                            <span class="fw-bold text-muted text-14">{{ item.count }} lần</span>
+                        </div>
+                        <div class="progress progress-sm" style="height: 8px;">
+                            <div 
+                                class="progress-bar bg-primary" 
+                                role="progressbar" 
+                                [style.width.%]="stats.totalAll > 0 ? (item.count / stats.totalAll) * 100 : 0" 
+                                [attr.aria-valuenow]="item.count" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="col-md-6 mb-25">
+        <mat-card class="tagus-card h-100">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Hướng dẫn xử lý sự cố</h5>
+            </mat-card-header>
+            <mat-card-content class="pt-20">
+                <div class="instruction-box bg-light rounded p-15 mb-15" style="border-left: 4px solid var(--primaryColor);">
+                    <h6 class="fw-bold text-primary mb-5"><i class="ri-shield-user-line me-1"></i> Bảo mật tài khoản</h6>
+                    <p class="text-muted small mb-0">Khi phát hiện UPDATE_ROLES hoặc DELETE từ IP lạ, nên khóa tài khoản và mở chi tiết log để xem payload (New values).</p>
+                </div>
+                <div class="instruction-box bg-light rounded p-15 mb-15" style="border-left: 4px solid var(--successColor);">
+                    <h6 class="fw-bold text-success mb-5"><i class="ri-checkbox-circle-line me-1"></i> Tra cứu khóa học / user</h6>
+                    <p class="text-muted small mb-0">Lọc loại thực thể <strong>Course</strong> hoặc <strong>User</strong> với hành động <strong>DELETE</strong> / <strong>UPDATE_STATUS</strong> để xác định người thao tác.</p>
+                </div>
+                <div class="instruction-box bg-light rounded p-15" style="border-left: 4px solid var(--warningColor);">
+                    <h6 class="fw-bold text-warning mb-5"><i class="ri-key-2-line me-1"></i> Thất bại đăng nhập</h6>
+                    <p class="text-muted small mb-0">Lọc hành động <strong>LOGIN_FAILED</strong> hoặc tìm theo IP / email. Status 401 lặp lại có thể là dò mật khẩu.</p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<!-- Modal Chi tiết Audit Log -->
+<ng-template #detailDialog>
+    <div class="create-dialog-box scrollable-dialog" style="max-height: 90vh; overflow-y: auto;">
+        <div class="title d-flex align-items-center justify-content-space-between">
+            <h4 class="mb-0 d-flex align-items-center">
+                <i class="ri-file-search-line me-2 text-primary"></i> Chi tiết Audit Log #{{ selectedLog?.Id }}
+            </h4>
+            <button class="close-btn bg-transparent p-0 border-none" (click)="closeDetail()"><i class="flaticon-close"></i></button>
+        </div>
+        <form>
+            <div class="dialog-content" *ngIf="detailLoading">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <div class="text-muted">Đang tải dữ liệu chi tiết...</div>
+                </div>
+            </div>
+
+            <div class="dialog-content" *ngIf="!detailLoading && selectedLog">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5 text-uppercase small">Người thực hiện</label>
+                            <div class="d-flex align-items-center" style="height: 55px;">
+                                <div class="avatar-circle-sm me-2 bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%;">
+                                    <i class="ri-user-line text-dark" style="font-size: 20px;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0">{{ selectedLog.UserName || 'Khách / Hệ thống' }}</h6>
+                                    <span class="small text-muted" *ngIf="selectedLog.UserEmail">{{ selectedLog.UserEmail }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5 text-uppercase small">Hành động & Thực thể</label>
+                            <div class="d-flex align-items-center" style="height: 55px;">
+                                <span class="badge rounded-pill px-3 py-2 text-11 me-2" [ngClass]="getActionClass(selectedLog.Action)">
+                                    {{ selectedLog.Action }}
+                                </span>
+                                <span class="fw-bold text-dark">{{ selectedLog.EntityType }} (ID: {{ selectedLog.EntityId || 'N/A' }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row border-top pt-20 mt-10">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5 small">IP Address</label>
+                            <div class="d-flex align-items-center" style="height: 55px;">
+                                <strong class="text-dark">{{ selectedLog.IpAddress || '—' }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5 small">HTTP Method & Status</label>
+                            <div class="d-flex align-items-center" style="height: 55px;">
+                                <code class="text-primary fw-bold me-2">{{ selectedLog.HttpMethod }}</code>
+                                <span class="badge" [ngClass]="getStatusClass(selectedLog.StatusCode)">{{ selectedLog.StatusCode }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-5 small">Endpoint</label>
+                            <div class="d-flex align-items-center" style="height: 55px;">
+                                <span class="text-dark text-truncate d-inline-block w-100" [title]="selectedLog.Endpoint">{{ selectedLog.Endpoint || '—' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Agent -->
+                <div class="form-group mb-25">
+                    <label class="d-block fw-semibold text-muted mb-5 small">User Agent (Thiết bị & Trình duyệt)</label>
+                    <div class="bg-light rounded p-15 text-muted small font-family-mono">
+                        {{ selectedLog.UserAgent || '—' }}
+                    </div>
+                </div>
+
+                <!-- JSON Diffs -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-10 small">Dữ liệu trước (Old values)</label>
+                            <pre class="bg-dark text-light p-15 rounded text-12 font-family-mono border-0 overflow-auto" style="max-height: 250px; margin: 0;">{{ formatJson(selectedLog.OldValues) }}</pre>
+                            <span class="small text-muted d-block mt-5" *ngIf="!selectedLog.OldValues">* Snapshot trước thay đổi sẽ bổ sung ở bản sau.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="d-block fw-semibold text-muted mb-10 small text-success">Dữ liệu mới (New values)</label>
+                            <pre class="bg-dark text-light p-15 rounded text-12 font-family-mono border-0 overflow-auto" style="max-height: 250px; margin: 0;">{{ formatJson(selectedLog.NewValues) }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-end pt-10 border-top mt-20">
+                <button type="button" class="gray" (click)="closeDetail()"><i class="ri-close-fill"></i> Đóng</button>
+            </div>
+        </form>
+    </div>
+</ng-template>

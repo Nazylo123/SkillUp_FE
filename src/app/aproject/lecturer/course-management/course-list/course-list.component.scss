@@ -226,3 +226,22 @@ tr.example-element-row:not(.example-expanded-row):active {
 ::ng-deep .mat-mdc-dialog-surface {
   overflow-x: hidden;
 }
+
+.materials-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 8px;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  vertical-align: middle;
+
+  i {
+    font-size: 12px;
+  }
+}

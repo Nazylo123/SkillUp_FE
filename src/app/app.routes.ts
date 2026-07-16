@@ -1,179 +1,321 @@
 import { Routes } from '@angular/router';
-import { User } from './aproject/user/user.component';
-import { Home } from './aproject/user/home/home.component';
-import { MyCoursesComponent } from './aproject/user/my-courses/my-courses.component';
-import { CourseDetailComponent } from './aproject/user/course-detail/course-detail.component';
-import { Admin } from './aproject/admin/admin.component';
-import { AdminDashboard } from './aproject/admin/admin-dashboard/admin-dashboard.component';
-import { AdminUserManagement } from './aproject/admin/user-management/user-management.component';
-import { AdminUserList } from './aproject/admin/user-management/user-list/user-list.component';
-import { AdminUserDetail } from './aproject/admin/user-management/user-detail/user-detail.component';
-import { AdminCourseManagement } from './aproject/admin/course-management/course-management.component';
-import { AdminCourseList } from './aproject/admin/course-management/course-list/course-list.component';
-import { Manager } from './aproject/manager/manager.component';
-import { ManagerDashboard } from './aproject/manager/manager-dashboard/manager-dashboard.component';
-import { ManagerUserManagement } from './aproject/manager/manager-user/manager-user.component';
-import { ManagerEmployee } from './aproject/manager/manager-user/manager-employee/manager-employee.component';
-import { ManagerLecturer } from './aproject/manager/manager-user/manager-lecturer/manager-lecturer.component';
-import { ManagerUserDetail } from './aproject/manager/manager-user/user-detail/user-detail.component';
-import { ManagerCourseManagement } from './aproject/manager/manager-course/manager-course.component';
-import { ManagerCourseList } from './aproject/manager/manager-course/course-list/course-list.component';
-import { ManagerCourseDetail } from './aproject/manager/manager-course/course-detail/course-detail.component';
-import { Lecturer } from './aproject/lecturer/lecturer.component';
-import { LecturerCourseList } from './aproject/lecturer/course-management/course-list/course-list.component';
-import { LecturerCourseManagement } from './aproject/lecturer/course-management/course-management.component';
-import { LecturerCourseDetail } from './aproject/lecturer/course-management/course-detail-lesson-list/course-detail.component';
-import { LecturerDashboardComponent } from './aproject/lecturer/lecturer-dashboard/lecturer-dashboard.component';
-import { NotFoundComponent } from './common/not-found/not-found.component';
-import { ProfileComponent } from './common/profile/profile.component';
-import { SecurityComponent } from './common/security/security.component';
-import { CourseLearnComponent } from './aproject/user/course-learn/course-learn.component';
-import { LoginComponent } from './common/authentication/login/login.component';
-import { ForgotPasswordComponent } from './common/authentication/forgot-password/forgot-password.component';
-import { QuizCreatorComponent } from './aproject/lecturer/course-management/quiz-creator/quiz-creator.component';
-import { QuizListComponent } from './aproject/lecturer/course-management/quiz-list/quiz-list.component';
-import { QuizComponent } from './aproject/user/quiz/quiz.component';
-import { ChatComponent } from './aproject/user/chat/chat.component';
-import { ManagerChatComponent } from './aproject/manager/manager-chat/manager-chat.component';
-import { MentorComponent } from './aproject/mentor/mentor.component';
-import { RoadmapFormComponent } from './aproject/manager/manager-roadmap/roadmap-form/roadmap-form.component';
-import { RoadmapDetailComponent } from './aproject/manager/manager-roadmap/roadmap-detail/roadmap-detail.component';
-import { ManagerRoadmapComponent } from './aproject/manager/manager-roadmap/manager-roadmap/manager-roadmap.component';
-import { ManagerLearningPathComponent } from './aproject/manager/manager-learning-path/manager-learning-path/manager-learning-path.component';
-import { LearningPathFormComponent } from './aproject/manager/manager-learning-path/learning-path-form/learning-path-form.component';
-import { LearningPathDetailComponent as ManagerLearningPathDetailComponent } from './aproject/manager/manager-learning-path/learning-path-detail/learning-path-detail.component';
-import { RoadMap } from './aproject/user/roadmap/roadmap-detail/roadmap.component';
-import { RoadmapListComponent } from './aproject/user/roadmap/roadmap-list/roadmap-list.component';
-import { LearningPathListComponent as UserLearningPathListComponent } from './aproject/user/learning-path/learning-path-list/learning-path-list.component';
-import { LearningPathDetail as UserLearningPathDetailComponent } from './aproject/user/learning-path/learning-path-detail/learning-path-detail.component';
-import { SettingsComponent } from './aproject/admin/settings/settings';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
-import { ManagerReportUserComponent } from './aproject/manager/manager-report-user/manager-report-user.component';
-import { ManagerCourseTypeComponent } from './aproject/manager/manager-setting/manager-course-type/manager-course-type.component';
-import { ManagerUserLevelComponent } from './aproject/manager/manager-setting/manager-user-level/manager-user-level.component';
-import { ManagerRagUploadComponent } from './aproject/manager/manager-rag-upload/manager-rag-upload.component';
-import { ManagerCoursePerformanceComponent } from './aproject/manager/manager-course-performance/manager-course-performance.component';
 
 export const routes: Routes = [
     //project
-    {path: 'authentication/login', component: LoginComponent},
-    {path: 'authentication/forgot-password', component: ForgotPasswordComponent},
+    {
+        path: 'authentication/login',
+        loadComponent: () => import('./common/authentication/login/login.component').then(m => m.LoginComponent)
+    },
+    {
+        path: 'authentication/forgot-password',
+        loadComponent: () => import('./common/authentication/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+    },
     {path: 'login', redirectTo: 'authentication/login', pathMatch: 'full'},
     {
-        path: '', component: User,
+        path: '',
+        loadComponent: () => import('./aproject/user/user.component').then(m => m.User),
         canActivate: [authGuard, roleGuard],
         data: { roles: ['Employee'] },
         children: [
-            {path: '', component: Home},
-            {path: 'profile', component: ProfileComponent},
-            {path: 'my-courses', component: MyCoursesComponent},
-            {path: 'security', component: SecurityComponent},
-            {path: 'course-detail/:id', component: CourseDetailComponent},
-            {path: 'course/learn/:id', component: CourseLearnComponent},
-            {path: 'quiz/:id', component: QuizComponent},
-            {path: 'roadmap', component: RoadmapListComponent},
-            {path: 'roadmap/:id', component: RoadMap},
-            {path: 'learning-paths', component: UserLearningPathListComponent},
-            {path: 'learning-path/:id', component: UserLearningPathDetailComponent},
-            {path: 'chat', component: ChatComponent},
+            {
+                path: '',
+                loadComponent: () => import('./aproject/user/home/home.component').then(m => m.Home)
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./common/profile/profile.component').then(m => m.ProfileComponent)
+            },
+            {
+                path: 'my-courses',
+                loadComponent: () => import('./aproject/user/my-courses/my-courses.component').then(m => m.MyCoursesComponent)
+            },
+            {
+                path: 'security',
+                loadComponent: () => import('./common/security/security.component').then(m => m.SecurityComponent)
+            },
+            {
+                path: 'course-detail/:id',
+                loadComponent: () => import('./aproject/user/course-detail/course-detail.component').then(m => m.CourseDetailComponent)
+            },
+            {
+                path: 'course/learn/:id',
+                loadComponent: () => import('./aproject/user/course-learn/course-learn.component').then(m => m.CourseLearnComponent)
+            },
+            {
+                path: 'quiz/:id',
+                loadComponent: () => import('./aproject/user/quiz/quiz.component').then(m => m.QuizComponent)
+            },
+            {
+                path: 'roadmap',
+                loadComponent: () => import('./aproject/user/roadmap/roadmap-list/roadmap-list.component').then(m => m.RoadmapListComponent)
+            },
+            {
+                path: 'roadmap/:id',
+                loadComponent: () => import('./aproject/user/roadmap/roadmap-detail/roadmap.component').then(m => m.RoadMap)
+            },
+            {
+                path: 'learning-paths',
+                loadComponent: () => import('./aproject/user/learning-path/learning-path-list/learning-path-list.component').then(m => m.LearningPathListComponent)
+            },
+            {
+                path: 'learning-path/:id',
+                loadComponent: () => import('./aproject/user/learning-path/learning-path-detail/learning-path-detail.component').then(m => m.LearningPathDetail)
+            },
+            {
+                path: 'chat',
+                loadComponent: () => import('./aproject/user/chat/chat.component').then(m => m.ChatComponent)
+            },
         ]
     },
     {
         path:'admin', 
-        component: Admin,
+        loadComponent: () => import('./aproject/admin/admin.component').then(m => m.Admin),
         canActivate: [authGuard, roleGuard],
         data: { roles: ['Admin'] },
         children: [
-            {path: '', component: AdminDashboard},
-            {path: 'profile', component: ProfileComponent},
-            {path: 'security', component: SecurityComponent},
-            {path: 'users', component: AdminUserManagement, 
+            {
+                path: '',
+                loadComponent: () => import('./aproject/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboard)
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./common/profile/profile.component').then(m => m.ProfileComponent)
+            },
+            {
+                path: 'security',
+                loadComponent: () => import('./common/security/security.component').then(m => m.SecurityComponent)
+            },
+            {
+                path: 'users',
+                loadComponent: () => import('./aproject/admin/user-management/user-management.component').then(m => m.AdminUserManagement), 
                 children:[
-                    {path: '', component: AdminUserList},
-                    {path: ':id', component: AdminUserDetail}
+                    {
+                        path: '',
+                        loadComponent: () => import('./aproject/admin/user-management/user-list/user-list.component').then(m => m.AdminUserList)
+                    },
+                    {
+                        path: ':id',
+                        loadComponent: () => import('./aproject/admin/user-management/user-detail/user-detail.component').then(m => m.AdminUserDetail)
+                    }
                 ]
             },
-            {path: 'courses', component: AdminCourseManagement,
+            {
+                path: 'courses',
+                loadComponent: () => import('./aproject/admin/course-management/course-management.component').then(m => m.AdminCourseManagement),
                 children: [
-                    {path: '', component: AdminCourseList}
+                    {
+                        path: '',
+                        loadComponent: () => import('./aproject/admin/course-management/course-list/course-list.component').then(m => m.AdminCourseList)
+                    }
                 ]
             },
-            {path: 'knowledge-base', component: ManagerRagUploadComponent},
-            {path: 'settings', component: SettingsComponent}
+            {
+                path: 'knowledge-base',
+                loadComponent: () => import('./aproject/manager/manager-rag-upload/manager-rag-upload.component').then(m => m.ManagerRagUploadComponent)
+            },
+            {
+                path: 'settings',
+                loadComponent: () => import('./aproject/admin/settings/settings').then(m => m.SettingsComponent)
+            },
+            {
+                path: 'audit-log',
+                loadComponent: () => import('./aproject/admin/audit-log/audit-log.component').then(m => m.AuditLogComponent)
+            }
         ]
     },
     {
         path: 'manager',
-        component: Manager,
+        loadComponent: () => import('./aproject/manager/manager.component').then(m => m.Manager),
         canActivate: [authGuard, roleGuard],
         data: { roles: ['Manager'] },
         children: [
-            {path: '', component: ManagerDashboard},
-            {path: 'profile', component: ProfileComponent},
-            {path: 'security', component: SecurityComponent},
-            {path: 'chat', component: ManagerChatComponent},
-            {path: 'users', component: ManagerUserManagement,
+            {
+                path: '',
+                loadComponent: () => import('./aproject/manager/manager-dashboard/manager-dashboard.component').then(m => m.ManagerDashboard)
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./common/profile/profile.component').then(m => m.ProfileComponent)
+            },
+            {
+                path: 'security',
+                loadComponent: () => import('./common/security/security.component').then(m => m.SecurityComponent)
+            },
+            {
+                path: 'chat',
+                loadComponent: () => import('./aproject/manager/manager-chat/manager-chat.component').then(m => m.ManagerChatComponent)
+            },
+            {
+                path: 'users',
+                loadComponent: () => import('./aproject/manager/manager-user/manager-user.component').then(m => m.ManagerUserManagement),
                 children: [
-                    {path: 'employee', component: ManagerEmployee},
-                    {path: 'lecturer', component: ManagerLecturer},
-                    {path: ':id', component: ManagerUserDetail},
+                    {
+                        path: 'employee',
+                        loadComponent: () => import('./aproject/manager/manager-user/manager-employee/manager-employee.component').then(m => m.ManagerEmployee)
+                    },
+                    {
+                        path: 'lecturer',
+                        loadComponent: () => import('./aproject/manager/manager-user/manager-lecturer/manager-lecturer.component').then(m => m.ManagerLecturer)
+                    },
+                    {
+                        path: 'mentor',
+                        loadComponent: () => import('./aproject/manager/manager-user/manager-mentor/manager-mentor.component').then(m => m.ManagerMentorComponent)
+                    },
+                    {
+                        path: ':id',
+                        loadComponent: () => import('./aproject/manager/manager-user/user-detail/user-detail.component').then(m => m.ManagerUserDetail)
+                    },
                 ]
             },
-            {path: 'courses', component: ManagerCourseManagement,
+            {
+                path: 'courses',
+                loadComponent: () => import('./aproject/manager/manager-course/manager-course.component').then(m => m.ManagerCourseManagement),
                 children: [
-                    {path: '', component: ManagerCourseList},
-                    {path: ':id', component: ManagerCourseDetail}
+                    {
+                        path: '',
+                        loadComponent: () => import('./aproject/manager/manager-course/course-list/course-list.component').then(m => m.ManagerCourseList)
+                    },
+                    {
+                        path: ':id',
+                        loadComponent: () => import('./aproject/manager/manager-course/course-detail/course-detail.component').then(m => m.ManagerCourseDetail)
+                    }
                 ]
             },
-            {path: 'roadmaps', component: ManagerRoadmapComponent},
-            {path: 'roadmaps/create', component: RoadmapFormComponent},
-            {path: 'roadmaps/edit/:id', component: RoadmapFormComponent},
-            {path: 'roadmaps/detail/:id', component: RoadmapDetailComponent},
-            {path: 'learning-paths', component: ManagerLearningPathComponent},
-            {path: 'learning-paths/create', component: LearningPathFormComponent},
-            {path: 'learning-paths/edit/:id', component: LearningPathFormComponent},
-            {path: 'learning-paths/detail/:id', component: ManagerLearningPathDetailComponent},
-            {path: 'report-user', component: ManagerReportUserComponent},
-            {path: 'knowledge-base', component: ManagerRagUploadComponent},
-            {path: 'course-type', component: ManagerCourseTypeComponent},
-            {path: 'user-level', component: ManagerUserLevelComponent},
-            {path: 'course-performance', component: ManagerCoursePerformanceComponent},
+            {
+                path: 'roadmaps',
+                loadComponent: () => import('./aproject/manager/manager-roadmap/manager-roadmap/manager-roadmap.component').then(m => m.ManagerRoadmapComponent)
+            },
+            {
+                path: 'roadmaps/create',
+                loadComponent: () => import('./aproject/manager/manager-roadmap/roadmap-form/roadmap-form.component').then(m => m.RoadmapFormComponent)
+            },
+            {
+                path: 'roadmaps/edit/:id',
+                loadComponent: () => import('./aproject/manager/manager-roadmap/roadmap-form/roadmap-form.component').then(m => m.RoadmapFormComponent)
+            },
+            {
+                path: 'roadmaps/detail/:id',
+                loadComponent: () => import('./aproject/manager/manager-roadmap/roadmap-detail/roadmap-detail.component').then(m => m.RoadmapDetailComponent)
+            },
+            {
+                path: 'learning-paths',
+                loadComponent: () => import('./aproject/manager/manager-learning-path/manager-learning-path/manager-learning-path.component').then(m => m.ManagerLearningPathComponent)
+            },
+            {
+                path: 'learning-paths/create',
+                loadComponent: () => import('./aproject/manager/manager-learning-path/learning-path-form/learning-path-form.component').then(m => m.LearningPathFormComponent)
+            },
+            {
+                path: 'learning-paths/edit/:id',
+                loadComponent: () => import('./aproject/manager/manager-learning-path/learning-path-form/learning-path-form.component').then(m => m.LearningPathFormComponent)
+            },
+            {
+                path: 'learning-paths/detail/:id',
+                loadComponent: () => import('./aproject/manager/manager-learning-path/learning-path-detail/learning-path-detail.component').then(m => m.LearningPathDetailComponent)
+            },
+            {
+                path: 'report-user',
+                loadComponent: () => import('./aproject/manager/manager-report-user/manager-report-user.component').then(m => m.ManagerReportUserComponent)
+            },
+            {
+                path: 'knowledge-base',
+                loadComponent: () => import('./aproject/manager/manager-rag-upload/manager-rag-upload.component').then(m => m.ManagerRagUploadComponent)
+            },
+            {
+                path: 'course-type',
+                loadComponent: () => import('./aproject/manager/manager-setting/manager-course-type/manager-course-type.component').then(m => m.ManagerCourseTypeComponent)
+            },
+            {
+                path: 'user-level',
+                loadComponent: () => import('./aproject/manager/manager-setting/manager-user-level/manager-user-level.component').then(m => m.ManagerUserLevelComponent)
+            },
+            {
+                path: 'course-performance',
+                loadComponent: () => import('./aproject/manager/manager-course-performance/manager-course-performance.component').then(m => m.ManagerCoursePerformanceComponent)
+            },
+            {
+                path: 'materials',
+                loadComponent: () => import('./aproject/manager/manager-materials/manager-materials.component').then(m => m.ManagerMaterialsComponent)
+            },
         ]
     },
     {
         path: 'lecturer',
-        component: Lecturer,
+        loadComponent: () => import('./aproject/lecturer/lecturer.component').then(m => m.Lecturer),
         canActivate: [authGuard, roleGuard],
         data: { roles: ['Lecturer'] },
         children: [
-            {path: 'dashboard', component: LecturerDashboardComponent},
-            {path: '', component: LecturerCourseList},
-            {path: 'profile', component: ProfileComponent},
-            {path: 'security', component: SecurityComponent},
-            {path: 'courses', component: LecturerCourseManagement,
+            {
+                path: 'dashboard',
+                loadComponent: () => import('./aproject/lecturer/lecturer-dashboard/lecturer-dashboard.component').then(m => m.LecturerDashboardComponent)
+            },
+            {
+                path: '',
+                loadComponent: () => import('./aproject/lecturer/course-management/course-list/course-list.component').then(m => m.LecturerCourseList)
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./common/profile/profile.component').then(m => m.ProfileComponent)
+            },
+            {
+                path: 'security',
+                loadComponent: () => import('./common/security/security.component').then(m => m.SecurityComponent)
+            },
+            {
+                path: 'courses',
+                loadComponent: () => import('./aproject/lecturer/course-management/course-management.component').then(m => m.LecturerCourseManagement),
                 children: [
-                    {path: '', component:LecturerCourseList},
-                    {path: ':id', component:LecturerCourseDetail},
-                    {path: ':id/quiz', component:QuizCreatorComponent},
+                    {
+                        path: '',
+                        loadComponent: () => import('./aproject/lecturer/course-management/course-list/course-list.component').then(m => m.LecturerCourseList)
+                    },
+                    {
+                        path: ':id',
+                        loadComponent: () => import('./aproject/lecturer/course-management/course-detail-lesson-list/course-detail.component').then(m => m.LecturerCourseDetail)
+                    },
+                    {
+                        path: ':id/quiz',
+                        loadComponent: () => import('./aproject/lecturer/course-management/quiz-creator/quiz-creator.component').then(m => m.QuizCreatorComponent)
+                    },
                 ]
             },
-            {path: 'quizzes', component: QuizListComponent},
+            {
+                path: 'quizzes',
+                loadComponent: () => import('./aproject/lecturer/course-management/quiz-list/quiz-list.component').then(m => m.QuizListComponent)
+            },
         ]
     },
     {
         path: 'mentor',
-        component: MentorComponent,
+        loadComponent: () => import('./aproject/mentor/mentor.component').then(m => m.MentorComponent),
         canActivate: [authGuard, roleGuard],
         data: { roles: ['Mentor'] },
         children: [
             {path: '', redirectTo: 'chat', pathMatch: 'full'},
-            {path: 'chat', component: ChatComponent},
-            {path: 'profile', component: ProfileComponent},
-            {path: 'security', component: SecurityComponent},
+            {
+                path: 'chat',
+                loadComponent: () => import('./aproject/user/chat/chat.component').then(m => m.ChatComponent)
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./common/profile/profile.component').then(m => m.ProfileComponent)
+            },
+            {
+                path: 'security',
+                loadComponent: () => import('./common/security/security.component').then(m => m.SecurityComponent)
+            },
+            {
+                path: 'materials',
+                loadComponent: () => import('./aproject/mentor/mentor-materials/mentor-materials.component').then(m => m.MentorMaterialsComponent)
+            },
         ]
     },
     //endProject
 
-    {path: '**', component: NotFoundComponent} // This line will remain down from the whole pages component list
+    {
+        path: '**',
+        loadComponent: () => import('./common/not-found/not-found.component').then(m => m.NotFoundComponent)
+    }
 ];

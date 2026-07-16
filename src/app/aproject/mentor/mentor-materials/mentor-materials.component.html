@@ -1,0 +1,182 @@
+<!-- Breadcrumb -->
+<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-space-between">
+  <h5 class="mb-0">📚 Học Liệu Của Tôi</h5>
+  <div class="d-flex align-items-center gap-4 mt-2 mt-md-0">
+    <span class="text-muted lm-count-text" *ngIf="!isLoading">
+      <i class="ri-folders-line"></i> {{ materials.length }} học liệu
+    </span>
+    <button class="lm-btn lm-btn-primary" (click)="openUploadModal()">
+      <i class="ri-upload-cloud-2-line"></i> Upload Học Liệu
+    </button>
+  </div>
+</div>
+
+<!-- Success Alert -->
+<div class="lm-alert lm-alert-success" *ngIf="successMessage">
+  <i class="ri-checkbox-circle-line"></i> {{ successMessage }}
+</div>
+
+<!-- Error Alert -->
+<div class="lm-alert lm-alert-danger" *ngIf="errorMessage && !showUploadModal">
+  <i class="ri-error-warning-line"></i> {{ errorMessage }}
+</div>
+
+<!-- Loading Skeleton -->
+<div class="lm-skeleton-wrapper" *ngIf="isLoading">
+  <div class="lm-skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+</div>
+
+<!-- Empty State -->
+<div class="lm-empty-state" *ngIf="!isLoading && materials.length === 0">
+  <div class="lm-empty-icon">📭</div>
+  <h4>Chưa có học liệu nào</h4>
+  <p>Bắt đầu bằng cách upload học liệu đầu tiên của bạn!</p>
+  <button class="lm-btn lm-btn-primary" (click)="openUploadModal()">
+    <i class="ri-upload-cloud-2-line"></i> Upload Ngay
+  </button>
+</div>
+
+<!-- Materials Grid -->
+<div class="lm-materials-grid" *ngIf="!isLoading && materials.length > 0">
+  <div class="lm-material-card" *ngFor="let material of materials">
+    <!-- File Type Badge -->
+    <div class="lm-file-badge" [style.background-color]="getFileTypeColor(material.fileType)">
+      {{ material.fileType }}
+    </div>
+
+    <!-- Card Body -->
+    <div class="lm-card-body">
+      <div class="lm-file-icon-wrapper">
+        <i [class]="getFileIcon(material.fileType)" [style.color]="getFileTypeColor(material.fileType)"></i>
+      </div>
+
+      <div class="lm-card-info">
+        <h6 class="lm-material-title" [title]="material.title">{{ material.title }}</h6>
+        <p class="lm-material-desc" *ngIf="material.description">{{ material.description }}</p>
+        <div class="lm-meta">
+          <span><i class="ri-file-line"></i> {{ material.fileName }}</span>
+          <span><i class="ri-hard-drive-2-line"></i> {{ material.fileSizeFormatted }}</span>
+          <span><i class="ri-time-line"></i> {{ material.createdAt | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Actions -->
+    <div class="lm-card-actions">
+      <button class="lm-btn-icon lm-btn-download" (click)="downloadMaterial(material.learningMaterialId, material.fileName)" title="Tải xuống">
+        <i class="ri-download-2-line"></i>
+      </button>
+      <button class="lm-btn-icon lm-btn-delete" (click)="confirmDelete(material)"
+        [disabled]="deletingId === material.learningMaterialId" title="Xóa">
+        <i class="ri-delete-bin-6-line" *ngIf="deletingId !== material.learningMaterialId"></i>
+        <span class="lm-spinner" *ngIf="deletingId === material.learningMaterialId"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== UPLOAD MODAL ===================== -->
+<div class="lm-modal-overlay" *ngIf="showUploadModal" (click)="closeUploadModal()">
+  <div class="lm-modal" (click)="$event.stopPropagation()">
+    <div class="lm-modal-header">
+      <h5><i class="ri-upload-cloud-2-line"></i> Upload Học Liệu Mới</h5>
+      <button class="lm-modal-close" (click)="closeUploadModal()" [disabled]="isUploading">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+
+    <div class="lm-modal-body">
+      <!-- Error in modal -->
+      <div class="lm-alert lm-alert-danger mb-16" *ngIf="errorMessage">
+        <i class="ri-error-warning-line"></i> {{ errorMessage }}
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div
+        class="lm-dropzone"
+        [class.drag-over]="isDragOver"
+        [class.has-file]="selectedFile"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="fileInput.click()"
+      >
+        <input #fileInput type="file" hidden
+          [accept]="allowedExtensions.join(',')"
+          (change)="onFileSelected($event)">
+
+        <div *ngIf="!selectedFile" class="lm-dropzone-placeholder">
+          <div class="lm-drop-icon">☁️</div>
+          <p><strong>Kéo thả file vào đây</strong> hoặc click để chọn</p>
+          <small>Hỗ trợ: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT, RTF — Tối đa 100MB</small>
+        </div>
+
+        <div *ngIf="selectedFile" class="lm-dropzone-selected">
+          <div class="lm-selected-icon">✅</div>
+          <p><strong>{{ selectedFile.name }}</strong></p>
+          <small>{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</small>
+          <span class="lm-change-link">Click để thay đổi</span>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="lm-form-group">
+        <label class="lm-label">Tiêu đề học liệu <span class="text-danger">*</span></label>
+        <input
+          class="lm-input"
+          type="text"
+          [(ngModel)]="uploadTitle"
+          placeholder="Nhập tiêu đề cho học liệu..."
+          [disabled]="isUploading"
+          maxlength="255">
+        <small class="lm-char-count">{{ uploadTitle.length }}/255</small>
+      </div>
+
+      <!-- Description -->
+      <div class="lm-form-group">
+        <label class="lm-label">Mô tả <span class="text-muted">(tùy chọn)</span></label>
+        <textarea
+          class="lm-input lm-textarea"
+          [(ngModel)]="uploadDescription"
+          placeholder="Mô tả ngắn về nội dung học liệu..."
+          [disabled]="isUploading"
+          rows="3"
+          maxlength="1000">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="lm-modal-footer">
+      <button class="lm-btn lm-btn-secondary" (click)="closeUploadModal()" [disabled]="isUploading">
+        Hủy
+      </button>
+      <button
+        class="lm-btn lm-btn-primary"
+        (click)="submitUpload()"
+        [disabled]="!selectedFile || !uploadTitle.trim() || isUploading">
+        <span class="lm-spinner-sm" *ngIf="isUploading"></span>
+        <i class="ri-upload-2-line" *ngIf="!isUploading"></i>
+        {{ isUploading ? 'Đang upload...' : 'Upload' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DELETE CONFIRM MODAL ===================== -->
+<div class="lm-modal-overlay" *ngIf="showDeleteConfirm" (click)="cancelDelete()">
+  <div class="lm-modal lm-modal-sm" (click)="$event.stopPropagation()">
+    <div class="lm-modal-header">
+      <h5><i class="ri-delete-bin-6-line" style="color:#e74c3c"></i> Xác nhận xóa</h5>
+    </div>
+    <div class="lm-modal-body">
+      <p>Bạn có chắc chắn muốn xóa học liệu <strong>"{{ materialToDelete?.title }}"</strong>?</p>
+      <p class="text-muted"><small>File sẽ bị xóa vĩnh viễn và không thể khôi phục.</small></p>
+    </div>
+    <div class="lm-modal-footer">
+      <button class="lm-btn lm-btn-secondary" (click)="cancelDelete()">Hủy</button>
+      <button class="lm-btn lm-btn-danger" (click)="doDelete()">
+        <i class="ri-delete-bin-6-line"></i> Xóa
+      </button>
+    </div>
+  </div>
+</div>

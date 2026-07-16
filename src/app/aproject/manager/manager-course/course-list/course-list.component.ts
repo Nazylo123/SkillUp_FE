@@ -55,6 +55,9 @@ export class ManagerCourseList implements AfterViewInit {
     pageSize = 10;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+    statuses: string[] = ['All', 'Draft', 'Pending', 'Approved', 'Rejected'];
+    selectedStatus = 'All';
+
     constructor(private router: Router, private courseService: ApiCourseServices, private snack: MatSnackBar) {}
 
     ngAfterViewInit() {
@@ -77,8 +80,18 @@ export class ManagerCourseList implements AfterViewInit {
         return this.maxLengthText(text) ? text.substring(0, 20) + '...' : text;
     }
 
+    selectStatus(status: string) {
+        this.selectedStatus = status;
+        this.currentPage = 1;
+        if (this.paginator) {
+            this.paginator.pageIndex = 0;
+        }
+        this.loadCourses();
+    }
+
     loadCourses() {
-        this.courseService.getCourseListManager(this.currentPage, this.pageSize, this.searchTerm).subscribe({
+        const statusParam = this.selectedStatus === 'All' ? undefined : this.selectedStatus;
+        this.courseService.getCourseListManager(this.currentPage, this.pageSize, this.searchTerm, undefined, statusParam).subscribe({
             next: (response: any) => {
                 this.data.data = response.items || [];
                 this.totalItems = response.total || 0;

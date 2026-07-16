@@ -16,6 +16,7 @@ export interface Course {
     createdAt: string;
     enrollmentCount?: number;
     lessons: Lesson[];
+    learningMaterialCount?: number;
 }
 
 export interface CoursePaginatedResponse<T> {
@@ -59,9 +60,13 @@ export interface CourseDetail {
     createdAt: string;
     deadline: string;
     isEnrolled: boolean;
+    mentorId?: number;
+    mentorName?: string;
+    mentorAvatarUrl?: string;
     lessons: Lesson[];
     quiz: Quiz;
     documents: DocumentItem[];
+    learningMaterials?: any[];
 }
 
 export interface CourseCreateEdit {
@@ -225,4 +230,40 @@ export interface CourseEnrollment {
     progressPct: number;
     isEnrolled: boolean;
     status: string;
+}
+
+export interface CourseForManagement {
+    courseId: number;
+    name: string;
+    description: string;
+    status: string;
+    courseType?: string;
+    courseTypeId?: number;
+    targetLevel?: string;
+    targetLevelId?: number;
+    duration?: number;
+    createdBy: number;
+    createdByName: string;
+    createdAt: string;
+    enrollmentCount: number;
+    mentorId?: number;
+    mentorName?: string;
+    mentorAvatarUrl?: string;
+}
+
+export interface MentorWorkload {
+    mentorId: number;
+    fullName: string;
+    email?: string;
+    avatarUrl?: string;
+    assignedCourseCount: number;
+    totalStudents: number;
+    assignedCourses: AssignedCourse[];
+}
+
+export interface AssignedCourse {
+    courseId: number;
+    courseName: string;
+    status: string;
+    studentCount: number;
 }

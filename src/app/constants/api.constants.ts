@@ -21,6 +21,8 @@ const BASE_POINTS = {
   LEARNING_PATH_ENROLLMENT: BASE_URLS.SKILL_UP + "/learning-path-enrollments",
   DASHBOARD: BASE_URLS.SKILL_UP + "/Dashboard",
   SETTINGS: BASE_URLS.SKILL_UP + "/settings",
+  LEARNING_MATERIAL: BASE_URLS.SKILL_UP + "/LearningMaterials",
+  AUDIT_LOG: BASE_URLS.SKILL_UP + "/AuditLog",
 }
 
 export const API_URLS = {
@@ -183,4 +185,20 @@ export const API_URLS = {
   // Lecturer KPI & Dashboard
   GET_LECTURER_STATS: BASE_POINTS.DASHBOARD + "/manager/lecturer-stats",
   GET_MY_LECTURER_DASHBOARD: BASE_POINTS.DASHBOARD + "/lecturer/my-stats",
+
+  // Learning Materials (Mentor & Manager)
+  LM_UPLOAD: BASE_POINTS.LEARNING_MATERIAL + "/upload",                        // POST - Mentor upload
+  LM_GET_MY: BASE_POINTS.LEARNING_MATERIAL + "/my",                            // GET  - Mentor: danh sách của mình
+  LM_DELETE: BASE_POINTS.LEARNING_MATERIAL,                                     // DELETE /{id} - Mentor
+  LM_ALL_BY_MENTOR: BASE_POINTS.LEARNING_MATERIAL + "/all-by-mentor",          // GET  - Manager: tất cả grouped
+  LM_ASSIGN: BASE_POINTS.LEARNING_MATERIAL,                                     // POST /{id}/assign - Manager gán
+  LM_UNASSIGN: BASE_POINTS.LEARNING_MATERIAL,                                   // DELETE /{id}/unassign/{courseId}
+  LM_BY_COURSE: BASE_POINTS.LEARNING_MATERIAL + "/course",                     // GET  /course/{courseId}
+  LM_DOWNLOAD: BASE_POINTS.LEARNING_MATERIAL,                                   // GET  /{id}/download
+
+  // Audit Log (Admin only)
+  AUDIT_LOG: BASE_POINTS.AUDIT_LOG,                          // GET /AuditLog
+  AUDIT_LOG_STATS: BASE_POINTS.AUDIT_LOG + "/stats",         // GET /AuditLog/stats
+  AUDIT_LOG_FILTER_OPTIONS: BASE_POINTS.AUDIT_LOG + "/filter-options", // GET /AuditLog/filter-options
+  AUDIT_LOG_DETAIL: BASE_POINTS.AUDIT_LOG,                   // GET /AuditLog/{id}
 }

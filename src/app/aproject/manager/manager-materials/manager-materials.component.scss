@@ -1,0 +1,313 @@
+// ==================== STAT BADGES ====================
+.mm-stat-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 16px;
+  background: #f0f2ff;
+  border-radius: 10px;
+  .mm-stat-value { font-size: 20px; font-weight: 700; color: #667eea; }
+  .mm-stat-label { font-size: 11px; color: #888; }
+}
+
+// ==================== ALERTS ====================
+.mm-alert {
+  padding: 12px 16px; border-radius: 10px; font-size: 14px;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+  animation: slideDown 0.3s ease;
+  &.mm-alert-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+  &.mm-alert-danger  { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+}
+
+// ==================== SEARCH ====================
+.mm-search-bar {
+  .mm-search-input-wrap {
+    position: relative;
+    .mm-search-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: #adb5bd; font-size: 18px;
+    }
+    .mm-search-input {
+      width: 100%; padding: 11px 44px 11px 44px;
+      border: 1.5px solid #dee2e6; border-radius: 12px;
+      font-size: 14px; outline: none; transition: border-color 0.2s;
+      &:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,.15); }
+    }
+    .mm-clear-btn {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      border: none; background: none; cursor: pointer; color: #adb5bd; font-size: 16px;
+      &:hover { color: #495057; }
+    }
+  }
+}
+
+// ==================== SKELETON ====================
+.mm-skeleton-wrapper { display: flex; flex-direction: column; gap: 20px; }
+.mm-skeleton-group {
+  .mm-skeleton-header {
+    height: 64px; border-radius: 14px 14px 0 0;
+    background: linear-gradient(90deg, #f0f2f5 25%, #e8eaed 50%, #f0f2f5 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite;
+  }
+  .mm-skeleton-body {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    .mm-skeleton-card {
+      height: 60px;
+      background: linear-gradient(90deg, #f8f9fa 25%, #f0f2f5 50%, #f8f9fa 75%);
+      background-size: 200% 100%; animation: shimmer 1.5s infinite;
+    }
+  }
+}
+
+// ==================== EMPTY STATE ====================
+.mm-empty-state {
+  text-align: center; padding: 80px 20px; color: #6c757d;
+  .mm-empty-icon { font-size: 64px; margin-bottom: 16px; }
+  h4 { color: #343a40; margin-bottom: 8px; }
+}
+
+// ==================== ACCORDION ====================
+.mm-accordion-list { display: flex; flex-direction: column; gap: 16px; }
+
+.mm-accordion-group {
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  background: #fff;
+}
+
+.mm-accordion-header {
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  background: linear-gradient(135deg, #667eea08, #764ba208);
+  border-bottom: 1px solid #f0f2f5;
+  transition: background 0.2s;
+  &:hover { background: linear-gradient(135deg, #667eea15, #764ba215); }
+
+  .mm-mentor-info {
+    display: flex; align-items: center; gap: 14px;
+    .mm-mentor-avatar {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff; font-weight: 700; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .mm-mentor-name { font-size: 15px; font-weight: 700; color: #2c3e50; margin: 0 0 2px; }
+    .mm-mentor-email { font-size: 12px; color: #7f8c8d; }
+  }
+
+  .mm-accordion-right {
+    display: flex; align-items: center; gap: 12px;
+    .mm-count-badge {
+      padding: 4px 12px; border-radius: 20px;
+      background: #667eea1a; color: #667eea;
+      font-size: 12px; font-weight: 600;
+    }
+    .mm-arrow { font-size: 20px; color: #adb5bd; transition: transform 0.3s ease; }
+    .mm-arrow-up { transform: rotate(180deg); }
+  }
+}
+
+.mm-accordion-body {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+  &.mm-expanded { max-height: 2000px; }
+}
+
+// ==================== TABLE ====================
+.mm-materials-table-wrap {
+  overflow-x: auto;
+  padding: 0;
+}
+
+.mm-table {
+  width: 100%; border-collapse: collapse;
+  thead tr {
+    background: #f8f9fa;
+    th {
+      padding: 10px 16px; text-align: left;
+      font-size: 12px; font-weight: 700;
+      color: #6c757d; letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+  }
+  tbody tr {
+    border-bottom: 1px solid #f0f2f5;
+    transition: background 0.15s;
+    &:hover { background: #fafbfc; }
+    &:last-child { border-bottom: none; }
+    td { padding: 12px 16px; vertical-align: middle; }
+  }
+
+  .mm-material-name {
+    display: flex; align-items: flex-start; gap: 10px;
+    .mm-file-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .mm-title { display: block; font-size: 13px; font-weight: 600; color: #2c3e50; }
+    .mm-filename { font-size: 11px; color: #adb5bd; }
+  }
+
+  .mm-type-badge {
+    color: #fff; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px; letter-spacing: 0.5px;
+  }
+
+  .mm-size, .mm-date { font-size: 12px; color: #7f8c8d; white-space: nowrap; }
+}
+
+// ==================== ASSIGN TAGS ====================
+.mm-assign-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+
+.mm-course-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px 3px 10px; border-radius: 20px;
+  background: #e8f5e9; color: #2e7d32;
+  font-size: 11px; font-weight: 600;
+  .mm-tag-remove {
+    width: 16px; height: 16px; border: none; border-radius: 50%;
+    background: transparent; cursor: pointer; color: #2e7d32;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; padding: 0; transition: background 0.2s;
+    &:hover { background: #c8e6c9; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+}
+
+.mm-course-tag-sm {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  background: #e8f5e9; color: #2e7d32;
+  font-size: 12px; font-weight: 600; margin: 2px;
+}
+
+.mm-no-assign { font-size: 12px; color: #bdc3c7; font-style: italic; }
+
+// ==================== ACTION BUTTONS ====================
+.mm-actions { display: flex; gap: 6px; }
+
+.mm-btn-action {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 12px; border: none; border-radius: 8px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  &.mm-btn-assign {
+    background: #667eea1a; color: #667eea;
+    &:hover:not(:disabled) { background: #667eea; color: #fff; }
+  }
+  &.mm-btn-download {
+    background: #e8f4fd; color: #2980b9;
+    padding: 6px 10px;
+    &:hover:not(:disabled) { background: #2980b9; color: #fff; }
+  }
+}
+
+// ==================== MODAL ====================
+.mm-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 1050; display: flex; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(4px); animation: fadeIn 0.2s ease;
+}
+
+.mm-modal {
+  background: #fff; border-radius: 20px;
+  width: 100%; max-width: 520px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: slideUp 0.3s ease;
+
+  .mm-modal-header {
+    padding: 20px 24px 16px; border-bottom: 1px solid #f0f2f5;
+    display: flex; align-items: center; justify-content: space-between;
+    h5 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+  }
+  .mm-modal-close {
+    width: 32px; height: 32px; border: none; background: #f0f2f5;
+    border-radius: 8px; cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    &:hover { background: #e2e5ea; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+  .mm-modal-body { padding: 24px; }
+  .mm-modal-footer {
+    padding: 16px 24px 20px; border-top: 1px solid #f0f2f5;
+    display: flex; gap: 10px; justify-content: flex-end;
+  }
+}
+
+.mm-material-preview {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 4px;
+  .mm-prev-icon {
+    width: 50px; height: 50px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .mm-prev-title { font-size: 15px; font-weight: 700; color: #2c3e50; }
+  .mm-prev-meta { font-size: 12px; color: #7f8c8d; }
+  .mm-prev-mentor { font-size: 12px; color: #667eea; margin-top: 2px; }
+}
+
+.mm-divider { border: none; border-top: 1px solid #f0f2f5; margin: 16px 0; }
+
+.mm-form-group { margin-bottom: 16px; }
+.mm-label { display: block; font-size: 13px; font-weight: 600; color: #495057; margin-bottom: 8px; }
+
+.mm-select {
+  width: 100%; padding: 10px 14px; border: 1.5px solid #dee2e6;
+  border-radius: 10px; font-size: 14px; outline: none;
+  transition: border-color 0.2s; background: #fff; cursor: pointer;
+  &:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,.15); }
+  &:disabled { background: #f8f9fa; cursor: not-allowed; }
+}
+
+.mm-loading-courses {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: #7f8c8d; padding: 10px 0;
+}
+
+.mm-no-courses {
+  padding: 12px; background: #fff8e1; border-radius: 8px;
+  font-size: 13px; color: #f39c12;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.mm-already-assigned {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+}
+
+// ==================== MODAL BUTTONS ====================
+.mm-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 20px; border-radius: 10px; font-size: 14px;
+  font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease;
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &.mm-btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2); color: #fff;
+    &:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(102,126,234,.4); }
+  }
+  &.mm-btn-secondary {
+    background: #f0f2f5; color: #555;
+    &:hover:not(:disabled) { background: #e2e5ea; }
+  }
+}
+
+// ==================== SPINNERS ====================
+.mm-spin {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid #dee2e6; border-top-color: #667eea;
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+.mm-spin-inline {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid #dee2e6; border-top-color: #667eea;
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+
+// ==================== ANIMATIONS ====================
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes spin { to { transform:rotate(360deg); } }

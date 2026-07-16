@@ -21,6 +21,7 @@ import { UserInfo } from '../../../models/user.models';
 import { AuthService } from '../../../context/auth.service';
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatTableModule } from '@angular/material/table';
+import { LearningMaterialService } from '../../../services/learning-material.service';
 
 @Component({
     selector: 'app-course-detail',
@@ -37,7 +38,8 @@ export class CourseDetailComponent {
         private dialog: MatDialog,
         private snackBar: MatSnackBar,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private materialService: LearningMaterialService
     ) {}
 
     documentsDisplayedColumns: string[] = ['name', 'type', 'size', 'uploadDate', 'actions'];
@@ -112,6 +114,11 @@ export class CourseDetailComponent {
 
     downloadDocument(fileUrl: string): void {
         window.open(fileUrl, '_blank');
+    }
+
+    /** Download Learning Material qua API có JWT token */
+    downloadLearningMaterial(id: number, fileName: string): void {
+        this.materialService.downloadMaterial(id, fileName);
     }
 
     toggleReply(feedbackId: string): void {
@@ -221,6 +228,23 @@ export class CourseDetailComponent {
                     panelClass: ['success-snackbar', 'custom-snackbar'],    
                 });
             });
+        });
+    }
+
+    askMentor(): void {
+        if (!this.course) return;
+        
+        // Ưu tiên dùng Mentor được gán, nếu chưa có thì fallback về Lecturer (người tạo)
+        const mentorId = this.course.mentorId || this.course.createdBy;
+        const mentorName = this.course.mentorName || this.course.createdByName;
+        const mentorAvatar = this.course.mentorAvatarUrl || this.course.lecturerImageUrl || 'img/user/user2.jpg';
+
+        this.router.navigate(['/chat'], { 
+            queryParams: { 
+                mentorId: mentorId,
+                mentorName: mentorName,
+                mentorAvatar: mentorAvatar
+            } 
         });
     }
 

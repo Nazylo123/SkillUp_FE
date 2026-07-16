@@ -1,0 +1,241 @@
+<!-- Breadcrumb -->
+<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-space-between">
+  <h5 class="mb-0">📋 Quản lý Học Liệu Mentor</h5>
+  <div class="d-flex align-items-center gap-3 mt-2 mt-md-0">
+    <div class="mm-stat-badge">
+      <span class="mm-stat-value">{{ getTotalMaterials() }}</span>
+      <span class="mm-stat-label">học liệu</span>
+    </div>
+    <div class="mm-stat-badge">
+      <span class="mm-stat-value">{{ mentorGroups.length }}</span>
+      <span class="mm-stat-label">mentor</span>
+    </div>
+  </div>
+</div>
+
+<!-- Alerts -->
+<div class="mm-alert mm-alert-success" *ngIf="successMessage">
+  <i class="ri-checkbox-circle-line"></i> {{ successMessage }}
+</div>
+<div class="mm-alert mm-alert-danger" *ngIf="errorMessage && !showAssignModal">
+  <i class="ri-error-warning-line"></i> {{ errorMessage }}
+</div>
+
+<!-- Search Bar -->
+<div class="mm-search-bar mb-25">
+  <div class="mm-search-input-wrap">
+    <i class="ri-search-line mm-search-icon"></i>
+    <input
+      type="text"
+      class="mm-search-input"
+      placeholder="Tìm theo mentor, tên file, loại file..."
+      [(ngModel)]="searchText"
+      (ngModelChange)="onSearch()">
+    <button *ngIf="searchText" class="mm-clear-btn" (click)="searchText=''; onSearch()">
+      <i class="ri-close-line"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Loading Skeleton -->
+<div class="mm-skeleton-wrapper" *ngIf="isLoading">
+  <div class="mm-skeleton-group" *ngFor="let i of [1,2]">
+    <div class="mm-skeleton-header"></div>
+    <div class="mm-skeleton-body">
+      <div class="mm-skeleton-card" *ngFor="let j of [1,2,3]"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Empty State -->
+<div class="mm-empty-state" *ngIf="!isLoading && filteredGroups.length === 0">
+  <div class="mm-empty-icon">📭</div>
+  <h4>{{ searchText ? 'Không tìm thấy kết quả' : 'Chưa có học liệu nào' }}</h4>
+  <p>{{ searchText ? 'Thử tìm kiếm với từ khóa khác.' : 'Các mentor chưa upload học liệu nào.' }}</p>
+</div>
+
+<!-- Accordion by Mentor -->
+<div class="mm-accordion-list" *ngIf="!isLoading && filteredGroups.length > 0">
+  <div class="mm-accordion-group" *ngFor="let group of filteredGroups">
+
+    <!-- Accordion Header -->
+    <div class="mm-accordion-header" (click)="toggleMentor(group.mentorId)">
+      <div class="mm-mentor-info">
+        <div class="mm-mentor-avatar">{{ group.mentorName.charAt(0).toUpperCase() }}</div>
+        <div class="mm-mentor-details">
+          <h6 class="mm-mentor-name">{{ group.mentorName }}</h6>
+          <span class="mm-mentor-email">{{ group.mentorEmail }}</span>
+        </div>
+      </div>
+      <div class="mm-accordion-right">
+        <span class="mm-count-badge">{{ group.totalMaterials }} học liệu</span>
+        <i class="ri-arrow-down-s-line mm-arrow" [class.mm-arrow-up]="isExpanded(group.mentorId)"></i>
+      </div>
+    </div>
+
+    <!-- Accordion Body -->
+    <div class="mm-accordion-body" [class.mm-expanded]="isExpanded(group.mentorId)">
+      <div class="mm-materials-table-wrap">
+        <table class="mm-table">
+          <thead>
+            <tr>
+              <th>Học liệu</th>
+              <th>Loại</th>
+              <th>Dung lượng</th>
+              <th>Ngày upload</th>
+              <th>Đã gán vào</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of group.materials">
+              <!-- Title & FileName -->
+              <td>
+                <div class="mm-material-name">
+                  <div class="mm-file-dot" [style.background]="getFileTypeColor(m.fileType)"></div>
+                  <div>
+                    <span class="mm-title">{{ m.title }}</span>
+                    <small class="mm-filename">{{ m.fileName }}</small>
+                  </div>
+                </div>
+              </td>
+
+              <!-- FileType badge -->
+              <td>
+                <span class="mm-type-badge" [style.background-color]="getFileTypeColor(m.fileType)">
+                  {{ m.fileType }}
+                </span>
+              </td>
+
+              <!-- File size -->
+              <td class="mm-size">{{ m.fileSizeFormatted }}</td>
+
+              <!-- Date -->
+              <td class="mm-date">{{ m.createdAt | date:'dd/MM/yyyy' }}</td>
+
+              <!-- Assigned courses tags -->
+              <td>
+                <div class="mm-assign-tags" *ngIf="m.assignedCourses.length > 0">
+                  <span
+                    class="mm-course-tag"
+                    *ngFor="let c of m.assignedCourses"
+                    [title]="'Bỏ gán khỏi ' + c.courseName">
+                    {{ c.courseName }}
+                    <button
+                      class="mm-tag-remove"
+                      (click)="unassign(m, c.courseId, c.courseName)"
+                      [disabled]="unassigningKey === m.learningMaterialId + '-' + c.courseId">
+                      <i class="ri-close-line" *ngIf="unassigningKey !== m.learningMaterialId + '-' + c.courseId"></i>
+                      <span class="mm-spin" *ngIf="unassigningKey === m.learningMaterialId + '-' + c.courseId"></span>
+                    </button>
+                  </span>
+                </div>
+                <span class="mm-no-assign" *ngIf="m.assignedCourses.length === 0">Chưa gán</span>
+              </td>
+
+              <!-- Actions -->
+              <td>
+                <div class="mm-actions">
+                  <button
+                    class="mm-btn-action mm-btn-assign"
+                    (click)="openAssignModal(m)"
+                    title="Gán vào khóa học">
+                    <i class="ri-link"></i> Gán
+                  </button>
+                  <button
+                    class="mm-btn-action mm-btn-download"
+                    (click)="downloadMaterial(m.learningMaterialId, m.fileName)"
+                    title="Tải xuống">
+                    <i class="ri-download-2-line"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ASSIGN MODAL ===================== -->
+<div class="mm-modal-overlay" *ngIf="showAssignModal" (click)="closeAssignModal()">
+  <div class="mm-modal" (click)="$event.stopPropagation()">
+    <div class="mm-modal-header">
+      <h5><i class="ri-link" style="color:#667eea"></i> Gán Học Liệu Vào Khóa Học</h5>
+      <button class="mm-modal-close" (click)="closeAssignModal()" [disabled]="isAssigning">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+
+    <div class="mm-modal-body">
+      <!-- Material info -->
+      <div class="mm-material-preview" *ngIf="assigningMaterial">
+        <div class="mm-prev-icon" [style.background]="getFileTypeColor(assigningMaterial.fileType)">
+          {{ assigningMaterial.fileType }}
+        </div>
+        <div>
+          <div class="mm-prev-title">{{ assigningMaterial.title }}</div>
+          <div class="mm-prev-meta">{{ assigningMaterial.fileName }} · {{ assigningMaterial.fileSizeFormatted }}</div>
+          <div class="mm-prev-mentor">Mentor: {{ assigningMaterial.mentorName }}</div>
+        </div>
+      </div>
+
+      <hr class="mm-divider">
+
+      <!-- Course selector -->
+      <div class="mm-form-group">
+        <label class="mm-label">Chọn khóa học để gán <span class="text-danger">*</span></label>
+
+        <div *ngIf="coursesLoading" class="mm-loading-courses">
+          <span class="mm-spin-inline"></span> Đang tải danh sách khóa học...
+        </div>
+
+        <select
+          *ngIf="!coursesLoading"
+          class="mm-select"
+          [(ngModel)]="selectedCourseId"
+          [disabled]="isAssigning">
+          <option [ngValue]="null" disabled>-- Chọn khóa học --</option>
+          <option
+            *ngFor="let c of getAvailableCourses(assigningMaterial!)"
+            [ngValue]="c.courseId">
+            {{ c.name }}
+          </option>
+        </select>
+
+        <div class="mm-no-courses" *ngIf="!coursesLoading && courses.length === 0">
+          <i class="ri-information-line"></i>
+          Hệ thống hiện chưa có khóa học nào.
+        </div>
+
+        <div class="mm-no-courses" *ngIf="!coursesLoading && courses.length > 0 && assigningMaterial && getAvailableCourses(assigningMaterial).length === 0">
+          <i class="ri-checkbox-circle-line"></i>
+          Học liệu này đã được gán vào <b>tất cả</b> các khóa học hiện có.
+        </div>
+      </div>
+
+      <!-- Already assigned -->
+      <div *ngIf="assigningMaterial && assigningMaterial.assignedCourses.length > 0">
+        <label class="mm-label">Đã gán vào:</label>
+        <div class="mm-already-assigned">
+          <span class="mm-course-tag-sm" *ngFor="let c of assigningMaterial.assignedCourses">
+            ✅ {{ c.courseName }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mm-modal-footer">
+      <button class="mm-btn mm-btn-secondary" (click)="closeAssignModal()" [disabled]="isAssigning">Hủy</button>
+      <button
+        class="mm-btn mm-btn-primary"
+        (click)="submitAssign()"
+        [disabled]="!selectedCourseId || isAssigning || coursesLoading">
+        <span class="mm-spin" *ngIf="isAssigning" style="border-color:rgba(255,255,255,.3);border-top-color:#fff"></span>
+        <i class="ri-link" *ngIf="!isAssigning"></i>
+        {{ isAssigning ? 'Đang gán...' : 'Xác nhận gán' }}
+      </button>
+    </div>
+  </div>
+</div>

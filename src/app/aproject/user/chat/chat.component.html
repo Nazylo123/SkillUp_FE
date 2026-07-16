@@ -3,7 +3,7 @@
   <div class="sidebar">
     <div class="sidebar-header">
       <h3>Trò chuyện</h3>
-      <button class="btn-new-chat" (click)="showUserPicker = !showUserPicker" matTooltip="Bắt đầu trò chuyện mới">
+      <button *ngIf="userRole !== 'Employee'" class="btn-new-chat" (click)="showUserPicker = !showUserPicker" matTooltip="Bắt đầu trò chuyện mới">
         <i class="ri-add-line"></i>
       </button>
     </div>
@@ -123,7 +123,7 @@
       <i class="ri-chat-smile-3-line empty-icon"></i>
       <h2>Chọn một cuộc trò chuyện</h2>
       <p>Bắt đầu trao đổi với Mentor hoặc Học viên của bạn</p>
-      <button class="btn-start-chat" (click)="showUserPicker = true">
+      <button *ngIf="userRole !== 'Employee'" class="btn-start-chat" (click)="showUserPicker = true">
         <i class="ri-add-circle-line"></i> Bắt đầu chat mới
       </button>
     </div>
