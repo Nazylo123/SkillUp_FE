@@ -6,7 +6,7 @@
 /out-tsc
 /bazel-out
 
-# Node
+# Node & Dependencies
 /node_modules
 npm-debug.log
 yarn-error.log
@@ -29,6 +29,19 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+
+# Environment & Sensitive Configs
+.env
+.env.*
+!.env.example
+
+# Large Archives & Dump Files
+*.tar
+*.zip
+*.gz
+mysql.tar
+skillup-backend.tar
+skillup-frontend.tar
 
 # Miscellaneous
 /.angular/cache

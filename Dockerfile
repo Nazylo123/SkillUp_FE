@@ -21,8 +21,8 @@ WORKDIR /usr/share/nginx/html
 # Remove default nginx static assets
 RUN rm -rf ./*
 
-# Copy build output to nginx (Angular 20 with outputMode static outputs to dist/tagus)
-COPY --from=build /app/dist/tagus .
+# Copy build output to nginx (Angular 20 with outputMode static outputs to dist/tagus/browser)
+COPY --from=build /app/dist/tagus/browser .
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf

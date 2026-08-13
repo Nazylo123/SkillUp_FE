@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   baseUrl: {
-    SKILL_UP: 'http://localhost:8080/api'
+    SKILL_UP: 'http://localhost:3000/api'
   },
-  googleClientId: '766419365895-fu2n28sacriqgpntg1f854skpmkk901p.apps.googleusercontent.com'
+  googleClientId: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
 };
